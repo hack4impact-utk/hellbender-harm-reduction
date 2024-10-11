@@ -1,11 +1,3 @@
-<!-- DELETE THIS SECTION AFTER USING TEMPLATE -->
-
-## About this repository
-
-This is a template repository meant to act as a starting point for new NextJS projects. This template will help us to standardize our development process and make it easier to onboard new developers.
-
-<!-- DELETE THIS SECTION AFTER USING TEMPLATE -->
-
 ### What's Included
 
 - React/NextJS
@@ -28,11 +20,11 @@ This is a template repository meant to act as a starting point for new NextJS pr
   - [Pull Request template](https://github.com/hack4impact-utk/nextjs-template/blob/main/.github/pull_request_template.md)
 - Pre-commit linting hook
 
-# Project Title
+# Hellbender Harm Reduction
 
 ## Overview
 
-Put an overview of the non-profit you are working with and what you are doing for them here.
+Hellbender Harm Resuction is a non profit that offers both harm reduction supplies for those that use drugs and community spaces/activities. We'll be working on a system that will help streamline the volunteering process and make it more user friendly.
 
 ## Getting Started
 
