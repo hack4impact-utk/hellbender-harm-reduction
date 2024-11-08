@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import zBase from './base'; 
+import zBase from './base';
 
 const userTypeEnum = z.enum(['Volunteer', 'Admin', 'Owner']);
 
@@ -20,14 +20,17 @@ const referralSourceEnum = z.enum([
   'Poster',
 ]);
 
-const newEventNotifsEnum = z.enum(['All Events', 'Preferred Events', 'No Events']);
+const newEventNotifsEnum = z.enum([
+  'All Events',
+  'Preferred Events',
+  'No Events',
+]);
 
 const reminderNotifsEnum = z.enum([
   '30 Minutes Before',
   'Day Before',
   '2 Days Before',
   'A Week Before',
-  'customReminder',
 ]);
 
 const zCustomReminder = z.object({
@@ -48,13 +51,14 @@ const zUserBase = z.object({
   email: z.string(),
   image: z.string().optional(),
   userType: userTypeEnum,
-  emergencyContacts: z.array(emergencyContactSchema).optional(),
+  emergencyContacts: z.array(zEmergencyContact).optional(),
   pronouns: z.string().optional(),
-  certifications: z.array(certificationSchema).optional(),
+  certifications: z.array(zCertification).optional(),
   events: z.array(z.string()), // add event pointer later
   phone: z.string(),
   eventPreferences: z.array(z.string()), // add event type pointer later
   reminders: z.array(reminderNotifsEnum),
+  custRemindsers: z.array(zCustomReminder).optional(),
   newEvents: newEventNotifsEnum,
   referrals: z.array(referralSourceEnum),
 });
