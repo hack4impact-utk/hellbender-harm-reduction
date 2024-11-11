@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import zBase from './base'; 
+import zBase from './base';
 
-const eventTypeEnum = z.enum([
+export const eventTypeEnum = z.enum([
   'Harm Reduction Services',
   'Syringe Pick-Up',
   'Community Education and Advocacy',
@@ -11,7 +11,7 @@ const eventTypeEnum = z.enum([
   'Special Events',
 ]);
 
-const zEventBase = z.object({
+export const zEventBase = z.object({
   eventName: z.string(),
   eventStart: z.date(),
   eventEnd: z.date(),
