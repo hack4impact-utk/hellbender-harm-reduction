@@ -20,8 +20,9 @@ const EventSchema = new Schema(
       required: true,
     },
     eventType: {
-      type: eventTypeEnum,
+      type: String,
       required: true,
+      enum: eventTypeEnum,
     },
   },
   {
