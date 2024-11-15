@@ -1,4 +1,4 @@
-import { model, Schema, Document, models, Model } from 'mongoose';
+import { model, Schema, models, Model } from 'mongoose';
 import { EventEntity, eventTypeEnum } from '@/types/event';
 
 const EventSchema = new Schema(
@@ -30,6 +30,12 @@ const EventSchema = new Schema(
     tracking: true,
   }
 );
+
+EventSchema.post('find', function (docs: EventEntity[]) {
+  docs.forEach((doc) => {
+    doc._id = doc._id.toString();
+  });
+});
 
 export interface EventDocument extends Omit<EventEntity, '_id'>, Document {}
 
