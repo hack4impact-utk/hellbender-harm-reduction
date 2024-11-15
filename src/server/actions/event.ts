@@ -1,5 +1,5 @@
 import dbConnect from '@/utils/db-connect';
-import Event from '@/server/models/event';
+import EventSchema from '@/server/models/event';
 import { CreateEventRequest, EventResponse } from '@/types/event';
 
 export async function getAllEvents(): Promise<EventResponse[]> {
@@ -7,14 +7,19 @@ export async function getAllEvents(): Promise<EventResponse[]> {
   try {
     await dbConnect();
 
-    response = await Event.find();
+    response = await EventSchema.find();
   } catch (error) {
     throw error;
   }
   return response;
 }
 
-export async function createEvent(event: CreateEventRequest) {
+export async function createEvent(
+  event: CreateEventRequest
+): Promise<EventResponse> {
   await dbConnect();
-  return await Event.create(event);
+
+  const response: EventResponse = await EventSchema.create(event);
+
+  return response as EventResponse;
 }
