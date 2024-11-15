@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import zBase from './base'; 
+import zBase from './base';
 
-const eventTypeEnum = z.enum([
+export const eventTypeEnum = [
   'Harm Reduction Services',
   'Syringe Pick-Up',
   'Community Education and Advocacy',
@@ -9,14 +9,15 @@ const eventTypeEnum = z.enum([
   'Building Work Days',
   'Fundraising',
   'Special Events',
-]);
+] as const;
+export const zEventTypeEnum = z.enum(eventTypeEnum);
 
-const zEventBase = z.object({
+export const zEventBase = z.object({
   eventName: z.string(),
   eventStart: z.date(),
   eventEnd: z.date(),
   eventDescription: z.string(),
-  eventType: eventTypeEnum,
+  eventType: zEventTypeEnum,
 });
 
 // Extend to create request, response, and entity types with zBase for event
