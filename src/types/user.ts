@@ -70,10 +70,10 @@ export const zUserBase = z.object({
 
 // Extend to create request, response, and entity types with zBase
 const zUserEntity = zUserBase.extend({ ...zBase.shape });
-const zUserRequest = zUserBase;
+export const zUserRequest = zUserBase;
 const zUserResponse = zUserEntity;
 
 //export { zUserBase, zUserRequest, zUserEntity, zUserResponse };
 export interface UserEntity extends z.infer<typeof zUserEntity> {}
 export interface UserRequest extends z.infer<typeof zUserRequest> {}
-export interface UserReponse extends z.infer<typeof zUserResponse> {}
+export interface UserResponse extends z.infer<typeof zUserResponse> {}
