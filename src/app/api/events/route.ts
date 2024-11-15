@@ -20,7 +20,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ _id: form._id }, { status: 201 });
   } else {
     return NextResponse.json(
-      { message: 'Input was not in correct format' },
+      {
+        message: 'Input was not in correct format',
+        errors: validationResult.error.format(),
+      },
       { status: 400 }
     );
   }
