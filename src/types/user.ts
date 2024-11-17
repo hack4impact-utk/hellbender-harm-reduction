@@ -62,18 +62,20 @@ export const zUserBase = z.object({
   events: z.array(zEventEntity).optional(),
   phone: z.string(),
   eventPreferences: z.array(zEventTypeEnum),
-  reminders: z.array(zReminderNotifsEnum),
+  reminders: z.array(zReminderNotifsEnum).optional(),
   custRemindsers: z.array(zCustomReminder).optional(),
   newEvents: zNewEventNotifsEnum,
   referrals: z.array(zreferralSourceEnum),
 });
 
 // Extend to create request, response, and entity types with zBase
-const zUserEntity = zUserBase.extend({ ...zBase.shape });
+export const zUserEntity = zUserBase.extend({ ...zBase.shape });
 export const zUserRequest = zUserBase;
-const zUserResponse = zUserEntity;
+export const zUserResponse = zUserEntity;
+export const zUpdateUserRequest = zUserRequest.partial();
 
 //export { zUserBase, zUserRequest, zUserEntity, zUserResponse };
 export interface UserEntity extends z.infer<typeof zUserEntity> {}
-export interface UserRequest extends z.infer<typeof zUserRequest> {}
-export interface UserResponse extends z.infer<typeof zUserResponse> {}
+export type UserRequest = z.infer<typeof zUserRequest>;
+export type UserResponse = z.infer<typeof zUserResponse>;
+export type UpdateUserRequest = z.infer<typeof zUpdateUserRequest>;

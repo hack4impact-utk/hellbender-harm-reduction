@@ -1,5 +1,5 @@
 import dbConnect from '@/utils/db-connect';
-import User from '@/server/models/user';
+import UserSchema from '@/server/models/user';
 import { UserResponse, UserRequest } from '@/types/user';
 
 export async function getAllUsers(): Promise<UserResponse[]> {
@@ -7,7 +7,7 @@ export async function getAllUsers(): Promise<UserResponse[]> {
   try {
     await dbConnect();
 
-    response = await User.find();
+    response = await UserSchema.find();
   } catch (error) {
     throw error;
   }
@@ -17,7 +17,7 @@ export async function getAllUsers(): Promise<UserResponse[]> {
 export async function createUser(request: UserRequest): Promise<string> {
   try {
     await dbConnect();
-    const user = await User.create(request);
+    const user = await UserSchema.create(request);
     return user._id.toString();
   } catch (error) {
     throw error;
