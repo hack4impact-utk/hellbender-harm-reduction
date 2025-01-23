@@ -131,6 +131,12 @@ const UserSchema = new Schema(
   }
 );
 
+UserSchema.post('find', function (docs: UserEntity[]) {
+  docs.forEach((doc) => {
+    doc._id = doc._id.toString();
+  });
+});
+
 export interface UserDocument extends Omit<UserEntity, '_id'>, Document {}
 export default (models.User as Model<UserDocument>) ||
   model<UserDocument>('User', UserSchema);
