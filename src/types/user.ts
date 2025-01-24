@@ -63,7 +63,7 @@ export const zUserBase = z.object({
   phone: z.string(),
   eventPreferences: z.array(zEventTypeEnum),
   reminders: z.array(zReminderNotifsEnum).optional(),
-  custRemindsers: z.array(zCustomReminder).optional(),
+  custReminders: z.array(zCustomReminder).optional(),
   newEvents: zNewEventNotifsEnum,
   referrals: z.array(zreferralSourceEnum),
 });
