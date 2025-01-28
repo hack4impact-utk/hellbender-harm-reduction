@@ -63,6 +63,23 @@ export async function getUser(userId: string): Promise<UserResponse | null> {
   return target;
 }
 
+export async function getUserBy(query: object): Promise<UserResponse[] | null> {
+  let target: UserResponse[] | null;
+
+  try {
+    await dbConnect();
+    target = await UserSchema.find(query);
+  } catch (error) {
+    throw error;
+  }
+
+  if (!target) {
+    throw new Error();
+  }
+
+  return target;
+}
+
 export async function updateUser(
   userId: string,
   updatedUser: UpdateUserRequest
