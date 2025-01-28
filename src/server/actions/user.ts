@@ -35,7 +35,7 @@ export async function deleteUser(userId: string): Promise<void> {
 
       const res = await UserSchema.findByIdAndDelete(userId);
       if (!res) {
-        throw new Error('Could not Delete');
+        throw new Error('500 Could Not Delete');
       }
     } catch (error) {
       throw error;
@@ -45,7 +45,7 @@ export async function deleteUser(userId: string): Promise<void> {
 
 export async function getUser(userId: string): Promise<UserResponse | null> {
   if (!isValidObjectId(userId)) {
-    throw new Error('bad User Id');
+    throw new Error('400 Bad User Id');
   }
 
   let target: UserResponse | null;
@@ -53,11 +53,11 @@ export async function getUser(userId: string): Promise<UserResponse | null> {
     await dbConnect();
     target = await UserSchema.findById(userId).lean();
   } catch (error) {
-    throw error;
+    throw new Error('500 User Lookup Failed');
   }
 
   if (!target) {
-    throw new Error();
+    throw new Error('404 User Not Found');
   }
 
   return target;
@@ -70,39 +70,14 @@ export async function getUserBy(query: object): Promise<UserResponse[] | null> {
     await dbConnect();
     target = await UserSchema.find(query);
   } catch (error) {
-    throw error;
+    throw new Error('500 User Lookup Failed');
   }
 
   if (!target) {
-    throw new Error();
+    throw new Error('404 Query Failed');
   }
 
   return target;
-}
-
-export async function updateUser(
-  userId: string,
-  updatedUser: UpdateUserRequest
-): Promise<void> {
-  if (!isValidObjectId(userId)) {
-    throw new Error('bad user id');
-  }
-
-  if (!updatedUser || Object.keys(updatedUser).length === 0) {
-    throw new Error('bad UpdateUserRequest');
-  }
-
-  let res;
-  try {
-    await dbConnect();
-    res = await UserSchema.findByIdAndUpdate(userId, updatedUser);
-  } catch (error) {
-    throw error;
-  }
-
-  if (!res) {
-    throw new Error();
-  }
 }
 
 export async function updateUserAction(
@@ -110,11 +85,11 @@ export async function updateUserAction(
   userUpdatesRequest: UpdateUserRequest
 ): Promise<void> {
   if (!isValidObjectId(userId)) {
-    throw new Error('bad user id');
+    throw new Error('400 Bad User Id');
   }
 
   if (!userUpdatesRequest || Object.keys(userUpdatesRequest).length === 0) {
-    throw new Error('bad UpdateUserRequest');
+    throw new Error('500 Bad UpdateUserRequest');
   }
 
   let res;
@@ -122,10 +97,10 @@ export async function updateUserAction(
     await dbConnect();
     res = await UserSchema.findByIdAndUpdate(userId, userUpdatesRequest);
   } catch (error) {
-    throw error;
+    throw new Error('500 Could Not Update');
   }
 
   if (!res) {
-    throw new Error();
+    throw new Error('404 User Not Found');
   }
 }
