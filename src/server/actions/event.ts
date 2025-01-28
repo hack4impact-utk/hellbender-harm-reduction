@@ -44,3 +44,22 @@ export async function getEvent(eventId: string): Promise<EventResponse | null> {
 
   return target;
 }
+
+export async function getEventBy(
+  query: object
+): Promise<EventResponse[] | null> {
+  let target: EventResponse[] | null;
+
+  try {
+    await dbConnect();
+    target = await EventSchema.find(query);
+  } catch (error) {
+    throw error;
+  }
+
+  if (!target) {
+    throw new Error();
+  }
+
+  return target;
+}
