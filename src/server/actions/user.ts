@@ -43,26 +43,6 @@ export async function deleteUser(userId: string): Promise<void> {
   }
 }
 
-export async function getUser(userId: string): Promise<UserResponse | null> {
-  if (!isValidObjectId(userId)) {
-    throw new Error('bad User Id');
-  }
-
-  let target: UserResponse | null;
-  try {
-    await dbConnect();
-    target = await UserSchema.findById(userId).lean();
-  } catch (error) {
-    throw error;
-  }
-
-  if (!target) {
-    throw new Error();
-  }
-
-  return target;
-}
-
 export async function updateUser(
   userId: string,
   updatedUser: UpdateUserRequest
