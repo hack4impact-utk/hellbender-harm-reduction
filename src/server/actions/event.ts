@@ -27,7 +27,7 @@ export async function createEvent(
 
 export async function getEvent(eventId: string): Promise<EventResponse | null> {
   if (!isValidObjectId(eventId)) {
-    throw new Error('bad Event Id');
+    throw new Error('400 Bad Id');
   }
 
   let target: EventResponse | null;
@@ -35,11 +35,30 @@ export async function getEvent(eventId: string): Promise<EventResponse | null> {
     await dbConnect();
     target = await EventSchema.findById(eventId).lean();
   } catch (error) {
-    throw error;
+    throw new Error('500 User lookup failed');
   }
 
   if (!target) {
-    throw new Error();
+    throw new Error('404 Event not found');
+  }
+
+  return target;
+}
+
+export async function getEventBy(
+  query: object
+): Promise<EventResponse[] | null> {
+  let target: EventResponse[] | null;
+
+  try {
+    await dbConnect();
+    target = await EventSchema.find(query);
+  } catch (error) {
+    throw new Error('500 User lookup failed');
+  }
+
+  if (!target) {
+    throw new Error('404 Events not found');
   }
 
   return target;
