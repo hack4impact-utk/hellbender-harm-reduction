@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { zObjectId } from '@/types/objectId';
-import { deleteUser, updateUserAction, getUser } from '@/server/actions/user';
+import { deleteUser, updateUser, getUser } from '@/server/actions/user';
 import { zUpdateUserRequest } from '@/types/user';
 
 export async function DELETE(
@@ -39,7 +39,7 @@ export async function PUT(
         { status: 500 }
       );
     }
-    await updateUserAction(params.userId, data);
+    await updateUser(params.userId, data);
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {

@@ -80,7 +80,7 @@ export async function getUserBy(query: object): Promise<UserResponse[] | null> {
   return target;
 }
 
-export async function updateUserAction(
+export async function updateUser(
   userId: string,
   userUpdatesRequest: UpdateUserRequest
 ): Promise<void> {
