@@ -27,6 +27,10 @@ const UserSchema = new Schema(
       required: true,
       enum: userTypeEnum,
     },
+    picture: {
+      type: String,
+      required: false,
+    },
     emergencyContacts: {
       type: [
         {

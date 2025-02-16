@@ -56,6 +56,7 @@ export const zUserBase = z.object({
   email: z.string(),
   image: z.string().optional(),
   userType: zUserTypeEnum,
+  picture: z.string().optional(),
   emergencyContacts: z.array(zEmergencyContact).optional(),
   pronouns: z.string().optional(),
   certifications: z.array(zCertification).optional(),
