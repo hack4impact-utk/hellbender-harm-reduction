@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import zBase from './base';
 import { zEventEntity, zEventTypeEnum } from './event';
+import { zCertEntity } from './certification';
 
 export const userTypeEnum = ['Volunteer', 'Admin', 'Owner'] as const;
 export const zUserTypeEnum = z.enum(userTypeEnum);
@@ -52,9 +53,7 @@ export const zCustomReminder = z.object({
 });
 
 export const zCertification = z.object({
-  certTitle: z.string(),
-  certImage: z.string().optional(),
-  certDescription: z.string(),
+  certification: zCertEntity,
   dateReceived: z.date(),
   dateExpiration: z.date().optional(),
 });
