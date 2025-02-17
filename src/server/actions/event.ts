@@ -25,6 +25,24 @@ export async function createEvent(
   return response as EventResponse;
 }
 
+export async function deleteEvent(eventId: string): Promise<void> {
+  if (isValidObjectId(eventId)) {
+    try {
+      await dbConnect();
+      await EventSchema.deleteMany({
+        event: eventId,
+      });
+
+      const res = await EventSchema.findByIdAndDelete(eventId);
+      if (!res) {
+        throw new Error('500 Could Not Delete');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+
 export async function getEvent(eventId: string): Promise<EventResponse | null> {
   if (!isValidObjectId(eventId)) {
     throw new Error('400 Bad Id');
