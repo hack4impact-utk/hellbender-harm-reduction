@@ -60,16 +60,9 @@ const UserSchema = new Schema(
     certifications: {
       type: [
         {
-          certTitle: {
-            type: String,
-            required: true,
-          },
-          certImage: {
-            type: String,
-            required: false,
-          },
-          certDescription: {
-            type: String,
+          certification: {
+            type: [Schema.Types.ObjectId],
+            ref: 'Cert',
             required: true,
           },
           dateRecieved: {
