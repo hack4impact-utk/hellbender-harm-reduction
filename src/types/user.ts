@@ -38,6 +38,14 @@ export const reminderNotifsEnum = [
 ] as const;
 export const zReminderNotifsEnum = z.enum(reminderNotifsEnum);
 
+export const pronounEnum = [
+  'he/him',
+  'she/her',
+  'they/them',
+  'chose not to answer',
+] as const;
+export const zPronounEnum = z.enum(pronounEnum);
+
 export const zCustomReminder = z.object({
   daysPrior: z.number(),
   time: z.string(),
@@ -56,9 +64,9 @@ export const zUserBase = z.object({
   email: z.string(),
   image: z.string().optional(),
   userType: zUserTypeEnum,
-  picture: z.string().optional(),
+  picture: z.string(),
   emergencyContacts: z.array(zEmergencyContact).optional(),
-  pronouns: z.string().optional(),
+  pronouns: zPronounEnum,
   certifications: z.array(zCertification).optional(),
   events: z.array(zEventEntity).optional(),
   phone: z.string(),
