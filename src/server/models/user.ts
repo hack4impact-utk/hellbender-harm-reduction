@@ -38,9 +38,13 @@ const UserSchema = new Schema(
             type: String,
             required: true,
           },
-          phone: {
+          mobile_phone: {
             type: String,
             required: true,
+          },
+          work_phone: {
+            type: String,
+            required: false,
           },
           email: {
             type: String,
