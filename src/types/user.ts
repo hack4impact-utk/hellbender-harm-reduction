@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import zBase from './base';
 import { zEventEntity, zEventTypeEnum } from './event';
+import { zCertEntity } from './certification';
 
 export const userTypeEnum = ['Volunteer', 'Admin', 'Owner'] as const;
 export const zUserTypeEnum = z.enum(userTypeEnum);
@@ -40,15 +41,21 @@ export const reminderNotifsEnum = [
 ] as const;
 export const zReminderNotifsEnum = z.enum(reminderNotifsEnum);
 
+export const pronounEnum = [
+  'he/him',
+  'she/her',
+  'they/them',
+  'chose not to answer',
+] as const;
+export const zPronounEnum = z.enum(pronounEnum);
+
 export const zCustomReminder = z.object({
   daysPrior: z.number(),
   time: z.string(),
 });
 
 export const zCertification = z.object({
-  certTitle: z.string(),
-  certImage: z.string().optional(),
-  certDescription: z.string(),
+  certification: zCertEntity,
   dateReceived: z.date(),
   dateExpiration: z.date().optional(),
 });
@@ -58,9 +65,9 @@ export const zUserBase = z.object({
   email: z.string(),
   image: z.string().optional(),
   userType: zUserTypeEnum,
-  picture: z.string().optional(),
+  picture: z.string(),
   emergencyContacts: z.array(zEmergencyContact).optional(),
-  pronouns: z.string().optional(),
+  pronouns: zPronounEnum,
   certifications: z.array(zCertification).optional(),
   events: z.array(zEventEntity).optional(),
   phone: z.string(),

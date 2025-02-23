@@ -5,6 +5,7 @@ import {
   reminderNotifsEnum,
   UserEntity,
   userTypeEnum,
+  pronounEnum,
 } from '@/types/user';
 import { eventTypeEnum } from '@/types/event';
 
@@ -29,7 +30,7 @@ const UserSchema = new Schema(
     },
     picture: {
       type: String,
-      required: false,
+      required: true,
     },
     emergencyContacts: {
       type: [
@@ -61,21 +62,15 @@ const UserSchema = new Schema(
     },
     pronouns: {
       type: String,
-      required: false,
+      required: true,
+      enum: pronounEnum,
     },
     certifications: {
       type: [
         {
-          certTitle: {
-            type: String,
-            required: true,
-          },
-          certImage: {
-            type: String,
-            required: false,
-          },
-          certDescription: {
-            type: String,
+          certification: {
+            type: [Schema.Types.ObjectId],
+            ref: 'Cert',
             required: true,
           },
           dateRecieved: {
