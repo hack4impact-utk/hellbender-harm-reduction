@@ -1,6 +1,10 @@
 import dbConnect from '@/utils/db-connect';
 import EventSchema from '@/server/models/event';
-import { CreateEventRequest, EventResponse } from '@/types/event';
+import {
+  CreateEventRequest,
+  EventResponse,
+  UpdateEventRequest,
+} from '@/types/event';
 import { isValidObjectId } from 'mongoose';
 
 export async function getAllEvents(): Promise<EventResponse[]> {
@@ -62,4 +66,24 @@ export async function getEventBy(
   }
 
   return target;
+}
+
+export async function updateEvent(  // Returns the updated event or null upon error
+  eventId: string,
+  updatedData: UpdateEventRequest
+): Promise<EventResponse | null> {
+  let response: EventResponse | null;
+
+  try {
+    await dbConnect();
+    response = await EventSchema.findByIdAndUpdate(
+      eventId,
+      { $set: updatedData },  // $set makes the function update new fields and leave the old fields unchanged (in contrast to the default of deleting them)
+      { new: true }           // makes the function return the updated document
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
