@@ -7,7 +7,9 @@ export const zUserTypeEnum = z.enum(userTypeEnum);
 
 export const zEmergencyContact = z.object({
   name: z.string(),
-  phone: z.string(),
+  mobile_phone: z.string(),
+  work_phone: z.string().optional(),
+  email: z.string().optional(),
   address: z.string().optional(),
 });
 
