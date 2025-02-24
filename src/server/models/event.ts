@@ -29,6 +29,11 @@ const EventSchema = new Schema(
       ref: 'Cert',
       required: false,
     },
+    eventPreferences: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Cert',
+      required: false,
+    },
   },
   {
     versionKey: false,

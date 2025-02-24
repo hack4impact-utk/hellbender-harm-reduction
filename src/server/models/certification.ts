@@ -1,5 +1,5 @@
 import { model, Schema, Document, models, Model } from 'mongoose';
-import { CertEntity } from '@/types/certification';
+import { CertEntity, certTypeEnum } from '@/types/certification';
 
 const CertSchema = new Schema(
   {
@@ -14,6 +14,11 @@ const CertSchema = new Schema(
     certDescription: {
       type: String,
       required: true,
+    },
+    certType: {
+      type: String,
+      required: true,
+      enum: certTypeEnum,
     },
   },
   {

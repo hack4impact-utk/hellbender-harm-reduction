@@ -1,10 +1,14 @@
 import { z } from 'zod';
 import zBase from './base';
 
+export const certTypeEnum = ['Certification', 'Language', 'Skill'] as const;
+export const zCertTypeEnum = z.enum(certTypeEnum);
+
 export const zCertBase = z.object({
   certName: z.string(),
   certPicture: z.string().optional(),
   certDescription: z.string(),
+  cerType: zCertTypeEnum,
 });
 
 // Extend to create request, response, and entity types with zBase for event
