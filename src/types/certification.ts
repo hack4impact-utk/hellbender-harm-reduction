@@ -8,7 +8,7 @@ export const zCertBase = z.object({
   certName: z.string(),
   certPicture: z.string().optional(),
   certDescription: z.string(),
-  cerType: zCertTypeEnum,
+  certType: zCertTypeEnum,
 });
 
 // Extend to create request, response, and entity types with zBase for event
