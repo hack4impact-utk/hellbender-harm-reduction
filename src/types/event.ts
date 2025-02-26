@@ -21,6 +21,7 @@ export const zEventBase = z.object({
   eventDescription: z.string(),
   eventType: zEventTypeEnum,
   eventRequirements: z.array(zCertEntity).optional(),
+  eventPreferences: z.array(zCertEntity).optional(),
 });
 
 // Extend to create request, response, and entity types with zBase for event

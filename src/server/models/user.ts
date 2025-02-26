@@ -6,8 +6,11 @@ import {
   UserEntity,
   userTypeEnum,
   pronounEnum,
+  certProgressEnum,
+  certProfEnum,
 } from '@/types/user';
 import { eventTypeEnum } from '@/types/event';
+import { certTypeEnum } from '@/types/certification';
 
 const UserSchema = new Schema(
   {
@@ -21,16 +24,12 @@ const UserSchema = new Schema(
     },
     image: {
       type: String,
-      required: false,
+      required: true,
     },
     userType: {
       type: String,
       required: true,
       enum: userTypeEnum,
-    },
-    picture: {
-      type: String,
-      required: true,
     },
     emergencyContacts: {
       type: [
@@ -69,11 +68,26 @@ const UserSchema = new Schema(
       type: [
         {
           certification: {
-            type: [Schema.Types.ObjectId],
+            type: Schema.Types.ObjectId,
             ref: 'Cert',
             required: true,
           },
-          dateRecieved: {
+          certType: {
+            type: String,
+            required: true,
+            enum: certTypeEnum,
+          },
+          certProgress: {
+            type: String,
+            required: true,
+            enum: certProgressEnum,
+          },
+          certProf: {
+            type: String,
+            required: true,
+            enum: certProfEnum,
+          },
+          dateReceived: {
             type: Date,
             required: true,
           },
