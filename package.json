@@ -13,6 +13,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^6.4.6",
     "@mui/material": "^5.15.15",
     "aws4": "^1.13.2",
     "bson": "^6.9.0",
