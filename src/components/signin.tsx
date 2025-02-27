@@ -1,5 +1,5 @@
 'use client';
-import { Box, Grid, IconButton, TextField } from '@mui/material';
+import { Button, Grid, IconButton, TextField } from '@mui/material';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import { useState } from 'react';
 
@@ -36,8 +36,14 @@ export default function SignInForm(props: signInProps) {
           ></TextField>
         </Grid>
       </Grid>
-      <Box sx={{ p: 1 }}></Box>
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
+      <Grid
+        container
+        direction="column"
+        sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}
+      >
+        <Grid item>
+          <Button>Forgot Password?</Button>
+        </Grid>
         <Grid item>
           <IconButton aria-label="Next" size="large">
             <ArrowCircleRightOutlinedIcon />
