@@ -1,7 +1,9 @@
 'use client';
 import {
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -27,34 +29,44 @@ export default function SignUpForm(props: signUpProps) {
 
   return (
     <>
-      <Grid container direction="column" spacing={3}>
-        <Grid item>
-          <TextField
-            required
-            label="Name"
-            variant="outlined"
-            fullWidth
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          ></TextField>
-          <Select value={pronouns} label="Pronouns" onChange={handleChange}>
-            <MenuItem>She/Her</MenuItem>
-            <MenuItem>He/Him</MenuItem>
-            <MenuItem>They/Them</MenuItem>
-            <MenuItem>Other</MenuItem>
-            <MenuItem>Prefer Not to Answer</MenuItem>
+      <Grid item xs={12} sm={10}>
+        <TextField
+          required
+          label="Name"
+          variant="outlined"
+          fullWidth
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        ></TextField>
+      </Grid>
+      <Grid item xs={12} sm={2}>
+        <FormControl fullWidth>
+          <InputLabel id="pronouns-select-label">Pronouns</InputLabel>
+          <Select
+            labelId="pronouns-select-label"
+            value={pronouns}
+            label="Pronouns"
+            onChange={handleChange}
+          >
+            <MenuItem value={'She/Her'}>She/Her</MenuItem>
+            <MenuItem value={'He/Him'}>He/Him</MenuItem>
+            <MenuItem value={'They/Them'}>They/Them</MenuItem>
+            <MenuItem value={'Other'}>Other</MenuItem>
+            <MenuItem value={'Prefer Not to Answer'}>
+              Prefer Not to Answer
+            </MenuItem>
           </Select>
-        </Grid>
-        <Grid item>
-          <TextField
-            required
-            label="Email"
-            variant="outlined"
-            fullWidth
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></TextField>
-        </Grid>
+        </FormControl>
+      </Grid>
+      <Grid mt={2} item xs={12}>
+        <TextField
+          required
+          label="Email"
+          variant="outlined"
+          fullWidth
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        ></TextField>
       </Grid>
       <Grid
         container
