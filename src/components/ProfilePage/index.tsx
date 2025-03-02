@@ -7,6 +7,8 @@ interface basicInfoProps {
 }
 
 // Uses a stack for natural vertical formatting
+// The id attribute for the TextFields can be changed to better fit our style
+// Remove the disabled attribute when it's time to allow the fields to be edited
 export function BasicInfo(props: basicInfoProps) {
     return (
         <Stack spacing={2} alignItems="center">
