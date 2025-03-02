@@ -10,9 +10,9 @@ interface basicInfoProps {
 export function BasicInfo(props: basicInfoProps) {
     return (
         <Stack spacing={2} alignItems="center">
-            <Avatar alt={props.name} src={props.profilePicture} sx={{ width:200, height:200,}} />
-            <TextField disabled id="outlined-basic" defaultValue={props.name} inputProps={{min: 0, style: { textAlign: 'center' }}} />
-            <TextField disabled id="outlined-basic" defaultValue={props.pronouns} inputProps={{min: 0, style: { textAlign: 'center' }}} />
+            <Avatar alt={props.name} src={props.profilePicture} sx={{ width: 200, height: 200, }} />
+            <TextField disabled id="outlined-basic" defaultValue={props.name} inputProps={{ min: 0, style: { textAlign: 'center' } }} />
+            <TextField disabled id="outlined-basic" defaultValue={props.pronouns} inputProps={{ min: 0, style: { textAlign: 'center' } }} />
         </Stack>
     );
 }

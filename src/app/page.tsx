@@ -1,4 +1,4 @@
-import {BasicInfo} from '@/components/ProfilePage/index'
+import { BasicInfo } from '@/components/ProfilePage/index'
 import { getUser } from '@/server/actions/user';
 
 export default async function Home() {
