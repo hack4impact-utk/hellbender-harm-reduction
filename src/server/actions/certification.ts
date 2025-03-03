@@ -24,7 +24,7 @@ export async function createCert(
 ): Promise<CertResponse> {
   await dbConnect();
 
-  const response: CertResponse = await CertSchema.create(event);
+  const response = await CertSchema.create(event);
 
   return response as CertResponse;
 }
@@ -52,10 +52,10 @@ export async function getCert(certId: string): Promise<CertResponse | null> {
     throw new Error('400 Bad Id');
   }
 
-  let target: CertResponse | null;
+  let target; // : CertResponse | null;
   try {
     await dbConnect();
-    target = await CertSchema.findById(certId).lean();
+    target = await CertSchema.findById(certId);
   } catch (error) {
     throw new Error('500 Certification lookup failed');
   }
@@ -64,7 +64,7 @@ export async function getCert(certId: string): Promise<CertResponse | null> {
     throw new Error('404 Certification not found');
   }
 
-  return target;
+  return target as CertResponse;
 }
 
 export async function updateCert(

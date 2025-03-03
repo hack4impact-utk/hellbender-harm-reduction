@@ -20,7 +20,7 @@ export async function createEvent(
 ): Promise<EventResponse> {
   await dbConnect();
 
-  const response: EventResponse = await EventSchema.create(event);
+  const response = await EventSchema.create(event);
 
   return response as EventResponse;
 }
@@ -48,10 +48,10 @@ export async function getEvent(eventId: string): Promise<EventResponse | null> {
     throw new Error('400 Bad Id');
   }
 
-  let target: EventResponse | null;
+  let target; //: EventResponse | null;
   try {
     await dbConnect();
-    target = await EventSchema.findById(eventId).lean();
+    target = await EventSchema.findById(eventId);
   } catch (error) {
     throw new Error('500 User lookup failed');
   }
@@ -60,7 +60,7 @@ export async function getEvent(eventId: string): Promise<EventResponse | null> {
     throw new Error('404 Event not found');
   }
 
-  return target;
+  return target as EventResponse;
 }
 
 export async function getEventBy(
