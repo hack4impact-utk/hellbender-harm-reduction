@@ -1,7 +1,15 @@
 'use client';
-import { Button, Grid, IconButton, TextField } from '@mui/material';
+import {
+  Button,
+  Grid,
+  IconButton,
+  TextField,
+  ThemeProvider,
+  Typography,
+} from '@mui/material';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import { useState } from 'react';
+import hhrColors from '@/utils/hhr-theme';
 
 interface signInProps {
   email: string;
@@ -14,42 +22,62 @@ export default function SignInForm(props: signInProps) {
 
   return (
     <>
-      <Grid container direction="column" spacing={3}>
-        <Grid item>
-          <TextField
-            required
-            label="Email"
-            variant="outlined"
-            fullWidth
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></TextField>
+      <ThemeProvider theme={hhrColors}>
+        <Grid container direction="column" spacing={3}>
+          <Grid item>
+            <Typography
+              variant="h2"
+              sx={{ fontWeight: 'bold', textAlign: 'center' }}
+            >
+              WELCOME!
+            </Typography>
+            <Typography
+              variant="h4"
+              sx={{ textAlign: 'center', marginBottom: 3 }}
+            >
+              Login or sign-up below
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              required
+              label="Email"
+              variant="filled"
+              fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ backgroundColor: '#fff', borderRadius: 1, marginBottom: 2 }}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              required
+              label="Password"
+              variant="filled"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              sx={{ backgroundColor: '#fff', borderRadius: 1, marginBottom: 2 }}
+            ></TextField>
+          </Grid>
         </Grid>
-        <Grid item>
-          <TextField
-            required
-            label="Password"
-            variant="outlined"
-            fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></TextField>
+        <Grid
+          container
+          direction="column"
+          sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}
+        >
+          <Grid item>
+            <Button sx={{ color: 'hhr.light' }}>Forgot Password?</Button>
+          </Grid>
+          <Grid item>
+            <IconButton aria-label="Next" size="large">
+              <ArrowCircleRightOutlinedIcon
+                sx={{ fontSize: 65, color: 'white' }}
+              />
+            </IconButton>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid
-        container
-        direction="column"
-        sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}
-      >
-        <Grid item>
-          <Button>Forgot Password?</Button>
-        </Grid>
-        <Grid item>
-          <IconButton aria-label="Next" size="large">
-            <ArrowCircleRightOutlinedIcon />
-          </IconButton>
-        </Grid>
-      </Grid>
+      </ThemeProvider>
     </>
   );
 }
