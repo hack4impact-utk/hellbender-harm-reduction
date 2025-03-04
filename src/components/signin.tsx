@@ -1,8 +1,8 @@
 'use client';
 import {
-  Button,
   Grid,
   IconButton,
+  Link,
   TextField,
   ThemeProvider,
   Typography,
@@ -35,7 +35,7 @@ export default function SignInForm(props: signInProps) {
               variant="h4"
               sx={{ textAlign: 'center', marginBottom: 3 }}
             >
-              Login or sign-up below
+              Login or Sign-up below
             </Typography>
           </Grid>
           <Grid item>
@@ -57,7 +57,7 @@ export default function SignInForm(props: signInProps) {
               fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              sx={{ backgroundColor: '#fff', borderRadius: 1, marginBottom: 2 }}
+              sx={{ backgroundColor: '#fff', borderRadius: 1, marginBottom: 1 }}
             ></TextField>
           </Grid>
         </Grid>
@@ -67,9 +67,15 @@ export default function SignInForm(props: signInProps) {
           sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}
         >
           <Grid item>
-            <Button sx={{ color: 'hhr.light' }}>Forgot Password?</Button>
+            <Link
+              href="#"
+              underline="hover"
+              sx={{ color: '#F0F5EF', fontFamily: 'Arial, sans-serif' }}
+            >
+              Forgot Password?
+            </Link>
           </Grid>
-          <Grid item>
+          <Grid item sx={{ marginTop: 2 }}>
             <IconButton aria-label="Next" size="large">
               <ArrowCircleRightOutlinedIcon
                 sx={{ fontSize: 65, color: 'white' }}

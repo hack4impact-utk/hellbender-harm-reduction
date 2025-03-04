@@ -116,7 +116,7 @@ export default function SignInUpView(/*props: SignInUpViewProps*/) {
           </Box>
           <Typography
             variant="body2"
-            sx={{ textAlign: 'center', marginTop: 2 }}
+            sx={{ textAlign: 'center', marginTop: 2, fontSize: 20 }}
           >
             New to Hellbender&apos;s?{' '}
             <Link href="#" underline="hover" sx={{ color: '#F0F5EF' }}>
