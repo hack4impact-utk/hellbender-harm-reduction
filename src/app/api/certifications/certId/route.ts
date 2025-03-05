@@ -21,7 +21,7 @@ export async function DELETE(
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {
-    return error;
+    return NextResponse.json({ message: error }, { status: 500 });
   }
 }
 
@@ -47,7 +47,7 @@ export async function PUT(
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {
-    return error;
+    return NextResponse.json({ message: error }, { status: 500 });
   }
 }
 
@@ -55,15 +55,19 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: { certId: string } }
 ) {
-  const formId = params.certId;
-  const validationResult = zObjectId.safeParse(formId);
-  if (!validationResult.success) {
-    return NextResponse.json({ message: 'invalid id' }, { status: 400 });
-  }
+  try {
+    const formId = params.certId;
+    const validationResult = zObjectId.safeParse(formId);
+    if (!validationResult.success) {
+      return NextResponse.json({ message: 'invalid id' }, { status: 400 });
+    }
 
-  const response = await getCert(formId);
-  if (response === null) {
-    return NextResponse.json({ message: 'User not found ' }), { status: 404 };
+    const response = await getCert(formId);
+    if (response === null) {
+      return NextResponse.json({ message: 'User not found ' }, { status: 404 });
+    }
+    return NextResponse.json(response, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 500 });
   }
-  return NextResponse.json(response, { status: 200 });
 }

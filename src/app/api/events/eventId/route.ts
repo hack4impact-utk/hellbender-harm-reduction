@@ -16,7 +16,7 @@ export async function DELETE(
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {
-    return error;
+    return NextResponse.json({ message: error }, { status: 500 });
   }
 }
 
