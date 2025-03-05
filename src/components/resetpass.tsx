@@ -95,7 +95,7 @@ export default function ResetPassForm(props: resetPassProps) {
           />
           <Typography
             variant="body2"
-            sx={{ textAlign: 'center', marginTop: 2, fontSize: 20 }}
+            sx={{ textAlign: 'center', marginTop: 4, fontSize: 20 }}
           >
             New to Hellbender&apos;s?{' '}
             <Link href="/signUp" underline="hover" sx={{ color: '#F0F5EF' }}>

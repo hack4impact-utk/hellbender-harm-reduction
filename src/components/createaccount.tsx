@@ -206,9 +206,9 @@ export default function SignUpForm(props: signUpProps) {
               objectFit: 'contain',
             }}
           />
-          <Typography variant="body2" sx={{ fontSize: 20, marginTop: 2 }}>
+          <Typography variant="body2" sx={{ fontSize: 20, marginTop: 4 }}>
             Have an account?{' '}
-            <Link href="/signUp" underline="hover" sx={{ color: '#F0F5EF' }}>
+            <Link href="/" underline="hover" sx={{ color: '#F0F5EF' }}>
               Log-in here
             </Link>
           </Typography>

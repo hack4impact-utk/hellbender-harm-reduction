@@ -200,7 +200,7 @@ export default function SignInForm(props: signInProps) {
                 objectFit: 'contain',
               }}
             />
-            <Typography variant="body2" sx={{ fontSize: 20, marginTop: 2 }}>
+            <Typography variant="body2" sx={{ fontSize: 20, marginTop: 4 }}>
               New to Hellbender&apos;s?{' '}
               <Link href="/signUp" underline="hover" sx={{ color: '#F0F5EF' }}>
                 Sign-up here.
