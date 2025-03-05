@@ -1,13 +1,10 @@
 'use client';
 
-import SignInForm from '@/components/signin';
-import { Box, Grid, Link, Typography } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 
-// interface SignInUpViewProps {
+export default function SignInUpView({ _form }: { _form: JSX.Element }) {
+  // const [currentPage, setCurrentPage] = useState("Login")
 
-// }
-
-export default function SignInUpView(/*props: SignInUpViewProps*/) {
   return (
     <Grid
       container
@@ -17,7 +14,7 @@ export default function SignInUpView(/*props: SignInUpViewProps*/) {
       <Grid
         item
         xs={12}
-        md={5.45}
+        md={7}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -36,11 +33,12 @@ export default function SignInUpView(/*props: SignInUpViewProps*/) {
             justifyContent: 'center',
             border: '2px solid #C7CBC6',
             boxShadow: 2,
-            width: '80%', // Responsive width
-            maxWidth: '500px',
-            height: '40%',
-            minHeight: '500px', // Ensures it grows and shrinks
+            width: '70%', // Responsive width
+            // height: 'auto',
+            // minHeight: '20%', // Ensures it grows and shrinks
+            aspectRatio: '1 / 1',
             flex: 1, // Allows resizing
+            maxWidth: '900px',
           }}
         >
           <Box
@@ -49,7 +47,7 @@ export default function SignInUpView(/*props: SignInUpViewProps*/) {
             alt="Hellbender Harm Reduction Logo"
             sx={{
               maxWidth: '100%',
-              height: '80%',
+              height: '100%',
               objectFit: 'contain',
             }}
           />
@@ -60,7 +58,7 @@ export default function SignInUpView(/*props: SignInUpViewProps*/) {
       <Grid
         item
         xs={12}
-        md={6.5}
+        md={5}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -82,8 +80,8 @@ export default function SignInUpView(/*props: SignInUpViewProps*/) {
             borderRadius: '20px',
             width: '100%', // Responsive width
             maxWidth: '75%',
-            height: '60%',
-            minHeight: '50vh',
+            height: '65%',
+            minHeight: '70vh',
             flex: 1,
             color: '#fff',
             boxShadow: 3,
@@ -92,37 +90,8 @@ export default function SignInUpView(/*props: SignInUpViewProps*/) {
             justifyContent: 'center',
           }}
         >
-          <SignInForm email={''} password={''}></SignInForm>
-
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%', // Use full width of parent
-              height: 'auto', // Let it take natural height
-            }}
-          >
-            <Box
-              component="img"
-              src="https://i.imgur.com/meVm0JE.png"
-              alt="Footer Image"
-              sx={{
-                maxWidth: '60%',
-                maxHeight: 'auto',
-                objectFit: 'contain',
-              }}
-            />
-          </Box>
-          <Typography
-            variant="body2"
-            sx={{ textAlign: 'center', marginTop: 2, fontSize: 20 }}
-          >
-            New to Hellbender&apos;s?{' '}
-            <Link href="#" underline="hover" sx={{ color: '#F0F5EF' }}>
-              Sign-up here.
-            </Link>
-          </Typography>
+          {/* {currentPage === "Login" && <SignInForm email={''} password={''}></SignInForm>} */}
+          {_form}
         </Box>
       </Grid>
     </Grid>

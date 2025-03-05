@@ -1,6 +1,6 @@
 import { Avatar, TextField, Stack } from '@mui/material';
 
-interface basicInfoProps {
+interface userInfoProps {
   profilePicture: string;
   name: string;
   pronouns: string;
@@ -9,7 +9,7 @@ interface basicInfoProps {
 // Uses a stack for natural vertical formatting
 // The id attribute for the TextFields can be changed to better fit our style
 // Remove the disabled attribute when it's time to allow the fields to be edited
-export function BasicInfo(props: basicInfoProps) {
+export function UserInfo(props: userInfoProps) {
   return (
     <Stack spacing={2} alignItems="center">
       <Avatar
