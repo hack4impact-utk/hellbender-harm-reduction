@@ -16,6 +16,7 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
 import { useState } from 'react';
 import hhrColors from '@/utils/hhr-theme';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import router from 'next/router';
 
 interface signInProps {
   email: string;
@@ -42,24 +43,24 @@ export default function SignInForm(props: signInProps) {
     event.preventDefault();
   };
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     // This code should attempt to fetch the user based on the email entered and go to the users profile page (not working yet)
-    // try {
-    //   // Call the API to get the user by email
-    //   const response = await fetch(`/api/users?email=${email}`);
-    //   if (!response.ok) {
-    //     throw new Error('User not found or error fetching user.');
-    //   }
-    //   const user = await response.json();
-    //   if (!user || !user.id) {
-    //     throw new Error('Invalid user data received.');
-    //   }
-    //   // Redirect to profile/[id] page
-    //   router.push(`/profile/${user.id}`);
-    // } catch (error) {
-    //   console.error('Sign-in error:', error);
-    //   setError('Failed to sign in. Please check your credentials.');
-    // }
+    try {
+      // Call the API to get the user by email
+      const response = await fetch(`/api/users?email=${email}`);
+      if (!response.ok) {
+        throw new Error('User not found or error fetching user.');
+      }
+      const user = await response.json();
+      if (!user || !user.id) {
+        throw new Error('Invalid user data received.');
+      }
+      // Redirect to profile/[id] page
+      router.push(`/profile/${user.id}`);
+    } catch (error) {
+      console.error('Sign-in error:', error);
+      // setError('Failed to sign in. Please check your credentials.');
+    }
   };
 
   return (
