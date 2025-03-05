@@ -88,6 +88,23 @@ export async function updateCert(
   }
 
   if (!res) {
-    throw new Error('404 User Not Found');
+    throw new Error('404 Certification Not Found');
   }
+}
+
+export async function getCertBy(query: object): Promise<CertResponse[] | null> {
+  let target: CertResponse[] | null;
+
+  try {
+    await dbConnect();
+    target = await CertSchema.find(query);
+  } catch (error) {
+    throw new Error('500 Certification lookup failed');
+  }
+
+  if (!target) {
+    throw new Error('404 Certifications not found');
+  }
+
+  return target;
 }
