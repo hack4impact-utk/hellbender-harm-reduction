@@ -20,34 +20,36 @@ export async function GET(
   return NextResponse.json(response, { status: 200 });
 }
 
-export async function PUT(request: NextRequest, {params}: {params: {eventId:string}}) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { eventId: string } }
+) {
   // Checking the data for bad formats
   const formId = params.eventId;
   const idValidationResult = zObjectId.safeParse(formId);
   if (!idValidationResult.success) {
-    return NextResponse.json({ message: 'invalid id' }, {status: 400});
+    return NextResponse.json({ message: 'invalid id' }, { status: 400 });
   }
 
   try {
     const stuffToChange = await request.json(); // Turning the request into a readable json file
-    const requestValidationResult = zUpdateEventRequest.safeParse(stuffToChange);
+    const requestValidationResult =
+      zUpdateEventRequest.safeParse(stuffToChange);
     if (!requestValidationResult.success) {
-      return NextResponse.json({ message: 'bad request'}, {status: 400}); // This wasn't explicitly stated in the story, but I've added this because I'm pretty sure it needs to be in here
+      return NextResponse.json({ message: 'bad request' }, { status: 400 }); // This wasn't explicitly stated in the story, but I've added this because I'm pretty sure it needs to be in here
     }
     const updatedEvent = await updateEvent(params.eventId, stuffToChange);
-    
+
     if (!updatedEvent) {
-      return NextResponse.json({error: 'Item not found'}, {status: 404});
+      return NextResponse.json({ error: 'Item not found' }, { status: 404 });
+    } else {
+      return NextResponse.json(updatedEvent, { status: 200 });
     }
-    else {
-      return NextResponse.json(updatedEvent, {status: 200});
-    }
-  }
-  catch (error) {
+  } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      {error: 'Failed to update item information', details: message },
-      {status: 500}
+      { error: 'Failed to update item information', details: message },
+      { status: 500 }
     );
   }
 }

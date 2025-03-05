@@ -68,7 +68,7 @@ export async function getEventBy(
   return target;
 }
 
-export async function updateEvent(  // Returns the updated event or null upon error
+export async function updateEvent( // Returns the updated event or null upon error
   eventId: string,
   updatedData: UpdateEventRequest
 ): Promise<EventResponse | null> {
@@ -78,8 +78,8 @@ export async function updateEvent(  // Returns the updated event or null upon er
     await dbConnect();
     response = await EventSchema.findByIdAndUpdate(
       eventId,
-      { $set: updatedData },  // $set makes the function update new fields and leave the old fields unchanged (in contrast to the default of deleting them)
-      { new: true }           // makes the function return the updated document
+      { $set: updatedData }, // $set makes the function update new fields and leave the old fields unchanged (in contrast to the default of deleting them)
+      { new: true } // makes the function return the updated document
     );
     return response;
   } catch (error) {
