@@ -72,11 +72,11 @@ export default function SignInForm(props: signInProps) {
           justifyContent="space-between"
           alignSelf="center"
           alignItems="center"
-          height="95%"
+          height="84.4%"
           width="80%"
         >
           {/* Header */}
-          <Box alignSelf="center" justifySelf="start">
+          <Box alignSelf="center" justifySelf="start" sx={{ marginTop: 5 }}>
             <Typography
               variant="h2"
               sx={{ fontWeight: 'bold', textAlign: 'center' }}

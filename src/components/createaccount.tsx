@@ -59,8 +59,9 @@ export default function SignUpForm(props: signUpProps) {
         justifyContent="space-between"
         alignSelf="center"
         alignItems="center"
-        height="95%"
+        height="80%"
         width="80%"
+        sx={{ marginTop: 5 }}
       >
         {/* Header */}
         <Box alignSelf="center" justifySelf="start">
