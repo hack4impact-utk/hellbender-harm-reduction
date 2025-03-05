@@ -1,5 +1,6 @@
 //"use client";
 import { getAllEvents } from '@/server/actions/event';
+import { NextResponse } from 'next/server';
 //import { GET } from "@/app/api/events/route"
 //require('dotenv').config()
 //import dbConnect from "@/utils/db-connect";
@@ -20,7 +21,7 @@ export default async function Home() {
   //console.log(getAllEvents());
   console.log(JSON.parse(JSON.stringify(await getAllEvents())));
   //<Button onClick={createPressed}>Create Event</Button>
-
+  // let test: NextResponse = {}
   return (
     <div>
       <h1>Home page</h1>

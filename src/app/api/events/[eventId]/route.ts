@@ -28,17 +28,19 @@ export async function PUT(request: NextRequest, {params}: {params: {eventId:stri
     return NextResponse.json({ message: 'invalid id' }, {status: 400});
   }
 
-  const requestValidationResult = zUpdateEventRequest.safeParse(request);
-  if (!requestValidationResult) {
-    return NextResponse.json({ message: 'bad request'}, {status: 400}); // This wasn't explicitly stated in the story, but I've added this because I'm pretty sure it needs to be in here
-  }
-  
   try {
     const stuffToChange = await request.json(); // Turning the request into a readable json file
+    const requestValidationResult = zUpdateEventRequest.safeParse(stuffToChange);
+    if (!requestValidationResult.success) {
+      return NextResponse.json({ message: 'bad request'}, {status: 400}); // This wasn't explicitly stated in the story, but I've added this because I'm pretty sure it needs to be in here
+    }
     const updatedEvent = await updateEvent(params.eventId, stuffToChange);
     
     if (!updatedEvent) {
       return NextResponse.json({error: 'Item not found'}, {status: 404});
+    }
+    else {
+      return NextResponse.json(updatedEvent, {status: 200});
     }
   }
   catch (error) {
