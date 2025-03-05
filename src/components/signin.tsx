@@ -67,26 +67,38 @@ export default function SignInForm(props: signInProps) {
     <>
       <ThemeProvider theme={hhrColors}>
         <Box
-          alignSelf={'center'}
-          sx={{
-            width: '80%', // Use full width of parent
-          }}
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-between"
+          alignSelf="center"
+          alignItems="center"
+          height="95%"
+          width="80%"
         >
-          <Grid container direction="column" spacing={6}>
-            <Grid item>
-              <Typography
-                variant="h2"
-                sx={{ fontWeight: 'bold', textAlign: 'center' }}
-              >
-                WELCOME!
-              </Typography>
-              <Typography
-                variant="h4"
-                sx={{ textAlign: 'center', marginBottom: 3 }}
-              >
-                Login or Sign-up below
-              </Typography>
-            </Grid>
+          {/* Header */}
+          <Box alignSelf="center" justifySelf="start">
+            <Typography
+              variant="h2"
+              sx={{ fontWeight: 'bold', textAlign: 'center' }}
+            >
+              WELCOME!
+            </Typography>
+            <Typography
+              variant="h4"
+              sx={{ textAlign: 'center', marginBottom: 3 }}
+            >
+              Login or Sign-up below
+            </Typography>
+          </Box>
+
+          {/* Main Content */}
+          <Grid
+            container
+            direction="column"
+            spacing={3}
+            justifyContent="center"
+            sx={{ flexGrow: 1, width: '100%' }} // Ensures content is centered and responsive
+          >
             <Grid item>
               <TextField
                 required
@@ -100,7 +112,7 @@ export default function SignInForm(props: signInProps) {
                   borderRadius: 1,
                   marginBottom: 1,
                 }}
-              ></TextField>
+              />
             </Grid>
             <Grid item>
               <FormControl
@@ -143,65 +155,58 @@ export default function SignInForm(props: signInProps) {
                   }
                 />
               </FormControl>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}
-          >
-            <Grid item>
-              <Link
-                href="/forgetPass"
-                underline="hover"
-                sx={{ color: '#F0F5EF', fontFamily: 'Arial, sans-serif' }}
-              >
-                Forgot Password?
-              </Link>
-            </Grid>
-            <Grid item sx={{ marginTop: 2 }}>
-              <IconButton aria-label="Next" size="large" onClick={handleSignIn}>
-                <ArrowCircleRightOutlinedIcon
-                  sx={{ fontSize: 65, color: 'white' }}
-                />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '100%', // Use full width of parent
-                  height: 'auto', // Let it take natural height
-                }}
-              >
-                <Box
-                  component="img"
-                  src="https://i.imgur.com/meVm0JE.png"
-                  alt="Footer Image"
-                  sx={{
-                    maxWidth: '100%',
-                    maxHeight: 'auto',
-                    objectFit: 'contain',
-                  }}
-                />
-              </Box>
-              <Typography
-                variant="body2"
-                sx={{ textAlign: 'center', marginTop: 2, fontSize: 20 }}
-              >
-                New to Hellbender&apos;s?{' '}
+              <Box marginTop={0} sx={{ width: '100%', textAlign: 'right' }}>
+                {/* Forgot Password */}
                 <Link
-                  href="/signUp"
+                  href="/resetPassword"
                   underline="hover"
-                  sx={{ color: '#F0F5EF' }}
+                  sx={{ color: '#F0F5EF', fontFamily: 'Arial, sans-serif' }}
                 >
-                  Sign-up here.
+                  Forgot Password?
                 </Link>
-              </Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              {/* Sign-In Button */}
+              <Box sx={{ marginTop: 2, textAlign: 'right' }}>
+                <IconButton
+                  aria-label="Next"
+                  size="large"
+                  onClick={handleSignIn}
+                >
+                  <ArrowCircleRightOutlinedIcon
+                    sx={{ fontSize: 65, color: 'white' }}
+                  />
+                </IconButton>
+              </Box>
             </Grid>
           </Grid>
+
+          {/* Footer */}
+          <Box
+            sx={{
+              width: '100%',
+              textAlign: 'center',
+              marginTop: 'auto',
+            }}
+          >
+            <Box
+              component="img"
+              src="https://i.imgur.com/meVm0JE.png"
+              alt="Footer Image"
+              sx={{
+                maxWidth: '100%',
+                height: 'auto',
+                objectFit: 'contain',
+              }}
+            />
+            <Typography variant="body2" sx={{ fontSize: 20, marginTop: 2 }}>
+              New to Hellbender&apos;s?{' '}
+              <Link href="/signUp" underline="hover" sx={{ color: '#F0F5EF' }}>
+                Sign-up here.
+              </Link>
+            </Typography>
+          </Box>
         </Box>
       </ThemeProvider>
     </>
