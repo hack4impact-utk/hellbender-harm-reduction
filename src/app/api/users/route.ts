@@ -17,7 +17,11 @@ export async function GET(req: Request): Promise<NextResponse> {
       return NextResponse.json(response, { status: 200 });
     }
   } catch (error) {
-    return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
+    console.error('Error fetching user by email:', error);
+    return NextResponse.json(
+      { message: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
 

@@ -25,8 +25,9 @@ export default function ResetPassForm(props: resetPassProps) {
         justifyContent="space-between"
         alignSelf={'center'}
         alignItems="center"
-        height="95%"
+        height="80%"
         width="80%"
+        sx={{ marginTop: 5 }}
       >
         <Box alignSelf={'center'} justifySelf={'start'}>
           <Typography
@@ -44,23 +45,39 @@ export default function ResetPassForm(props: resetPassProps) {
           justifyContent="center"
           sx={{ flexGrow: 1, width: '100%' }} // Ensures content is centered and responsive
         >
-          <Grid item>
-            <Typography variant="h6">
+          <Grid item justifyContent="center" sx={{ marginTop: 2 }}>
+            <Typography
+              variant="h4"
+              justifyContent="center"
+              justifySelf={'center'}
+              sx={{ textAlign: 'center', width: '90%', alignContent: 'center' }}
+            >
               Please enter the email associated with your account
             </Typography>
-            <Typography variant="subtitle2">
+            <Typography
+              variant="subtitle1"
+              justifyContent="center"
+              justifySelf={'center'}
+              sx={{
+                textAlign: 'center',
+                width: '80%',
+                alignContent: 'center',
+                marginTop: 2,
+              }}
+            >
               We&apos;ll send instructions to reset your password if there is an
               account associated with this email.
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item sx={{ marginTop: 4 }}>
             <TextField
               required
               label="Email"
-              variant="outlined"
+              variant="filled"
               fullWidth
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              sx={{ backgroundColor: '#fff' }}
             ></TextField>
           </Grid>
           <Grid
@@ -95,7 +112,7 @@ export default function ResetPassForm(props: resetPassProps) {
           />
           <Typography
             variant="body2"
-            sx={{ textAlign: 'center', marginTop: 2, fontSize: 20 }}
+            sx={{ textAlign: 'center', marginTop: 4, fontSize: 20 }}
           >
             New to Hellbender&apos;s?{' '}
             <Link href="/signUp" underline="hover" sx={{ color: '#F0F5EF' }}>
