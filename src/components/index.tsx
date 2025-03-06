@@ -1,3 +1,4 @@
+'use client'
 import { TextField, Stack } from "@mui/material";
 
 interface AccountInfoProps {
@@ -5,7 +6,7 @@ interface AccountInfoProps {
     phone: string
 }
 
-function AccountInfo(props: AccountInfoProps) {
+export function AccountInfo(props: AccountInfoProps) {
     return (
     <Stack spacing={2}>
         <h3>Email</h3>
