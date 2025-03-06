@@ -10,16 +10,8 @@ export function AddEmergContact() {
                 <TextField id="Name" fullWidth />
                 {/* No need for a variant="outlined" attribute since it is the TextField default */}
             </Grid >
-            <Grid item xs={12}>
-                <Typography variant="h5"> Phone </Typography>
-            </Grid >
-            <Grid item xs="auto">
-                <h5> yo MOMMA </h5>
-            </Grid>
-            {/* Having no size be defined makes the grid item take up the rest of available space */}
-            <Grid item xs> 
-                <TextField id="Phone" fullWidth />
-            </Grid>
+            {/* <Grid item xs={12}>
+            </Grid > */}
             <Grid item xs={12}>
                 <Typography variant="h5"> Email </Typography>
                 <TextField id="Email" fullWidth />
@@ -28,6 +20,18 @@ export function AddEmergContact() {
                 {/* Google autopopulates this field if we just call it 'address' instead of 'physical address' */}
                 <Typography variant="h5"> Address </Typography>
                 <TextField id="Address" fullWidth />
+            </Grid>
+            <Grid container item columnSpacing={2} xs={12}>
+                <Grid item xs={12}>
+                    <Typography variant="h5"> Phone </Typography>
+                </Grid>
+                <Grid item xs="auto">
+                    <h5> yo MOMMA </h5>
+                </Grid>
+                {/* Having no size be defined makes the grid item take up the rest of available space */}
+                <Grid item xs> 
+                    <TextField id="Phone" fullWidth />
+                </Grid>
             </Grid>
 
         </Grid>
