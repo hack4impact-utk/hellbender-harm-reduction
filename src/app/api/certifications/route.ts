@@ -1,11 +1,25 @@
-import { createCert, getAllCerts } from '@/server/actions/certification';
+import {
+  createCert,
+  getAllCerts,
+  getCertBy,
+} from '@/server/actions/certification';
 import { zCreateCertRequest } from '@/types/certification';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(req: Request): Promise<NextResponse> {
+  const url = new URL(req.url);
+  const query = Object.fromEntries(url.searchParams.entries());
+
   try {
-    const events = await getAllCerts();
-    return NextResponse.json(events, { status: 200 });
+    if (Object.keys(query).length === 0) {
+      // If no query parameters, return all events
+      const response = await getAllCerts();
+      return NextResponse.json(response, { status: 200 });
+    } else {
+      // If there are query parameters, return filtered events
+      const response = await getCertBy(query);
+      return NextResponse.json(response, { status: 200 });
+    }
   } catch (error) {
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }

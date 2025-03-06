@@ -1,11 +1,21 @@
-import { createEvent, getAllEvents } from '@/server/actions/event';
+import { createEvent, getAllEvents, getEventBy } from '@/server/actions/event';
 import { zCreateEventRequest } from '@/types/event';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(req: Request): Promise<NextResponse> {
+  const url = new URL(req.url);
+  const query = Object.fromEntries(url.searchParams.entries());
+
   try {
-    const events = await getAllEvents();
-    return NextResponse.json(events, { status: 200 });
+    if (Object.keys(query).length === 0) {
+      // If no query parameters, return all events
+      const response = await getAllEvents();
+      return NextResponse.json(response, { status: 200 });
+    } else {
+      // If there are query parameters, return filtered events
+      const response = await getEventBy(query);
+      return NextResponse.json(response, { status: 200 });
+    }
   } catch (error) {
     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
   }

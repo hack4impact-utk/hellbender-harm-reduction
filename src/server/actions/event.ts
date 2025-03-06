@@ -53,7 +53,7 @@ export async function getEvent(eventId: string): Promise<EventResponse | null> {
     await dbConnect();
     target = await EventSchema.findById(eventId);
   } catch (error) {
-    throw new Error('500 User lookup failed');
+    throw new Error('500 Event lookup failed');
   }
 
   if (!target) {
@@ -72,7 +72,7 @@ export async function getEventBy(
     await dbConnect();
     target = await EventSchema.find(query);
   } catch (error) {
-    throw new Error('500 User lookup failed');
+    throw new Error('500 Event lookup failed');
   }
 
   if (!target) {

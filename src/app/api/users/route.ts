@@ -2,32 +2,20 @@ import { getAllUsers, createUser, getUserBy } from '@/server/actions/user';
 import { zUserRequest } from '@/types/user';
 import { NextRequest, NextResponse } from 'next/server';
 
-// export async function GET(): Promise<NextResponse> {
-//   try {
+export async function GET(req: Request): Promise<NextResponse> {
+  const url = new URL(req.url);
+  const query = Object.fromEntries(url.searchParams.entries());
 
-//   } catch (error) {
-//     return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
-//   }
-// }
-export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    // Extract the email query parameter
-    const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email');
-
-    if (!email) {
-      const users = await getAllUsers();
-      return NextResponse.json(users, { status: 200 });
+    if (Object.keys(query).length === 0) {
+      // If no query parameters, return all users
+      const response = await getAllUsers();
+      return NextResponse.json(response, { status: 200 });
+    } else {
+      // If there are query parameters, return filtered users
+      const response = await getUserBy(query);
+      return NextResponse.json(response, { status: 200 });
     }
-
-    // Fetch user by email
-    const users = await getUserBy({ email });
-
-    if (!users || users.length === 0) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(users[0], { status: 200 }); // Return the first matching user
   } catch (error) {
     console.error('Error fetching user by email:', error);
     return NextResponse.json(
@@ -36,6 +24,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     );
   }
 }
+
+/*export async function GET(req: Request): Promise<NextResponse> {
+  try {
+    const url = new URL(req.url);
+    const query = Object.fromEntries(url.searchParams.entries());
+    const response = await getUserBy(query)
+    return NextResponse.json(response, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: 'Unknown Error' }, { status: 500 });
+  }
+}*/
 
 export async function POST(request: NextRequest) {
   try {
