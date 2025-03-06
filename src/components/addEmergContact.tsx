@@ -1,5 +1,6 @@
 'use client'
-import { TextField, Select, Button, Grid, Typography, Box } from "@mui/material"
+import { TextField, Select, Button, Grid, Typography, Box, IconButton, MenuItem, InputLabel } from "@mui/material"
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 export function AddEmergContact() {
 
@@ -26,11 +27,21 @@ export function AddEmergContact() {
                     <Typography variant="h5"> Phone </Typography>
                 </Grid>
                 <Grid item xs="auto">
-                    <h5> yo MOMMA </h5>
+                    <InputLabel>Type</InputLabel>
+                    <Select id="phoneType" label="Type">
+                        <MenuItem>Mobile</MenuItem>
+                        <MenuItem>Work</MenuItem>
+                        <MenuItem>Home</MenuItem>
+                    </Select>
                 </Grid>
                 {/* Having no size be defined makes the grid item take up the rest of available space */}
                 <Grid item xs> 
                     <TextField id="Phone" fullWidth />
+                </Grid>
+                <Grid item xs="auto">
+                    <IconButton aria-label="AddBoxIcon">
+                        <AddBoxIcon />
+                    </IconButton>
                 </Grid>
             </Grid>
 
