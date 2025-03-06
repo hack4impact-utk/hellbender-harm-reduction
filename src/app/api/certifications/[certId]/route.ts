@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { zObjectId } from '@/types/objectId';
-import { deleteUser, updateUser, getUser } from '@/server/actions/user';
-import { zUpdateUserRequest } from '@/types/user';
+import {
+  deleteCert,
+  updateCert,
+  getCert,
+} from '@/server/actions/certification';
+import { zUpdateCertRequest } from '@/types/certification';
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: { certId: string } }
 ) {
   try {
-    const validationResult = zObjectId.safeParse(params.userId);
+    const validationResult = zObjectId.safeParse(params.certId);
     if (!validationResult.success) {
       return NextResponse.json({ message: 'Bad Id' }, { status: 500 });
     }
 
-    await deleteUser(params.userId);
+    await deleteCert(params.certId);
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {
@@ -23,23 +27,23 @@ export async function DELETE(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: { certId: string } }
 ) {
   try {
-    const idValidationResult = zObjectId.safeParse(params.userId);
+    const idValidationResult = zObjectId.safeParse(params.certId);
     if (!idValidationResult.success) {
       return NextResponse.json({ message: 'Bad Id' }, { status: 500 });
     }
 
     const data = await req.json();
-    const validationResult = zUpdateUserRequest.safeParse(data);
+    const validationResult = zUpdateCertRequest.safeParse(data);
     if (!validationResult.success) {
       return NextResponse.json(
         { message: 'Could not validate' },
         { status: 500 }
       );
     }
-    await updateUser(params.userId, data);
+    await updateCert(params.certId, data);
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {
@@ -49,16 +53,16 @@ export async function PUT(
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: { certId: string } }
 ) {
   try {
-    const formId = params.userId;
+    const formId = params.certId;
     const validationResult = zObjectId.safeParse(formId);
     if (!validationResult.success) {
       return NextResponse.json({ message: 'invalid id' }, { status: 400 });
     }
 
-    const response = await getUser(formId);
+    const response = await getCert(formId);
     if (response === null) {
       return NextResponse.json({ message: 'User not found ' }, { status: 404 });
     }

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import zBase from './base';
+import { zCertEntity } from './certification';
 
 export const eventTypeEnum = [
   'Harm Reduction Services',
@@ -19,6 +20,8 @@ export const zEventBase = z.object({
   eventEnd: z.date(),
   eventDescription: z.string(),
   eventType: zEventTypeEnum,
+  eventRequirements: z.array(zCertEntity).optional(),
+  eventPreferences: z.array(zCertEntity).optional(),
 });
 
 // Extend to create request, response, and entity types with zBase for event

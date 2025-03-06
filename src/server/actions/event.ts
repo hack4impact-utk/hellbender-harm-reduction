@@ -24,9 +24,27 @@ export async function createEvent(
 ): Promise<EventResponse> {
   await dbConnect();
 
-  const response: EventResponse = await EventSchema.create(event);
+  const response = await EventSchema.create(event);
 
   return response as EventResponse;
+}
+
+export async function deleteEvent(eventId: string): Promise<void> {
+  if (isValidObjectId(eventId)) {
+    try {
+      await dbConnect();
+      await EventSchema.deleteMany({
+        event: eventId,
+      });
+
+      const res = await EventSchema.findByIdAndDelete(eventId);
+      if (!res) {
+        throw new Error('500 Could Not Delete');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export async function getEvent(eventId: string): Promise<EventResponse | null> {
@@ -34,19 +52,19 @@ export async function getEvent(eventId: string): Promise<EventResponse | null> {
     throw new Error('400 Bad Id');
   }
 
-  let target: EventResponse | null;
+  let target; //: EventResponse | null;
   try {
     await dbConnect();
-    target = await EventSchema.findById(eventId).lean();
+    target = await EventSchema.findById(eventId);
   } catch (error) {
-    throw new Error('500 User lookup failed');
+    throw new Error('500 Event lookup failed');
   }
 
   if (!target) {
     throw new Error('404 Event not found');
   }
 
-  return target;
+  return target as EventResponse;
 }
 
 export async function getEventBy(
@@ -58,7 +76,7 @@ export async function getEventBy(
     await dbConnect();
     target = await EventSchema.find(query);
   } catch (error) {
-    throw new Error('500 User lookup failed');
+    throw new Error('500 Event lookup failed');
   }
 
   if (!target) {

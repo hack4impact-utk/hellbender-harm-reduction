@@ -18,7 +18,8 @@ export async function getAllUsers(): Promise<UserResponse[]> {
 export async function createUser(request: UserRequest): Promise<string> {
   try {
     await dbConnect();
-    const user = await UserSchema.create(request);
+    const response = await UserSchema.create(request);
+    const user: UserResponse = response as UserResponse;
     return user._id.toString();
   } catch (error) {
     throw error;
@@ -51,7 +52,7 @@ export async function getUser(userId: string): Promise<UserResponse | null> {
   let target: UserResponse | null;
   try {
     await dbConnect();
-    target = await UserSchema.findById(userId).lean();
+    target = await UserSchema.findById(userId);
   } catch (error) {
     throw new Error('500 User Lookup Failed');
   }
@@ -80,7 +81,7 @@ export async function getUserBy(query: object): Promise<UserResponse[] | null> {
   return target;
 }
 
-export async function updateUserAction(
+export async function updateUser(
   userId: string,
   userUpdatesRequest: UpdateUserRequest
 ): Promise<void> {

@@ -1,5 +1,9 @@
-import { createEvent, getAllEvents, getEventBy } from '@/server/actions/event';
-import { zCreateEventRequest } from '@/types/event';
+import {
+  createCert,
+  getAllCerts,
+  getCertBy,
+} from '@/server/actions/certification';
+import { zCreateCertRequest } from '@/types/certification';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: Request): Promise<NextResponse> {
@@ -9,11 +13,11 @@ export async function GET(req: Request): Promise<NextResponse> {
   try {
     if (Object.keys(query).length === 0) {
       // If no query parameters, return all events
-      const response = await getAllEvents();
+      const response = await getAllCerts();
       return NextResponse.json(response, { status: 200 });
     } else {
       // If there are query parameters, return filtered events
-      const response = await getEventBy(query);
+      const response = await getCertBy(query);
       return NextResponse.json(response, { status: 200 });
     }
   } catch (error) {
@@ -23,9 +27,9 @@ export async function GET(req: Request): Promise<NextResponse> {
 
 export async function POST(request: NextRequest) {
   const requestBody = await request.json();
-  const validationResult = zCreateEventRequest.safeParse(requestBody);
+  const validationResult = zCreateCertRequest.safeParse(requestBody);
   if (validationResult.success) {
-    const form = await createEvent(requestBody);
+    const form = await createCert(requestBody);
 
     return NextResponse.json({ _id: form._id }, { status: 201 });
   } else {

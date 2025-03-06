@@ -5,8 +5,12 @@ import {
   reminderNotifsEnum,
   UserEntity,
   userTypeEnum,
+  pronounEnum,
+  certProgressEnum,
+  certProfEnum,
 } from '@/types/user';
 import { eventTypeEnum } from '@/types/event';
+import { certTypeEnum } from '@/types/certification';
 
 const UserSchema = new Schema(
   {
@@ -20,7 +24,7 @@ const UserSchema = new Schema(
     },
     image: {
       type: String,
-      required: false,
+      required: true,
     },
     userType: {
       type: String,
@@ -34,9 +38,17 @@ const UserSchema = new Schema(
             type: String,
             required: true,
           },
-          phone: {
+          mobile_phone: {
             type: String,
             required: true,
+          },
+          work_phone: {
+            type: String,
+            required: false,
+          },
+          email: {
+            type: String,
+            required: false,
           },
           address: {
             type: String,
@@ -49,24 +61,33 @@ const UserSchema = new Schema(
     },
     pronouns: {
       type: String,
-      required: false,
+      required: true,
+      enum: pronounEnum,
     },
     certifications: {
       type: [
         {
-          certTitle: {
-            type: String,
+          certification: {
+            type: Schema.Types.ObjectId,
+            ref: 'Cert',
             required: true,
           },
-          certImage: {
-            type: String,
-            required: false,
-          },
-          certDescription: {
+          certType: {
             type: String,
             required: true,
+            enum: certTypeEnum,
           },
-          dateRecieved: {
+          certProgress: {
+            type: String,
+            required: true,
+            enum: certProgressEnum,
+          },
+          certProf: {
+            type: String,
+            required: true,
+            enum: certProfEnum,
+          },
+          dateReceived: {
             type: Date,
             required: true,
           },

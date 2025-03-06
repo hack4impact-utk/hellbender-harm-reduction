@@ -24,6 +24,16 @@ const EventSchema = new Schema(
       required: true,
       enum: eventTypeEnum,
     },
+    eventRequirements: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Cert',
+      required: false,
+    },
+    eventPreferences: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Cert',
+      required: false,
+    },
   },
   {
     versionKey: false,

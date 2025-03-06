@@ -1,13 +1,16 @@
 import { z } from 'zod';
 import zBase from './base';
 import { zEventEntity, zEventTypeEnum } from './event';
+import { zCertEntity, zCertTypeEnum } from './certification';
 
 export const userTypeEnum = ['Volunteer', 'Admin', 'Owner'] as const;
 export const zUserTypeEnum = z.enum(userTypeEnum);
 
 export const zEmergencyContact = z.object({
   name: z.string(),
-  phone: z.string(),
+  mobile_phone: z.string(),
+  work_phone: z.string().optional(),
+  email: z.string().optional(),
   address: z.string().optional(),
 });
 
@@ -38,15 +41,35 @@ export const reminderNotifsEnum = [
 ] as const;
 export const zReminderNotifsEnum = z.enum(reminderNotifsEnum);
 
+export const pronounEnum = [
+  'he/him',
+  'she/her',
+  'they/them',
+  'chose not to answer',
+] as const;
+export const zPronounEnum = z.enum(pronounEnum);
+
+export const certProgressEnum = ['Pending', 'Approved', 'Denied'] as const;
+export const zCertProgressEnum = z.enum(certProgressEnum);
+
+export const certProfEnum = [
+  'Beginner',
+  'Intermediate',
+  'Expert',
+  'N/A',
+] as const;
+export const zCertProfEnum = z.enum(certProfEnum);
+
 export const zCustomReminder = z.object({
   daysPrior: z.number(),
   time: z.string(),
 });
 
 export const zCertification = z.object({
-  certTitle: z.string(),
-  certImage: z.string().optional(),
-  certDescription: z.string(),
+  certification: zCertEntity,
+  certType: zCertTypeEnum,
+  certProgress: zCertProgressEnum,
+  certProf: zCertProfEnum,
   dateReceived: z.date(),
   dateExpiration: z.date().optional(),
 });
@@ -54,10 +77,10 @@ export const zCertification = z.object({
 export const zUserBase = z.object({
   name: z.string(),
   email: z.string(),
-  image: z.string().optional(),
+  image: z.string(),
   userType: zUserTypeEnum,
   emergencyContacts: z.array(zEmergencyContact).optional(),
-  pronouns: z.string().optional(),
+  pronouns: zPronounEnum,
   certifications: z.array(zCertification).optional(),
   events: z.array(zEventEntity).optional(),
   phone: z.string(),
