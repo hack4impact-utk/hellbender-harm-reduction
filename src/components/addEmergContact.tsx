@@ -27,12 +27,11 @@ export function AddEmergContact() {
                     <Typography variant="h5"> Phone </Typography>
                 </Grid>
                 <Grid item xs="auto">
-                    <InputLabel>Type</InputLabel>
-                    <Select id="phoneType" label="Type">
-                        <MenuItem>Mobile</MenuItem>
-                        <MenuItem>Work</MenuItem>
-                        <MenuItem>Home</MenuItem>
-                    </Select>
+                    <TextField id="PhoneType" select defaultValue="Mobile"> {/*I chose to use a textfield since it already had an implementation of the select component*/}
+                        <MenuItem key="Mobile" value="Mobile">Mobile</MenuItem>
+                        <MenuItem key="Work" value="Work">Work</MenuItem>
+                        <MenuItem key="Home" value="Home">Home</MenuItem>
+                    </TextField>
                 </Grid>
                 {/* Having no size be defined makes the grid item take up the rest of available space */}
                 <Grid item xs> 
