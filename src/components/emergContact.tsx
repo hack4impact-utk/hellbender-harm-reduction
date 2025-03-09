@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 
+//required interface
 interface emergContactInfoProps {
   name: string;
   mobile_phone: string;
@@ -16,6 +17,7 @@ interface emergContactInfoProps {
   relation?: string;
 }
 
+// exports accordion, only prints values that aren't undefined
 export default function EmergContactInfo(props: emergContactInfoProps) {
   return (
     <>
@@ -25,15 +27,36 @@ export default function EmergContactInfo(props: emergContactInfoProps) {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Mobile Phone: {props.mobile_phone} <br></br>
-            Work Phone: {props.work_phone} <br></br>
-            Home Phone: {props.home_phone} <br></br>
-            Email: {props.email}
-            <br></br>
-            Address: {props.address}
-            <br></br>
-            Relation: {props.relation}
-            <br></br>
+            {props.mobile_phone && (
+              <>
+                Mobile Phone: {props.mobile_phone} <br />
+              </>
+            )}
+            {props.work_phone && (
+              <>
+                Work Phone: {props.work_phone} <br />
+              </>
+            )}
+            {props.home_phone && (
+              <>
+                Home Phone: {props.home_phone} <br />
+              </>
+            )}
+            {props.email && (
+              <>
+                Email: {props.email} <br />
+              </>
+            )}
+            {props.address && (
+              <>
+                Address: {props.address} <br />
+              </>
+            )}
+            {props.relation && (
+              <>
+                Relation: {props.relation} <br />
+              </>
+            )}
           </Typography>
         </AccordionDetails>
       </Accordion>
