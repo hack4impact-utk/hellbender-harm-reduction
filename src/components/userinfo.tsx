@@ -1,4 +1,7 @@
-import { Avatar, TextField, Stack } from '@mui/material';
+import hhrColors from '@/utils/hhr-theme';
+import { Avatar, Stack } from '@mui/material';
+import { alpha, ThemeProvider } from '@mui/material/styles';
+import { UserInfoTextField } from '@/utils/customTextField';
 
 interface userInfoProps {
   profilePicture: string;
@@ -11,24 +14,33 @@ interface userInfoProps {
 // Remove the disabled attribute when it's time to allow the fields to be edited
 export function UserInfo(props: userInfoProps) {
   return (
-    <Stack spacing={2} alignItems="center">
-      <Avatar
-        alt={props.name}
-        src={props.profilePicture}
-        sx={{ width: 200, height: 200 }}
-      />
-      <TextField
-        disabled
-        id="outlined-basic"
-        defaultValue={props.name}
-        inputProps={{ min: 0, style: { textAlign: 'center' } }}
-      />
-      <TextField
-        disabled
-        id="outlined-basic"
-        defaultValue={props.pronouns}
-        inputProps={{ min: 0, style: { textAlign: 'center' } }}
-      />
-    </Stack>
+    <ThemeProvider theme={hhrColors}>
+      <Stack spacing={2} alignItems="center">
+        <Avatar
+          alt={props.name}
+          src={props.profilePicture}
+          sx={{ width: '70%', height: '70%' }}
+        />
+        <UserInfoTextField
+          disabled
+          id="outlined-basic"
+          defaultValue={props.name}
+          inputProps={{
+            min: 0,
+            style: { textAlign: 'center' },
+          }}
+          sx={{
+            backgroundColor: alpha(hhrColors.palette.hhr.main, 0.75),
+          }}
+        ></UserInfoTextField>
+        <UserInfoTextField
+          disabled
+          id="outlined-basic"
+          defaultValue={props.pronouns}
+          inputProps={{ min: 0, style: { textAlign: 'center' } }}
+          sx={{ backgroundColor: alpha(hhrColors.palette.hhr.main, 0.75) }}
+        />
+      </Stack>
+    </ThemeProvider>
   );
 }
