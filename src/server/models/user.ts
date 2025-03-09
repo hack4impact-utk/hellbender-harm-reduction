@@ -46,11 +46,19 @@ const UserSchema = new Schema(
             type: String,
             required: false,
           },
+          home_phone: {
+            type: String,
+            required: false,
+          },
           email: {
             type: String,
             required: false,
           },
           address: {
+            type: String,
+            required: false,
+          },
+          relation: {
             type: String,
             required: false,
           },
