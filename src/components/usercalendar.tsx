@@ -7,7 +7,10 @@ const CalendarComp = () => {
   useEffect(() => {
     const style = document.createElement('style');
     style.innerHTML = `
-        /* Specifically style the prev and next buttons */
+            .fc {
+              background-color: background-color: rgba(240, 245, 239) !important;
+            }    
+    /* Specifically style the prev and next buttons */
             .fc-header-toolbar .fc-prev-button,
             .fc-header-toolbar .fc-next-button {
                 background-color: #42603C !important;
@@ -60,6 +63,18 @@ const CalendarComp = () => {
                 text-align: center !important;
                 padding: 10px 0 !important; /* Padding for better spacing */
                 background-color: rgba(240, 245, 239) !important; /* Slight background for day names */
+            }
+            .fc-daygrid-day-number {
+                font-size: 20px !important;
+                color: #333333 !important; /* Dark color for day numbers */
+                padding: 5px;
+                display: inline-block;
+                background-color: rgb(218, 230, 215, 0.8) !important;
+                width: 100%;
+                height: 100%;
+                text-align: left;
+                line-height: 30px;
+                transition: background-color 0.3s ease, color 0.3s ease;
             }
         `;
     document.head.appendChild(style);
