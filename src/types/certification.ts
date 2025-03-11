@@ -1,26 +1,22 @@
 import { z } from 'zod';
 import zBase from './base';
 
-export const certTypeEnum = ['Certification', 'Language', 'Skill'] as const;
-export const zCertTypeEnum = z.enum(certTypeEnum);
-
-export const zCertBase = z.object({
-  certName: z.string(),
-  certPicture: z.string().optional(),
-  certDescription: z.string(),
-  certType: zCertTypeEnum,
+export const zTagBase = z.object({
+  tagName: z.string(),
+  tagDescription: z.string(),
+  certification: z.boolean(),
 });
 
 // Extend to create request, response, and entity types with zBase for event
-export const zCertEntity = zCertBase.extend({ ...zBase.shape });
-export const zCreateCertRequest = zCertBase;
-export const zCertResponse = zCertEntity;
-export const zUpdateCertRequest = zCreateCertRequest.partial();
+export const zTagEntity = zTagBase.extend({ ...zBase.shape });
+export const zCreateTagRequest = zTagBase;
+export const zTagResponse = zTagEntity;
+export const zUpdateTagRequest = zCreateTagRequest.partial();
 
-export interface CertEntity extends z.infer<typeof zCertEntity> {}
+export interface TagEntity extends z.infer<typeof zTagEntity> {}
 
-export type CreateCertRequest = z.infer<typeof zCreateCertRequest>;
+export type CreateTagRequest = z.infer<typeof zCreateTagRequest>;
 
-export type CertResponse = z.infer<typeof zCertResponse>;
+export type TagResponse = z.infer<typeof zTagResponse>;
 
-export type UpdateCertRequest = z.infer<typeof zUpdateCertRequest>;
+export type UpdateTagRequest = z.infer<typeof zUpdateTagRequest>;

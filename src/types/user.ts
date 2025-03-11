@@ -1,17 +1,14 @@
 import { z } from 'zod';
 import zBase from './base';
 import { zEventEntity, zEventTypeEnum } from './event';
-import { zCertEntity, zCertTypeEnum } from './certification';
+import { zTagEntity } from './certification';
 
 export const userTypeEnum = ['Volunteer', 'Admin', 'Owner'] as const;
 export const zUserTypeEnum = z.enum(userTypeEnum);
 
 export const zEmergencyContact = z.object({
   name: z.string(),
-  mobile_phone: z.string(),
-  work_phone: z.string().optional(),
-  email: z.string().optional(),
-  address: z.string().optional(),
+  phone: z.string(),
 });
 
 export const referralSourceEnum = [
@@ -45,33 +42,46 @@ export const pronounEnum = [
   'he/him',
   'she/her',
   'they/them',
+  'not listed',
   'chose not to answer',
 ] as const;
 export const zPronounEnum = z.enum(pronounEnum);
 
-export const certProgressEnum = ['Pending', 'Approved', 'Denied'] as const;
-export const zCertProgressEnum = z.enum(certProgressEnum);
+export const accommEnum = [
+  'Accessible Parking',
+  'Service Dogs Allowed',
+  'Quiet/Dark Space',
+  'Large Print',
+  'Wheelchair Accessible',
+  'Provided Seating',
+  'No Heavy Lifting',
+  'Flexible Breaks',
+  'Blind Accommodations',
+  'Deaf Accommodations',
+] as const;
+export const zAccommEnum = z.enum(accommEnum);
 
-export const certProfEnum = [
+export const tagProfEnum = [
   'Beginner',
   'Intermediate',
   'Expert',
   'N/A',
 ] as const;
-export const zCertProfEnum = z.enum(certProfEnum);
+export const zTagProfEnum = z.enum(tagProfEnum);
 
 export const zCustomReminder = z.object({
   daysPrior: z.number(),
   time: z.string(),
 });
 
-export const zCertification = z.object({
-  certification: zCertEntity,
-  certType: zCertTypeEnum,
-  certProgress: zCertProgressEnum,
-  certProf: zCertProfEnum,
-  dateReceived: z.date(),
-  dateExpiration: z.date().optional(),
+export const zUserTag = z.object({
+  tag: zTagEntity,
+  tagProf: zTagProfEnum,
+});
+
+export const zUserEvents = z.object({
+  uevent: zEventEntity,
+  appDate: z.date(),
 });
 
 export const zUserBase = z.object({
@@ -79,16 +89,18 @@ export const zUserBase = z.object({
   email: z.string(),
   image: z.string(),
   userType: zUserTypeEnum,
-  emergencyContacts: z.array(zEmergencyContact).optional(),
+  emergencyContacts: zEmergencyContact.optional(),
   pronouns: zPronounEnum,
-  certifications: z.array(zCertification).optional(),
-  events: z.array(zEventEntity).optional(),
+  userTags: z.array(zUserTag).optional(),
+  events: z.array(zUserEvents).optional(),
   phone: z.string(),
   eventPreferences: z.array(zEventTypeEnum),
   reminders: z.array(zReminderNotifsEnum).optional(),
   custReminders: z.array(zCustomReminder).optional(),
   newEvents: zNewEventNotifsEnum,
   referrals: z.array(zreferralSourceEnum),
+  accomm: z.array(zAccommEnum).optional(),
+  otherAccomm: z.string().optional(),
 });
 
 // Extend to create request, response, and entity types with zBase

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import zBase from './base';
-import { zCertEntity } from './certification';
+import { zTagEntity } from './certification';
 
 export const eventTypeEnum = [
   'Harm Reduction Services',
@@ -14,14 +14,21 @@ export const eventTypeEnum = [
 export const zEventTypeEnum = z.enum(eventTypeEnum);
 export type EventTypeEnum = z.infer<typeof zEventTypeEnum>;
 
+export const zRecurrEvent = z.object({
+  rule: z.string(),
+  duration: z.string(), //could potentially get rid of this
+  excep: z.array(z.date()).optional(),
+});
+
 export const zEventBase = z.object({
   eventName: z.string(),
   eventStart: z.date(),
   eventEnd: z.date(),
   eventDescription: z.string(),
   eventType: zEventTypeEnum,
-  eventRequirements: z.array(zCertEntity).optional(),
-  eventPreferences: z.array(zCertEntity).optional(),
+  eventRequirements: z.array(zTagEntity).optional(),
+  eventPreferences: z.array(zTagEntity).optional(),
+  recurring: zRecurrEvent.optional(),
 });
 
 // Extend to create request, response, and entity types with zBase for event

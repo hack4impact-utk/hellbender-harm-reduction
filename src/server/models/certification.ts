@@ -1,24 +1,19 @@
 import { model, Schema, Document, models, Model } from 'mongoose';
-import { CertEntity, certTypeEnum } from '@/types/certification';
+import { TagEntity } from '@/types/certification';
 
-const CertSchema = new Schema(
+const TagSchema = new Schema(
   {
-    certName: {
+    tagName: {
       type: String,
       required: true,
     },
-    certPicture: {
-      type: String,
-      required: false,
-    },
-    certDescription: {
+    tagDescription: {
       type: String,
       required: true,
     },
-    certType: {
-      type: String,
+    certification: {
+      type: Boolean,
       required: true,
-      enum: certTypeEnum,
     },
   },
   {
@@ -27,7 +22,7 @@ const CertSchema = new Schema(
   }
 );
 
-export interface CertDocument extends Omit<CertEntity, '_id'>, Document {}
+export interface TagDocument extends Omit<TagEntity, '_id'>, Document {}
 
-export default (models.Cert as Model<CertDocument>) ||
-  model<CertDocument>('Cert', CertSchema);
+export default (models.Tag as Model<TagDocument>) ||
+  model<TagDocument>('Tag', TagSchema);
