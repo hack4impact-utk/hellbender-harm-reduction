@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { zObjectId } from '@/types/objectId';
-import { deleteTag, updateTag, getTag } from '@/server/actions/certification';
-import { zUpdateTagRequest } from '@/types/certification';
+import { deleteTag, updateTag, getTag } from '@/server/actions/tag';
+import { zUpdateTagRequest } from '@/types/tag';
 
 export async function DELETE(
   _request: NextRequest,

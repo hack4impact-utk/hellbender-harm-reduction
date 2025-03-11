@@ -1,5 +1,5 @@
 import { model, Schema, Document, models, Model } from 'mongoose';
-import { TagEntity } from '@/types/certification';
+import { TagEntity } from '@/types/tag';
 
 const TagSchema = new Schema(
   {

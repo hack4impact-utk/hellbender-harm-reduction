@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import zBase from './base';
 import { zEventEntity, zEventTypeEnum } from './event';
-import { zTagEntity } from './certification';
+import { zTagEntity } from './tag';
 
 export const userTypeEnum = ['Volunteer', 'Admin', 'Owner'] as const;
 export const zUserTypeEnum = z.enum(userTypeEnum);

@@ -1,9 +1,5 @@
-import {
-  createTag,
-  getAllTags,
-  getTagBy,
-} from '@/server/actions/certification';
-import { zCreateTagRequest } from '@/types/certification';
+import { createTag, getAllTags, getTagBy } from '@/server/actions/tag';
+import { zCreateTagRequest } from '@/types/tag';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: Request): Promise<NextResponse> {

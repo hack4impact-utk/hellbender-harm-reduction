@@ -1,10 +1,6 @@
 import dbConnect from '@/utils/db-connect';
-import TagSchema from '@/server/models/certification';
-import {
-  CreateTagRequest,
-  TagResponse,
-  UpdateTagRequest,
-} from '@/types/certification';
+import TagSchema from '@/server/models/tag';
+import { CreateTagRequest, TagResponse, UpdateTagRequest } from '@/types/tag';
 import { isValidObjectId } from 'mongoose';
 
 export async function getAllTags(): Promise<TagResponse[]> {

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import zBase from './base';
-import { zTagEntity } from './certification';
+import { zTagEntity } from './tag';
 
 export const eventTypeEnum = [
   'Harm Reduction Services',
