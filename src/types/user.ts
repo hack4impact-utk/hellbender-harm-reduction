@@ -50,14 +50,14 @@ export const zPronounEnum = z.enum(pronounEnum);
 export const accommEnum = [
   'Accessible Parking',
   'Service Dogs Allowed',
-  'Quiet/Dark Space',
+  'Sensory Space',
   'Large Print',
   'Wheelchair Accessible',
   'Provided Seating',
   'No Heavy Lifting',
   'Flexible Breaks',
-  'Blind Accommodations',
-  'Deaf Accommodations',
+  'Blind',
+  'Deaf',
 ] as const;
 export const zAccommEnum = z.enum(accommEnum);
 
