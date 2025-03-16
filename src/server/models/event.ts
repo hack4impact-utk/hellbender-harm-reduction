@@ -34,25 +34,6 @@ const EventSchema = new Schema(
       ref: 'Tag',
       required: false,
     },
-    recurring: {
-      type: {
-        rule: {
-          type: String,
-          required: true,
-        },
-        duration: {
-          //could potentially get rid of this
-          type: String,
-          required: true,
-        },
-        excep: {
-          type: [Date],
-          required: false,
-        },
-        _id: false,
-      },
-      required: false,
-    },
   },
   {
     versionKey: false,
