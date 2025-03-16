@@ -2,6 +2,8 @@
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { useEffect } from 'react';
+//import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+//import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const CalendarComp = () => {
   useEffect(() => {
@@ -11,22 +13,30 @@ const CalendarComp = () => {
               background-color: background-color: rgba(240, 245, 239) !important;
             }    
     /* Specifically style the prev and next buttons */
+           /* .fc-next-button::before{
+              content: "\uE5C4";
+              font-family: "Material Icons";
+              font-size: 24px;
+              color: #42603C;
+            }
+
+            .fc-prev-button::before{
+              content: "\uE5C5";
+              font-family: "Material Icons";
+              font-size: 24px;
+              color: #42603C;
+            }*/
+    
             .fc-header-toolbar .fc-prev-button,
             .fc-header-toolbar .fc-next-button {
-                background-color: #42603C !important;
-                color: #E2E7E2 !important;
-                font-size: 16px !important; /* Font size for the buttons */
+                background: none !important;
+                color: #42603C !important;
+                font-size: 32px !important; /* Font size for the buttons */
                 padding: 8px 12px !important; /* Button padding */
                 border: none !important; /* Remove default border */
                 border-radius: 4px !important; /* Rounded corners for the buttons */
                 cursor: pointer !important; /* Pointer cursor on hover */
                 transition: background-color 0.3s ease !important; /* Smooth background color transition */
-            }
-
-            /* Hover effect for prev and next buttons */
-            .fc-header-toolbar .fc-prev-button:hover,
-            .fc-header-toolbar .fc-next-button:hover {
-                background-color: #283a24 !important; /* Darker green on hover */
             }
 
             /* This ensures the title is centered and properly aligned within the left section */
@@ -36,6 +46,7 @@ const CalendarComp = () => {
                 font-size: 25px !important; /* Font size for the title */
                 color: #42603C !important; /* Dark gray color for the title */
                 font-weight: bold !important; /* Bold title text */
+                text-transform: uppercase !important;
             }
             .fc-daygrid-day {
                 background-color: rgba(240, 245, 239, 0.7) !important;  /* Light gray background */
@@ -58,11 +69,12 @@ const CalendarComp = () => {
             .fc-col-header-cell {
                 font-family: 'Verdana', sans-serif !important;
                 font-size: 18px !important;
-                color: #42603C !important; /* Darker color for the day names */
+                color: #E2E7E2 !important; /* Darker color for the day names */
+                background-color: #42603C !important;
                 font-weight: bold !important;
                 text-align: center !important;
                 padding: 10px 0 !important; /* Padding for better spacing */
-                background-color: rgba(240, 245, 239) !important; /* Slight background for day names */
+                text-transform: uppercase !important;
             }
             .fc-daygrid-day-number {
                 font-size: 20px !important;
@@ -79,14 +91,14 @@ const CalendarComp = () => {
         `;
     document.head.appendChild(style);
 
-    const calendarGrid = document.querySelector('.fc-daygrid');
+    //const calendarGrid = document.querySelector('.fc-daygrid');
 
-    if (calendarGrid) {
+    /*if (calendarGrid) {
       calendarGrid.setAttribute(
         'style',
         'background-image: url("https://imgur.com/nkNSLL2.png"); background-size: cover; background-position: center; background-repeat: no-repeat;'
       );
-    }
+    }*/
 
     return () => {
       document.head.removeChild(style);
