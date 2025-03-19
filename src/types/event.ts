@@ -14,12 +14,6 @@ export const eventTypeEnum = [
 export const zEventTypeEnum = z.enum(eventTypeEnum);
 export type EventTypeEnum = z.infer<typeof zEventTypeEnum>;
 
-export const zRecurrEvent = z.object({
-  rule: z.string(),
-  duration: z.string(), //could potentially get rid of this
-  excep: z.array(z.date()).optional(),
-});
-
 export const zEventBase = z.object({
   eventName: z.string(),
   eventStart: z.date(),
@@ -28,7 +22,6 @@ export const zEventBase = z.object({
   eventType: zEventTypeEnum,
   eventRequirements: z.array(zTagEntity).optional(),
   eventPreferences: z.array(zTagEntity).optional(),
-  recurring: zRecurrEvent.optional(),
 });
 
 // Extend to create request, response, and entity types with zBase for event
