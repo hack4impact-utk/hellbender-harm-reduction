@@ -6,11 +6,10 @@ import {
   UserEntity,
   userTypeEnum,
   pronounEnum,
-  certProgressEnum,
-  certProfEnum,
+  tagProfEnum,
+  accommEnum,
 } from '@/types/user';
 import { eventTypeEnum } from '@/types/event';
-import { certTypeEnum } from '@/types/certification';
 
 const UserSchema = new Schema(
   {
@@ -32,31 +31,17 @@ const UserSchema = new Schema(
       enum: userTypeEnum,
     },
     emergencyContacts: {
-      type: [
-        {
-          name: {
-            type: String,
-            required: true,
-          },
-          mobile_phone: {
-            type: String,
-            required: true,
-          },
-          work_phone: {
-            type: String,
-            required: false,
-          },
-          email: {
-            type: String,
-            required: false,
-          },
-          address: {
-            type: String,
-            required: false,
-          },
-          _id: false,
+      type: {
+        name: {
+          type: String,
+          required: true,
         },
-      ],
+        phone: {
+          type: String,
+          required: true,
+        },
+        _id: false,
+      },
       required: false,
     },
     pronouns: {
@@ -64,36 +49,18 @@ const UserSchema = new Schema(
       required: true,
       enum: pronounEnum,
     },
-    certifications: {
+    userTags: {
       type: [
         {
-          certification: {
+          tag: {
             type: Schema.Types.ObjectId,
-            ref: 'Cert',
+            ref: 'Tag',
             required: true,
           },
-          certType: {
+          tagProf: {
             type: String,
             required: true,
-            enum: certTypeEnum,
-          },
-          certProgress: {
-            type: String,
-            required: true,
-            enum: certProgressEnum,
-          },
-          certProf: {
-            type: String,
-            required: true,
-            enum: certProfEnum,
-          },
-          dateReceived: {
-            type: Date,
-            required: true,
-          },
-          dateExpiration: {
-            type: Date,
-            required: false,
+            enum: tagProfEnum,
           },
           _id: false,
         },
@@ -101,8 +68,20 @@ const UserSchema = new Schema(
       required: false,
     },
     events: {
-      type: [Schema.Types.ObjectId],
-      ref: 'Event',
+      type: [
+        {
+          uevent: {
+            type: Schema.Types.ObjectId,
+            ref: 'Event',
+            required: true,
+          },
+          appDate: {
+            type: Date,
+            required: true,
+          },
+          _id: false,
+        },
+      ],
       required: false,
     },
     phone: {
@@ -144,6 +123,15 @@ const UserSchema = new Schema(
       type: [String],
       required: true,
       enum: referralSourceEnum,
+    },
+    accomm: {
+      type: [String],
+      required: false,
+      enum: accommEnum,
+    },
+    otherAccomm: {
+      type: String,
+      required: false,
     },
   },
   {
