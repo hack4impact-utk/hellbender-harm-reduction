@@ -32,11 +32,11 @@ const UserSchema = new Schema(
     },
     emergencyContacts: {
       type: {
-        name: {
+        ecName: {
           type: String,
           required: true,
         },
-        phone: {
+        ecPhone: {
           type: String,
           required: true,
         },
