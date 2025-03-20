@@ -7,19 +7,20 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import { Typography } from '@mui/material';
 import React from 'react';
 
-/*interface emergContact {
-    name: string;
-    phone: string;
-}*/
+interface emergContact {
+  ecName: string;
+  ecPhone: string;
+}
 
 interface UserData {
   name: string;
   phone: string;
   email: string;
   pronouns: string;
-  //emergencyContacts: emergContact;
+  emergencyContacts?: emergContact;
 }
 
 interface DataTableProps {
@@ -30,13 +31,14 @@ export function AllVolunteers({ data }: DataTableProps) {
   //console.log("Data received in AllVolunteers:", data)
   return (
     <TableContainer component={Paper}>
-      <Table>
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>Phone</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Pronouns</TableCell>
+            <TableCell>Emergency Contact</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -46,6 +48,17 @@ export function AllVolunteers({ data }: DataTableProps) {
               <TableCell>{user.phone}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.pronouns}</TableCell>
+              <TableCell>
+                {user.emergencyContacts ? (
+                  <Typography>
+                    {user.emergencyContacts.ecName}
+                    <br />
+                    {user.emergencyContacts.ecPhone}
+                  </Typography>
+                ) : (
+                  <span>N/A</span>
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
