@@ -65,13 +65,10 @@ export function EventVolunteers({ data }: DataTableProps) {
                       {item}
                     </Typography>
                   ))
+                ) : user.otherAccomm ? (
+                  <Typography variant="body2">{user.otherAccomm}</Typography>
                 ) : (
                   <Typography variant="body2">N/A</Typography>
-                )}
-                {user.otherAccomm ? (
-                  <Typography>{user.otherAccomm}</Typography>
-                ) : (
-                  <span></span>
                 )}
               </TableCell>
               <TableCell>
@@ -89,7 +86,8 @@ export function EventVolunteers({ data }: DataTableProps) {
                 {user.userTags && user.userTags.length > 0 ? (
                   user.userTags.map((item, idx) => (
                     <Typography key={idx} variant="body2">
-                      {item.tag} - {item.tagProf}
+                      {item.tag}
+                      {item.tagProf !== 'N/A' && ` - ${item.tagProf}`}
                     </Typography>
                   ))
                 ) : (
