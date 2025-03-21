@@ -36,7 +36,6 @@ interface DataTableProps {
 }
 
 export function EventVolunteers({ data }: DataTableProps) {
-  //console.log(JSON.stringify(data));
   return (
     <TableContainer component={Paper}>
       <Table stickyHeader>
