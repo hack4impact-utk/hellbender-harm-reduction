@@ -1,23 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { zObjectId } from '@/types/objectId';
-import {
-  deleteCert,
-  updateCert,
-  getCert,
-} from '@/server/actions/certification';
-import { zUpdateCertRequest } from '@/types/certification';
+import { deleteTag, updateTag, getTag } from '@/server/actions/tag';
+import { zUpdateTagRequest } from '@/types/tag';
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { certId: string } }
+  { params }: { params: { tagId: string } }
 ) {
   try {
-    const validationResult = zObjectId.safeParse(params.certId);
+    const validationResult = zObjectId.safeParse(params.tagId);
     if (!validationResult.success) {
       return NextResponse.json({ message: 'Bad Id' }, { status: 500 });
     }
 
-    await deleteCert(params.certId);
+    await deleteTag(params.tagId);
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {
@@ -27,23 +23,23 @@ export async function DELETE(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { certId: string } }
+  { params }: { params: { tagId: string } }
 ) {
   try {
-    const idValidationResult = zObjectId.safeParse(params.certId);
+    const idValidationResult = zObjectId.safeParse(params.tagId);
     if (!idValidationResult.success) {
       return NextResponse.json({ message: 'Bad Id' }, { status: 500 });
     }
 
     const data = await req.json();
-    const validationResult = zUpdateCertRequest.safeParse(data);
+    const validationResult = zUpdateTagRequest.safeParse(data);
     if (!validationResult.success) {
       return NextResponse.json(
         { message: 'Could not validate' },
         { status: 500 }
       );
     }
-    await updateCert(params.certId, data);
+    await updateTag(params.tagId, data);
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {
@@ -53,16 +49,16 @@ export async function PUT(
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { certId: string } }
+  { params }: { params: { tagId: string } }
 ) {
   try {
-    const formId = params.certId;
+    const formId = params.tagId;
     const validationResult = zObjectId.safeParse(formId);
     if (!validationResult.success) {
       return NextResponse.json({ message: 'invalid id' }, { status: 400 });
     }
 
-    const response = await getCert(formId);
+    const response = await getTag(formId);
     if (response === null) {
       return NextResponse.json({ message: 'User not found ' }, { status: 404 });
     }

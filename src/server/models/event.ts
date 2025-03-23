@@ -26,12 +26,12 @@ const EventSchema = new Schema(
     },
     eventRequirements: {
       type: [Schema.Types.ObjectId],
-      ref: 'Cert',
+      ref: 'Tag',
       required: false,
     },
     eventPreferences: {
       type: [Schema.Types.ObjectId],
-      ref: 'Cert',
+      ref: 'Tag',
       required: false,
     },
   },
