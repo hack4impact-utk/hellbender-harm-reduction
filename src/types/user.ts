@@ -7,8 +7,8 @@ export const userTypeEnum = ['Volunteer', 'Admin', 'Owner'] as const;
 export const zUserTypeEnum = z.enum(userTypeEnum);
 
 export const zEmergencyContact = z.object({
-  name: z.string(),
-  phone: z.string(),
+  ecName: z.string(),
+  ecPhone: z.string(),
 });
 
 export const referralSourceEnum = [
