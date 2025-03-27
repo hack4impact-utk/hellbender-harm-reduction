@@ -25,26 +25,29 @@ interface SignUpAddLangProps {
 }
 
 export function SignUpAddLang({ Languages, UserTags }: SignUpAddLangProps) {
-  //const [selectedLangs, setSelectedLangs] = useState<string[]>([]);
-
+  // state for list item
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
+  // state for proficiency
   const [selectedProf, setSelectedProf] = useState<string>('');
 
+  // state for all tags (imported and added)
   const [userTags, setUserTags] = useState<Tags[]>(
     UserTags.filter((tag): tag is Tags => tag !== null)
   );
-  //const listItems = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
 
+  // if list item is clicked
   const handleListItemClick = (item: string) => {
     setSelectedItem(item);
     setSelectedProf('');
   };
 
+  // if proficiency is selected
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedProf(event.target.value);
   };
 
+  // if language is added
   const handleFormSubmit = () => {
     if (!selectedItem || !selectedProf) {
       // If either selectedItem or selectedProf is not set, do not proceed with the submission
@@ -69,6 +72,7 @@ export function SignUpAddLang({ Languages, UserTags }: SignUpAddLangProps) {
     setSelectedProf(''); // Reset selected profession
   };
 
+  // if you delete one of the languages at the bottom
   const handleChipDelete = (chipValue: string) => {
     setUserTags((prevUserTags) =>
       prevUserTags.filter(
@@ -100,17 +104,38 @@ export function SignUpAddLang({ Languages, UserTags }: SignUpAddLangProps) {
             <Typography variant="h6">
               Select a Proficiency for {selectedItem}:
             </Typography>
+            <br></br>
             <RadioGroup value={selectedProf} onChange={handleRadioChange}>
+              <Typography>
+                At the Beginner level, an individual can communicate short
+                messages on highly predictable, familiar every day topics. They
+                can piece together vocabulary to create sentences but tend to
+                rely on memorized and learned phrases.
+              </Typography>
               <FormControlLabel
                 value="Beginner"
                 control={<Radio />}
                 label="Beginner"
               />
+              <br></br>
+              <Typography>
+                At the Intermediate level, an individual can handle
+                uncomplicated tasks and social situations requiring an exchange
+                of information. They can provide paragraph-length narratives in
+                past, present, and future but with inconsistency.
+              </Typography>
               <FormControlLabel
                 value="Intermediate"
                 control={<Radio />}
                 label="Intermediate"
               />
+              <br></br>
+              <Typography>
+                At the Advanced level, an individual is either a native-speaker
+                or can speak the language with near-native fluency and accuracy.
+                They will be sufficient in formal and professional conversations
+                and can handle both concrete and abstract concepts.
+              </Typography>
               <FormControlLabel
                 value="Advanced"
                 control={<Radio />}
@@ -119,7 +144,7 @@ export function SignUpAddLang({ Languages, UserTags }: SignUpAddLangProps) {
             </RadioGroup>
             <Box mt={2}>
               <Button variant="contained" onClick={handleFormSubmit}>
-                Submit
+                Add Language
               </Button>
             </Box>
           </Box>
