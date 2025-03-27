@@ -19,12 +19,12 @@ interface Tags {
   tagProf: string;
 }
 
-interface SignUpAddLangProps {
+interface AddLangProps {
   Languages: string[];
   UserTags: (Tags | null)[];
 }
 
-export function SignUpAddLang({ Languages, UserTags }: SignUpAddLangProps) {
+export function AddLang({ Languages, UserTags }: AddLangProps) {
   // state for list item
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
@@ -83,7 +83,15 @@ export function SignUpAddLang({ Languages, UserTags }: SignUpAddLangProps) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={6}>
+      <Grid
+        item
+        xs={6}
+        sx={{
+          minHeight: '600px', // Minimum height when no item is selected
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <Typography variant="h6">Select an Item:</Typography>
         <List>
           {Languages.map((item) => (
