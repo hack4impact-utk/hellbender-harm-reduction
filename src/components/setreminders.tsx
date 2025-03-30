@@ -32,10 +32,12 @@ interface AddLangProps {
   reminders?: string[];
 }
 
+// can take in a users reminders and custom reminders
 export function SetReminders({
   custReminders = [],
   reminders = [],
 }: AddLangProps) {
+  // list of preset reminder options
   const reminderOptions = [
     '30 Minutes Before',
     'Day Before',
@@ -43,11 +45,13 @@ export function SetReminders({
     'A Week Before',
   ];
 
+  // needed state values
   const [checked, setChecked] = useState(reminders);
   const [daysBefore, setDaysBefore] = useState('1');
   const [selectedTime, setSelectedTime] = useState<Dayjs | null>(null);
   const [userCustoms, setUserCustoms] = useState<Custom[]>(custReminders);
 
+  // handles when list checkboxes are toggled
   const handleToggle = (item: string) => () => {
     const newChecked = [...checked];
     const currentIndex = newChecked.indexOf(item);
@@ -59,19 +63,19 @@ export function SetReminders({
       newChecked.splice(currentIndex, 1);
     }
 
+    // set checked value
     setChecked(newChecked);
-    // Call a prop function or update reminders here
-    // For example: updateReminders(newChecked);
   };
 
+  // keeps updating
   useEffect(() => {
     setChecked(reminders);
   }, [reminders]);
 
   const handleFormSubmit = () => {
-    //alert(`${daysBefore} Days Before At ${selectedTime.format('hh:mm a')}`)
-    // Ensure that no tag with the same tagName and tagProf exists
+    // makes sure selectedTime isn't null
     if (selectedTime) {
+      // Ensure that no tag with the same tagName and tagProf exists
       if (
         !userCustoms.some(
           (rem) =>
@@ -79,7 +83,7 @@ export function SetReminders({
             rem.time === String(selectedTime.format('hh:mm a'))
         )
       ) {
-        // Create a new tag with selected tagName and tagProf
+        // Create a new custom reminder with days prior and time information
         const newCustom: Custom = {
           daysPrior: daysBefore,
           time: String(selectedTime.format('hh:mm a')),
@@ -93,31 +97,6 @@ export function SetReminders({
     setDaysBefore('1'); // Reset selected language
     setSelectedTime(null); // Reset selected profession
   };
-
-  /*// if language is added
-  const handleFormSubmit = () => {
-    if (!selectedItem || !selectedProf) {
-      // If either selectedItem or selectedProf is not set, do not proceed with the submission
-      alert('Please select a language and a profession');
-      return;
-    }
-
-    // Ensure that no tag with the same tagName and tagProf exists
-    if (
-      !userTags.some(
-        (tag) => tag.tagName === selectedItem && tag.tagProf === selectedProf
-      )
-    ) {
-      // Create a new tag with selected tagName and tagProf
-      const newTag: Tags = { tagName: selectedItem, tagProf: selectedProf };
-
-      // Correctly update the state by using the previous state
-      setUserTags((prevUserTags) => [...prevUserTags, newTag]);
-    }
-    // Reset selected values after submission
-    setSelectedItem(null); // Reset selected language
-    setSelectedProf(''); // Reset selected profession
-  };*/
 
   // if you delete one of the languages at the bottom
   const handleChipDelete = (chipValue: string) => {
