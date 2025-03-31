@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, Grid } from '@mui/material';
+import { JSX } from 'react';
 
 export default function SignInUpView({ _form }: { _form: JSX.Element }) {
   // const [currentPage, setCurrentPage] = useState("Login")
