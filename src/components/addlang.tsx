@@ -12,6 +12,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  ListItemButton,
 } from '@mui/material';
 
 interface Tags {
@@ -26,7 +27,7 @@ interface AddLangProps {
 
 export function AddLang({ Languages, UserTags }: AddLangProps) {
   // state for list item
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>('Spanish');
 
   // state for proficiency
   const [selectedProf, setSelectedProf] = useState<string>('');
@@ -51,7 +52,7 @@ export function AddLang({ Languages, UserTags }: AddLangProps) {
   const handleFormSubmit = () => {
     if (!selectedItem || !selectedProf) {
       // If either selectedItem or selectedProf is not set, do not proceed with the submission
-      alert('Please select a language and a profession');
+      alert('Please select a language and a proficiency');
       return;
     }
 
@@ -68,7 +69,6 @@ export function AddLang({ Languages, UserTags }: AddLangProps) {
       setUserTags((prevUserTags) => [...prevUserTags, newTag]);
     }
     // Reset selected values after submission
-    setSelectedItem(null); // Reset selected language
     setSelectedProf(''); // Reset selected profession
   };
 
@@ -92,15 +92,16 @@ export function AddLang({ Languages, UserTags }: AddLangProps) {
           flexDirection: 'column',
         }}
       >
-        <Typography variant="h6">Select an Item:</Typography>
-        <List>
+        <Typography variant="h6">Select a Language:</Typography>
+        <List component="nav">
           {Languages.map((item) => (
-            <ListItem
-              button
-              key={item}
-              onClick={() => handleListItemClick(item)}
-            >
-              <ListItemText primary={item} />
+            <ListItem key={item}>
+              <ListItemButton
+                selected={selectedItem === item}
+                onClick={() => handleListItemClick(item)}
+              >
+                <ListItemText primary={item} />
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
@@ -109,9 +110,7 @@ export function AddLang({ Languages, UserTags }: AddLangProps) {
       <Grid item xs={6}>
         {selectedItem && (
           <Box>
-            <Typography variant="h6">
-              Select a Proficiency for {selectedItem}:
-            </Typography>
+            <Typography variant="h6">Select a Proficiency:</Typography>
             <br></br>
             <RadioGroup value={selectedProf} onChange={handleRadioChange}>
               <Typography>
