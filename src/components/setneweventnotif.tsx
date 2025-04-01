@@ -20,7 +20,6 @@ export function SetNewEventNotif() {
     >
       <Typography variant="h4">Want to Know About New Events?</Typography>
       <br />
-      <Typography variant="h5">New Events</Typography>
       <FormLabel id="demo-radio-buttons-group-label">
         I want email notifications for...
       </FormLabel>
@@ -39,11 +38,15 @@ export function SetNewEventNotif() {
           label="All New Events"
         />
         <FormControlLabel
-          value="New Events I Prefer"
+          value="Preferred New Events"
           control={<Radio />}
-          label="New Events I Prefer"
+          label="Preferred New Events"
         />
-        <FormControlLabel value="Never" control={<Radio />} label="Never" />
+        <FormControlLabel
+          value="Never"
+          control={<Radio />}
+          label="No New Events"
+        />
       </RadioGroup>
     </Stack>
   );
