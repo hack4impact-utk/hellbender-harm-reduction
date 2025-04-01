@@ -75,7 +75,6 @@ export function SetReminders({
   const handleFormSubmit = () => {
     // makes sure selectedTime isn't null
     if (selectedTime) {
-      // Ensure that no tag with the same tagName and tagProf exists
       if (
         !userCustoms.some(
           (rem) =>
@@ -94,17 +93,22 @@ export function SetReminders({
       }
     }
     // Reset selected values after submission
-    setDaysBefore('1'); // Reset selected language
-    setSelectedTime(null); // Reset selected profession
+    setDaysBefore('1');
+    setSelectedTime(null);
   };
 
-  // if you delete one of the languages at the bottom
+  // if you delete one of the reminders at the bottom
   const handleChipDelete = (chipValue: string) => {
     setUserCustoms((prevUserCustoms) =>
       prevUserCustoms.filter(
         (rem) => `${rem?.daysPrior} Days Before At ${rem?.time}` !== chipValue
       )
     );
+  };
+
+  // delete a preset reminder (also unchecks box)
+  const handlePresetDelete = (reminder: string) => {
+    setChecked((prevChecked) => prevChecked.filter((r) => r !== reminder));
   };
 
   return (
@@ -197,7 +201,12 @@ export function SetReminders({
           <Box mt={1}>
             {checked.length > 0 ? (
               checked.map((item, index) => (
-                <Chip key={index} label={`${item}`} sx={{ margin: '4px' }} />
+                <Chip
+                  key={index}
+                  label={item}
+                  onDelete={() => handlePresetDelete(item)}
+                  sx={{ margin: '4px' }}
+                />
               ))
             ) : (
               <Typography></Typography>
@@ -233,22 +242,3 @@ export function SetReminders({
     </Grid>
   );
 }
-
-/*
-<Box mt={1}>
-            {custReminders.length > 0 ? (
-              custReminders.map((item, index) => (
-                <Chip
-                  key={index}
-                  label={`${item?.daysPrior} Days Before at ${item?.time}`}
-                  onDelete={() =>
-                    handleChipDelete(`${item?.daysPrior} Days Before at ${item?.time}`)
-                  }
-                  sx={{ margin: '4px' }}
-                />
-              ))
-            ) : (
-              <Typography></Typography>
-            )}
-          </Box>
-          */
