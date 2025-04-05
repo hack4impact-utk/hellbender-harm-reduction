@@ -3,8 +3,8 @@ import { Box, Grid, Paper, Stack, styled, TextField } from '@mui/material';
 
 // name, #, accoms
 interface EmergencyInfoProps {
-  name: string;
-  phone: string;
+  name?: string;
+  phone?: string;
   accommodations?: string[];
 }
 
