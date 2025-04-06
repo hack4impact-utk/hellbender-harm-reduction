@@ -9,9 +9,9 @@ interface AccountInfoProps {
 export function AccountInfo(props: AccountInfoProps) {
   return (
     <Stack spacing={2}>
-      <Typography variant="h3"> Email </Typography>
+      <Typography variant="h5"> Email </Typography>
       <TextField disabled defaultValue={props.email} />
-      <Typography variant="h3"> Phone Number </Typography>
+      <Typography variant="h5"> Phone Number </Typography>
       <TextField disabled defaultValue={props.phone} />
     </Stack>
   );
