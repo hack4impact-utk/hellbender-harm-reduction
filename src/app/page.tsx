@@ -1,6 +1,7 @@
 import SignInForm from '@/components/signin';
 import SignInUpView from '@/views/signInUpView';
 
+/* Uncomment to test Code
 import { YearlyEvents } from '@/components/yearlyevents';
 import { UserResponse, zUserEvents } from '@/types/user';
 import { getUser } from '@/server/actions/user';
@@ -35,11 +36,15 @@ async function YearlyEventsCount(userID: string): Promise<number> {
 
   return filtered_events;
 }
+*/
 
 export default async function Home() {
+  /*
+  // Anakin Skywalker
   const filtered_events: number = await YearlyEventsCount(
     '67daca61a3a78172a40ec740'
   );
+  */
 
   return (
     <div>
@@ -48,9 +53,11 @@ export default async function Home() {
           _form={<SignInForm email="" password="" />}
         ></SignInUpView>
       </div>
+      {/* Testing code
       <div>
         <YearlyEvents number_events={filtered_events}></YearlyEvents>
       </div>
+      */}
     </div>
   );
 }
