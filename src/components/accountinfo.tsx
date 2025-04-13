@@ -1,4 +1,5 @@
 'use client'; // Makes the client use their resources to render the component instead of having the server render it first (epic)
+import { ArrowDownward } from '@mui/icons-material';
 import { TextField, Stack, Typography, Grid, Accordion, AccordionSummary, AccordionDetails, AccordionActions } from '@mui/material';
 
 interface Tag {
@@ -38,7 +39,7 @@ export function AccountInfo(props: AccountInfoProps) {
         
         <Grid size={6}>
           <Accordion>
-            <AccordionSummary expandIcon={<ArrowDownwardIcon />} aria-controls="tag-information">
+            <AccordionSummary expandIcon={<ArrowDownward />} aria-controls="tag-information">
 
             </AccordionSummary>
           </Accordion>
