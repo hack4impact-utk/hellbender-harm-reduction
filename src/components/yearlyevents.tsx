@@ -5,7 +5,6 @@ interface events {
 }
 
 // literally just takes in a number and presents it in a nice little box.
-// How do you want me to style this?
 export function YearlyEvents(props: events) {
   const plurality: string = props.number_events === 1 ? 'Event' : 'Events';
   return (
