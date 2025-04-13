@@ -1,5 +1,5 @@
 'use client'; // Makes the client use their resources to render the component instead of having the server render it first (epic)
-import { TextField, Stack, Typography, Grid } from '@mui/material';
+import { TextField, Stack, Typography, Grid, Accordion } from '@mui/material';
 
 interface Tag {
   tagName: string;
