@@ -34,17 +34,22 @@ export function AccountInfo(props: AccountInfoProps) {
         <TextField disabled defaultValue={props.email} />
         <Typography variant="h5"> Phone Number </Typography>
         <TextField disabled defaultValue={props.phone} />
-      </Stack>
-      <Grid container spacing={2}>
         
-        <Grid size={6}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ArrowDownward />} aria-controls="tag-information">
-
-            </AccordionSummary>
-          </Accordion>
+        <Grid container spacing={2}>
+          
+          <Grid item xs={6}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ArrowDownward />} aria-controls="tag-information">
+                <Typography variant="h5"> What is This? </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                Ur mom is hot and also gay
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+          
         </Grid>
-      </Grid>
+      </Stack>
     </div>
   );
 }
