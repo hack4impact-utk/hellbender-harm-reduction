@@ -10,17 +10,14 @@ import { SetNewEventNotif } from './setneweventnotif';
 import { CertificationInfo } from './certificationinfo';
 import { AddAccommodations } from './addaccommodation';
 import { SignUpReferral } from './signupreferral';
+// import { SetReminders } from './setreminders';
 
 export enum FormEnum {
   BasicInfo,
-  ContactInfo,
-  EmergencyContactInfo,
+  Emergency,
   LanguageInfo,
   EventPreferences,
-  NotificationPreferences,
   CertificationInfo,
-  AccommodationsPreferences,
-  Referrals,
 }
 
 export function SignUpInfoForm() {
@@ -29,37 +26,37 @@ export function SignUpInfoForm() {
   return (
     <div>
       {currentForm === FormEnum.BasicInfo && (
-        <SignUpBasicInfo></SignUpBasicInfo>
+        <div>
+          <SignUpBasicInfo></SignUpBasicInfo>
+          <SignUpContactInfo></SignUpContactInfo>
+        </div>
       )}
-      {currentForm === FormEnum.ContactInfo && (
-        <SignUpContactInfo></SignUpContactInfo>
-      )}
-      {currentForm === FormEnum.EmergencyContactInfo && (
-        <p>Emergency Contact</p>
+      {currentForm === FormEnum.Emergency && (
+        <div>
+          <p>Emergency Contact</p>
+          <AddAccommodations></AddAccommodations>
+        </div>
       )}
       {currentForm === FormEnum.LanguageInfo && (
         <AddLang Languages={['Spanish']} UserTags={[null]}></AddLang>
       )}
       {currentForm === FormEnum.EventPreferences && (
-        <SetEventPref></SetEventPref>
-      )}
-      {currentForm === FormEnum.NotificationPreferences && (
         <div>
+          <SetEventPref></SetEventPref>
           <SetNewEventNotif></SetNewEventNotif>
-          {/* <SetReminders></SetReminders> */}
+          {/*<SetReminders></SetReminders>*/}
         </div>
       )}
       {currentForm === FormEnum.CertificationInfo && (
-        <CertificationInfo
-          data={[{ certName: '', certDescription: '' }]}
-        ></CertificationInfo>
+        <div>
+          <CertificationInfo
+            data={[{ certName: '', certDescription: '' }]}
+          ></CertificationInfo>
+          <SignUpReferral></SignUpReferral>
+        </div>
       )}
-      {currentForm === FormEnum.AccommodationsPreferences && (
-        <AddAccommodations></AddAccommodations>
-      )}
-      {currentForm === FormEnum.Referrals && <SignUpReferral></SignUpReferral>}
       <Button
-        onClick={() => setCurrentForm((currentForm + 1) % 9)}
+        onClick={() => setCurrentForm((currentForm + 1) % 5)}
         variant="contained"
       >
         Next
