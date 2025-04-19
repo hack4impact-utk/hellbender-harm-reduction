@@ -8,6 +8,9 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       MONGODB_URI: string; // the URI of the mongodb instance to connect to
+      GOOGLE_CLIENT_ID: string;
+      GOOGLE_CLIENT_SECRET: string;
+      ALLOWED_EMAILS: string;
     }
   }
 }
