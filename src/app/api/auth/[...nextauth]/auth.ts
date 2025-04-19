@@ -17,7 +17,7 @@ export const handler: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'defaultClientSecret',
     }),
   ],
-
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
   },
