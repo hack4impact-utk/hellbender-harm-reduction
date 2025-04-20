@@ -1,7 +1,18 @@
 'use client';
 import { TextField, Stack, Typography } from '@mui/material';
 
-export function SetEmergencyContact() {
+export interface SetEmergencyContactProps {
+  data: {
+    ecName: string;
+    ecPhone: string;
+  };
+  onChange: (updated: Partial<SetEmergencyContactProps['data']>) => void;
+}
+
+export function SetEmergencyContact({
+  data,
+  onChange,
+}: SetEmergencyContactProps) {
   return (
     <Stack spacing={2}>
       <Typography variant="h5" align="center">
@@ -15,6 +26,8 @@ export function SetEmergencyContact() {
         sx={{
           backgroundColor: '#4d6a48',
         }}
+        value={data.ecName}
+        onChange={(e) => onChange({ ecName: e.target.value })}
       ></TextField>
       <br></br>
       <Typography variant="body1">Phone Number</Typography>
@@ -24,6 +37,8 @@ export function SetEmergencyContact() {
         sx={{
           backgroundColor: '#4d6a48',
         }}
+        value={data.ecPhone}
+        onChange={(e) => onChange({ ecPhone: e.target.value })}
       ></TextField>
     </Stack>
   );

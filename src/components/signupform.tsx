@@ -12,6 +12,7 @@ import { AddAccommodations } from './addaccommodation';
 import { SignUpReferral } from './signupreferral';
 import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 import { SetEmergencyContact } from './setemergencycontact';
+import { SignUpFormData } from '@/types/form/signUp';
 // import { SetReminders } from './setreminders';
 
 export enum FormEnum {
@@ -24,6 +25,30 @@ export enum FormEnum {
 
 export function SignUpInfoForm() {
   const [currentForm, setCurrentForm] = useState<FormEnum>(FormEnum.BasicInfo);
+  const [signUpData, setSignUpFormData] = useState<SignUpFormData>({
+    name: '',
+    image: '',
+    email: '',
+    phone: '',
+    pronouns: '',
+
+    emergencyContact: {
+      ecName: '',
+      ecPhone: '',
+    },
+
+    languages: [],
+    eventPreferences: [],
+    wantsNewEventNotifications: false,
+
+    certifications: [{ certName: '', certDescription: '' }],
+    referralSource: '',
+    accommodations: [],
+  });
+
+  const handleChange = (updated: SignUpFormData) => {
+    setSignUpFormData(updated);
+  };
 
   return (
     <Box display="flex" flexDirection="column" height="95%">
@@ -37,14 +62,51 @@ export function SignUpInfoForm() {
       >
         {currentForm === FormEnum.BasicInfo && (
           <div>
-            <SignUpBasicInfo></SignUpBasicInfo>
+            <SignUpBasicInfo
+              data={{
+                name: signUpData.name,
+                image: signUpData.image,
+                pronouns: signUpData.pronouns,
+              }}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  ...updated,
+                })
+              }
+            ></SignUpBasicInfo>
             <Box mt={3}></Box>
-            <SignUpContactInfo></SignUpContactInfo>
+            <SignUpContactInfo
+              data={{
+                phone: signUpData.phone,
+                email: signUpData.email,
+              }}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  ...updated,
+                })
+              }
+            ></SignUpContactInfo>
           </div>
         )}
         {currentForm === FormEnum.Emergency && (
           <div>
-            <SetEmergencyContact></SetEmergencyContact>
+            <SetEmergencyContact
+              data={{
+                ecName: signUpData.emergencyContact.ecName,
+                ecPhone: signUpData.emergencyContact.ecPhone,
+              }}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  emergencyContact: {
+                    ...signUpData.emergencyContact,
+                    ...updated,
+                  },
+                })
+              }
+            ></SetEmergencyContact>
             <Box mt={3}></Box>
             <AddAccommodations></AddAccommodations>
           </div>

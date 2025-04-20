@@ -17,7 +17,16 @@ const pronouns = [
   'chose not to answer',
 ];
 
-export function SignUpBasicInfo() {
+export interface SignUpBasicInfoProps {
+  data: {
+    name: string;
+    image: string;
+    pronouns: string;
+  };
+  onChange: (updated: Partial<SignUpBasicInfoProps['data']>) => void;
+}
+
+export function SignUpBasicInfo({ data, onChange }: SignUpBasicInfoProps) {
   return (
     <Box textAlign="center">
       <Stack spacing={2}>
@@ -34,6 +43,8 @@ export function SignUpBasicInfo() {
           sx={{
             backgroundColor: '#4d6a48',
           }}
+          value={data.name}
+          onChange={(e) => onChange({ name: e.target.value })}
         />
         <br></br>
         <Typography variant="body1" align="left">
@@ -46,6 +57,8 @@ export function SignUpBasicInfo() {
           sx={{
             backgroundColor: '#4d6a48',
           }}
+          value={data.pronouns}
+          onChange={(e) => onChange({ pronouns: e.target.value })}
         >
           {pronouns.map((option) => (
             <MenuItem key={option} value={option}>
@@ -59,6 +72,7 @@ export function SignUpBasicInfo() {
         </Typography>
       </Stack>
       <IconButton aria-label="upload" component="label" size="large">
+        {/* Image not implimented */}
         <AccountCircle fontSize="large" />
       </IconButton>
     </Box>
