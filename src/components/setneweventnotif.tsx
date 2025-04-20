@@ -18,9 +18,9 @@ export function SetNewEventNotif() {
         alignItems: 'center',
       }}
     >
-      <Typography variant="h4">Want to Know About New Events?</Typography>
+      <Typography variant="h5">Want to Know About New Events?</Typography>
       <br />
-      <FormLabel id="demo-radio-buttons-group-label">
+      <FormLabel id="demo-radio-buttons-group-label" sx={{ color: 'white' }}>
         I want email notifications for...
       </FormLabel>
       <RadioGroup

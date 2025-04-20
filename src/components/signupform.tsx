@@ -11,6 +11,7 @@ import { CertificationInfo } from './certificationinfo';
 import { AddAccommodations } from './addaccommodation';
 import { SignUpReferral } from './signupreferral';
 import { NavigateBefore, NavigateNext } from '@mui/icons-material';
+import { SetEmergencyContact } from './setemergencycontact';
 // import { SetReminders } from './setreminders';
 
 export enum FormEnum {
@@ -37,14 +38,14 @@ export function SignUpInfoForm() {
         {currentForm === FormEnum.BasicInfo && (
           <div>
             <SignUpBasicInfo></SignUpBasicInfo>
-            <Box mt={2}></Box>
+            <Box mt={3}></Box>
             <SignUpContactInfo></SignUpContactInfo>
           </div>
         )}
         {currentForm === FormEnum.Emergency && (
           <div>
-            <p>Emergency Contact</p>
-            <Box mt={2}></Box>
+            <SetEmergencyContact></SetEmergencyContact>
+            <Box mt={3}></Box>
             <AddAccommodations></AddAccommodations>
           </div>
         )}
@@ -54,9 +55,8 @@ export function SignUpInfoForm() {
         {currentForm === FormEnum.EventPreferences && (
           <div>
             <SetEventPref></SetEventPref>
-            <Box mt={2}></Box>
+            <Box mt={3}></Box>
             <SetNewEventNotif></SetNewEventNotif>
-            {/*<SetReminders></SetReminders>*/}
           </div>
         )}
         {currentForm === FormEnum.CertificationInfo && (
@@ -64,7 +64,7 @@ export function SignUpInfoForm() {
             <CertificationInfo
               data={[{ certName: '', certDescription: '' }]}
             ></CertificationInfo>
-            <Box mt={2}></Box>
+            <Box mt={3}></Box>
             <SignUpReferral></SignUpReferral>
           </div>
         )}

@@ -98,7 +98,10 @@ export function AddAccommodations({
             value={otherText}
             onChange={handleOtherChange}
             fullWidth
-            variant="outlined"
+            variant="filled"
+            sx={{
+              backgroundColor: '#4d6a48',
+            }}
           />
         </Grid>
       </Grid>

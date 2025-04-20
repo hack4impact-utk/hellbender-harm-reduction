@@ -21,19 +21,32 @@ export function SignUpBasicInfo() {
   return (
     <Box textAlign="center">
       <Stack spacing={2}>
-        <Typography variant="h4" align="center">
+        <Typography variant="h5" align="center">
           Tell us more about you!
         </Typography>
         <br></br>
         <Typography variant="body1" align="left">
           Name
         </Typography>
-        <TextField required />
+        <TextField
+          required
+          variant="filled"
+          sx={{
+            backgroundColor: '#4d6a48',
+          }}
+        />
         <br></br>
         <Typography variant="body1" align="left">
           Pronouns
         </Typography>
-        <TextField required select>
+        <TextField
+          required
+          select
+          variant="filled"
+          sx={{
+            backgroundColor: '#4d6a48',
+          }}
+        >
           {pronouns.map((option) => (
             <MenuItem key={option} value={option}>
               {option}
