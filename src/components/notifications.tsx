@@ -35,7 +35,7 @@ const iconMap = {
   'Community Education and Advocacy': <HandshakeIcon />,
   'In-Kind Fundraising': <AddBusinessIcon />,
   'Building Work Days': <HomeWorkIcon />,
-  Fundraising: <AttachMoneyIcon />,
+  'Fundraising': <AttachMoneyIcon />,
   'Special Events': <LocalActivityIcon />,
 };
 
