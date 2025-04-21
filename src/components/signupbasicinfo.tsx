@@ -30,8 +30,8 @@ export function SignUpBasicInfo({ data, onChange }: SignUpBasicInfoProps) {
   return (
     <Box textAlign="center">
       <Stack spacing={2}>
-        <Typography variant="h5" align="center">
-          Tell us more about you!
+        <Typography variant="h4" align="center">
+          Tell Us More About You!
         </Typography>
         <br></br>
         <Typography variant="body1" align="left">
@@ -67,7 +67,7 @@ export function SignUpBasicInfo({ data, onChange }: SignUpBasicInfoProps) {
           ))}
         </TextField>
         <br></br>
-        <Typography variant="h5" align="center">
+        <Typography variant="h6" align="center">
           Upload a profile image
         </Typography>
       </Stack>
