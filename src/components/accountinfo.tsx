@@ -2,22 +2,21 @@
 import { ArrowDownward } from '@mui/icons-material';
 import { TextField, Stack, Typography, Grid, Accordion, AccordionSummary, AccordionDetails, AccordionActions } from '@mui/material';
 
-interface Tag {
+export interface Tag {
   tagName: string;
-  cartPicture: string;
   certification: boolean;
 }
 
-enum tagProfEnum {
-  Beginner,
-  Intermediate, 
-  Expert,
-  NotApplicable,
-}
+// enum tagProfEnum {
+//   "Beginner",
+//   "Intermediate", 
+//   "Expert",
+//   "N/A",
+// }
 
-interface userTag {
+export interface userTag {
   tag: Tag;
-  tagProf: tagProfEnum;
+  tagProf: "Beginner" | "Intermediate" | "Expert" | "N/A";
 }
 
 interface AccountInfoProps {
@@ -40,7 +39,7 @@ export function AccountInfo(props: AccountInfoProps) {
           <Grid item xs={6}>
             <Accordion>
               <AccordionSummary expandIcon={<ArrowDownward />} aria-controls="tag-information">
-                <Typography variant="h5"> What is This? </Typography>
+                {/* <Typography variant="h5"> {props.tags[0].tag.tagName} </Typography> */}
               </AccordionSummary>
               <AccordionDetails>
                 Ur mom is hot and also gay
