@@ -33,23 +33,81 @@ export function AllVolunteers({ data }: DataTableProps) {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Phone</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Pronouns</TableCell>
-            <TableCell>Emergency Contact</TableCell>
+            <TableCell
+              sx={{
+                backgroundColor: '#42603C',
+                fontFamily: 'Verdana',
+                color: 'white',
+              }}
+            >
+              Name
+            </TableCell>
+            <TableCell
+              sx={{
+                backgroundColor: '#42603C',
+                fontFamily: 'Verdana',
+                color: 'white',
+              }}
+            >
+              Phone
+            </TableCell>
+            <TableCell
+              sx={{
+                backgroundColor: '#42603C',
+                fontFamily: 'Verdana',
+                color: 'white',
+              }}
+            >
+              Email
+            </TableCell>
+            <TableCell
+              sx={{
+                backgroundColor: '#42603C',
+                fontFamily: 'Verdana',
+                color: 'white',
+              }}
+            >
+              Pronouns
+            </TableCell>
+            <TableCell
+              sx={{
+                backgroundColor: '#42603C',
+                fontFamily: 'Verdana',
+                color: 'white',
+              }}
+            >
+              Emergency Contact
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {data.map((user, index) => (
             <TableRow key={index}>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.phone}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.pronouns}</TableCell>
-              <TableCell>
+              <TableCell
+                sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+              >
+                {user.name}
+              </TableCell>
+              <TableCell
+                sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+              >
+                {user.phone}
+              </TableCell>
+              <TableCell
+                sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+              >
+                {user.email}
+              </TableCell>
+              <TableCell
+                sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+              >
+                {user.pronouns}
+              </TableCell>
+              <TableCell
+                sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+              >
                 {user.emergencyContacts ? (
-                  <Typography>
+                  <Typography variant={'body2'} fontFamily={'Verdana'}>
                     {user.emergencyContacts.ecName}
                     <br />
                     {user.emergencyContacts.ecPhone}
