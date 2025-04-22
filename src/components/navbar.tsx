@@ -111,7 +111,7 @@ export default function NavBar({ userType, userId, page }: NavBarProps) {
             <Button
               color="inherit"
               component={Link}
-              href={`/calendar/${userId}`}
+              href={`/calendar`}
               sx={{
                 fontWeight: 'bold',
                 fontSize: 30,
@@ -128,7 +128,7 @@ export default function NavBar({ userType, userId, page }: NavBarProps) {
             <Button
               color="inherit"
               component={Link}
-              href={`/events/${userId}`}
+              href={`/events`}
               sx={{
                 fontWeight: 'bold',
                 fontSize: 30,
