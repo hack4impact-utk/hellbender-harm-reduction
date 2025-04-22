@@ -23,12 +23,14 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 
+// Props
 interface NotificationInfoProps {
   eventPreferences?: string[];
   newEvents?: string;
   reminders?: string[];
 }
 
+// Maps a specific phrase to an icon
 const iconMap = {
   'Harm Reduction Services': <HealingIcon />,
   'Syringe Pick-Up': <VaccinesIcon />,
@@ -39,8 +41,11 @@ const iconMap = {
   'Special Events': <LocalActivityIcon />,
 };
 
+// Main function
 export function NotificationInfo(props: NotificationInfoProps) {
   return (
+
+    // Styling for preferred events
     <Container maxWidth="md" sx={{ mt: 5, mb: 5 }}>
       <Box sx={{ backgroundColor: 'hhr.light', p: 4, borderRadius: 2 }}>
         <Typography
@@ -51,10 +56,12 @@ export function NotificationInfo(props: NotificationInfoProps) {
           Preferred Events
         </Typography>
         <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 3 }}>
-          {props.eventPreferences?.map((pref, index) => (
+          {/*Displays all the preferred events for the user */}
+          {props.eventPreferences?.map((pref, index) => ( 
             <Chip
               key={index}
-              icon={iconMap[pref as keyof typeof iconMap]}
+              // matches icon to label
+              icon={iconMap[pref as keyof typeof iconMap]} 
               label={pref}
               sx={{
                 backgroundColor: 'hhr.light',
@@ -71,14 +78,16 @@ export function NotificationInfo(props: NotificationInfoProps) {
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Paper elevation={1} sx={{ p: 3, borderRadius: 2 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom> 
                 Email Settings
               </Typography>
+              {/*Displays in disabled radio format, what option the user picked
+              for event notifications */}
               <Typography variant="subtitle1" gutterBottom>
                 New Event Notifications
               </Typography>
               <FormControl component="fieldset">
-                <RadioGroup value={props.newEvents}>
+                <RadioGroup value={props.newEvents}> 
                   <FormControlLabel
                     value="All Events"
                     control={<Radio disabled />}
@@ -101,6 +110,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
 
           <Grid item xs={12} md={6}>
             <Paper elevation={1} sx={{ p: 3, borderRadius: 2 }}>
+              {/*This displays what the user picked for event reminder type they prefer */}
               <Typography variant="h6" gutterBottom>
                 Your Event Reminders
               </Typography>
