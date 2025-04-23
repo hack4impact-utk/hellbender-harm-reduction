@@ -4,29 +4,30 @@ import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { AllVolunteers } from '@/components/allvolunteers';
 import { EventVolunteers } from '@/components/eventvolunteers';
-  
-  interface utag {
-    tag: string;
-    tagProf: string;
-  }
-  
-  interface UserData {
-    name: string;
-    phone: string;
-    email: string;
-    pronouns: string;
-    accomm?: string[];
-    otherAccomm?: string;
-    emergencyContacts?: emergContact;
-    userTags?: utag[] | null;
-    events: string[];
-  }
 
-  interface EventData {
-    id: string;
-    eventName: string;
-    start: Date;
-    end: Date;
+//interfaces for the data in all three components/tabs
+interface utag {
+  tag: string;
+  tagProf: string;
+}
+
+interface UserData {
+  name: string;
+  phone: string;
+  email: string;
+  pronouns: string;
+  accomm?: string[];
+  otherAccomm?: string;
+  emergencyContacts?: emergContact;
+  userTags?: (utag | null)[];
+  events: string[];
+}
+
+interface EventData {
+  id: string;
+  eventName: string;
+  start: Date;
+  end: Date;
 }
 interface emergContact {
   ecName: string;
@@ -47,9 +48,15 @@ interface DataTableProps {
   eventdata: EventData[];
 }
 
-export default function VolunteersView({ alldata, userdata, eventdata }: DataTableProps) {
+export default function VolunteersView({
+  alldata,
+  userdata,
+  eventdata,
+}: DataTableProps) {
+  // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
 
+  // for handling when someone swaps tabs
   const handleTabChange = (
     event: React.SyntheticEvent,
     newSelected: number
@@ -57,6 +64,7 @@ export default function VolunteersView({ alldata, userdata, eventdata }: DataTab
     setSelected(newSelected);
   };
 
+  // returns actual page
   return (
     <Box
       sx={{
@@ -64,7 +72,7 @@ export default function VolunteersView({ alldata, userdata, eventdata }: DataTab
         height: '100vh',
       }}
     >
-      <Navbar userType={'Admin'} userId={''} page={'Volunteers'}/>
+      <Navbar userType={'Admin'} userId={''} page={'Volunteers'} />
       <Box
         sx={{
           height: '90%',
@@ -134,7 +142,11 @@ export default function VolunteersView({ alldata, userdata, eventdata }: DataTab
               </Box>
             </Box>
           )}
-          {selected === 2 && <Box sx={{height: '100%'}}><EventVolunteers users={userdata} events={eventdata}/></Box>}
+          {selected === 2 && (
+            <Box sx={{ height: '100%' }}>
+              <EventVolunteers users={userdata} events={eventdata} />
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

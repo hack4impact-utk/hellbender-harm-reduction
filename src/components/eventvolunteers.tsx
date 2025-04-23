@@ -25,6 +25,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 
+// needed interfaces
 interface emergContact {
   ecName: string;
   ecPhone: string;
@@ -43,7 +44,7 @@ interface UserData {
   accomm?: string[];
   otherAccomm?: string;
   emergencyContacts?: emergContact;
-  userTags?: utag[] | null;
+  userTags?: (utag | null)[];
   events: string[];
 }
 
@@ -59,89 +60,124 @@ interface DataTableProps {
   events: EventData[];
 }
 
+declare module '@mui/material/styles' {
+  interface Components {
+    MuiPickerPopper?: {
+      styleOverrides?: {
+        paper?: any;
+      };
+    };
+    MuiPickersTextField?: {
+      styleOverrides?: {
+        root?: any;
+      };
+    };
+    MuiMonthCalendar?: {
+      styleOverrides?: {
+        button?: any;
+      };
+    };
+    MuiYearCalendar?: {
+      styleOverrides?: {
+        button?: any;
+      };
+    };
+  }
+}
+
+// creates theme for styling of DatePicker (can't be done in component itself)
 const custTheme = createTheme({
   components: {
     MuiPickerPopper: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#f0f5ef'
-        }
-      }
+          backgroundColor: '#f0f5ef',
+        },
+      },
     },
     MuiPickersTextField: {
       styleOverrides: {
         root: {
           backgroundColor: '#e2e7e2',
-          borderRadius: '4px'
-        }
-      }
+          borderRadius: '4px',
+        },
+      },
     },
     MuiMonthCalendar: {
       styleOverrides: {
         button: {
           '&.Mui-selected:focus': {
             backgroundColor: '#6e8569',
-            color: 'white'
+            color: 'white',
           },
           '&.Mui-selected': {
             backgroundColor: '#6e8569',
-            color: 'white'
+            color: 'white',
           },
-        }
-      }
+        },
+      },
     },
     MuiYearCalendar: {
       styleOverrides: {
         button: {
           '&.Mui-selected:focus': {
             backgroundColor: '#6e8569',
-            color: 'white'
+            color: 'white',
           },
           '&.Mui-selected': {
             backgroundColor: '#6e8569',
-            color: 'white'
-          }
-        }
-      }
+            color: 'white',
+          },
+        },
+      },
     },
-  }
-})
+  },
+});
 
+// exports list of volunteers by event
 export function EventVolunteers({ users, events }: DataTableProps) {
-  const chronEvents = [...events].sort((a, b) => a.start.getTime() - b.start.getTime());
+  // a bunch of needed values
+  const chronEvents = [...events].sort(
+    (a, b) => a.start.getTime() - b.start.getTime()
+  );
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const filtUsers = users.filter(user => user.events.includes(selectedEventId));
+  const filtUsers = selectedEventId
+    ? users.filter((user) => user.events.includes(selectedEventId))
+    : [];
 
+  // gets a list of all events within selected month
   const filteredEvents = selectedDate
-  ? chronEvents.filter(event => {
-      const eventDate = dayjs(event.start);
-      return (
-        eventDate.month() === selectedDate.month() &&
-        eventDate.year() === selectedDate.year()
-      );
-    })
-  : chronEvents;
+    ? chronEvents.filter((event) => {
+        const eventDate = dayjs(event.start);
+        return (
+          eventDate.month() === selectedDate.month() &&
+          eventDate.year() === selectedDate.year()
+        );
+      })
+    : chronEvents;
 
+  // handles values used throughout the component
   useEffect(() => {
     const lastIndex = chronEvents.length - 1;
     const lastItem = itemRefs.current[lastIndex];
     const scrollContainer = scrollContainerRef.current;
     const now = new Date();
-  
-    // Only set default selected event if none is selected yet
+
     if (selectedEventId === null && chronEvents.length > 0) {
-      const sortedEvents = [...chronEvents].sort((a, b) => a.start.getTime() - b.start.getTime());
-      const upcomingEvent = sortedEvents.find(event => event.end > now);
-  
+      const sortedEvents = [...chronEvents].sort(
+        (a, b) => a.start.getTime() - b.start.getTime()
+      );
+      const upcomingEvent = sortedEvents.find((event) => event.end > now);
+
       if (upcomingEvent) {
         setSelectedEventId(upcomingEvent.id);
       }
     }
-  
-    // Scroll to last item
+
+    // scroll to most recent event
     if (lastItem && scrollContainer) {
       scrollContainer.scrollTo({
         top: lastItem.offsetTop,
@@ -150,193 +186,338 @@ export function EventVolunteers({ users, events }: DataTableProps) {
     }
   }, [chronEvents, selectedEventId]);
 
+  //returns actual component
   return (
-    <Box sx={{height: '100%', overflow: 'hidden'}}>
-    <Grid container padding={'15px'} columnSpacing={'15px'} sx={{height: '100%'}}>
-      <Grid item xs={3} sx={{height:'100%'}}>
-        <Stack
-          sx={{
-            height: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column'
-          }}
-        >
-          <Box
+    <Box sx={{ height: '100%', overflow: 'hidden' }}>
+      <Grid
+        container
+        padding={'15px'}
+        columnSpacing={'15px'}
+        sx={{ height: '100%' }}
+      >
+        <Grid item xs={3} sx={{ height: '100%' }}>
+          <Stack
             sx={{
-              backgroundColor: '#42603C',
+              height: '100%',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <Typography color={'white'} padding={'10px'} fontFamily={'Verdana'} fontSize={'25px'}>Choose Event</Typography>
-            <Stack direction="row" alignItems="center" sx={{ mb: 4 }}>
-              <Typography color={'white'} padding={'15px'} fontFamily={'Verdana'} fontSize={'20px'}>Filter by Month: </Typography>
-              <ThemeProvider theme={custTheme}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  views={['year', 'month']}
-                  value={selectedDate}
-                  onChange={(newValue) => setSelectedDate(newValue)}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                    }
-                  }}
-                  sx={{
-                    width: '40%'
-                  }}
-                />
-              </LocalizationProvider>
-              </ThemeProvider>
-              <IconButton onClick={() => setSelectedDate(null)} aria-label="clear date filter">
-                <Clear />
-              </IconButton>
-            </Stack>
-          </Box>
-          <Box
-            ref={scrollContainerRef}
-            sx={{
-              backgroundColor: '#F0F5EF',
-              height: '80%',
-              overflowY: 'auto',
-            }}
-          >
-            {filteredEvents.map((event, index) => (
-              <ListItem
-              key={index}
-              ref={(el) => (itemRefs.current[index] = el)}
-              divider
+            <Box
               sx={{
-                backgroundColor: event.end < new Date() ? '#e2e7e2' : 'inherit',
+                backgroundColor: '#42603C',
               }}
-              secondaryAction={
-                <FormControlLabel
-                  value={event.id}
-                  control={
-                    <Radio
-                      checked={selectedEventId === event.id}
-                      onChange={() => setSelectedEventId(event.id)}
-                      color="primary"
+            >
+              <Typography
+                color={'white'}
+                padding={'10px'}
+                fontFamily={'Verdana'}
+                fontSize={'25px'}
+              >
+                Choose Event
+              </Typography>
+              <Stack direction="row" alignItems="center" sx={{ mb: 4 }}>
+                <Typography
+                  color={'white'}
+                  padding={'15px'}
+                  fontFamily={'Verdana'}
+                  fontSize={'20px'}
+                >
+                  Filter by Month:{' '}
+                </Typography>
+                <ThemeProvider theme={custTheme}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      views={['year', 'month']}
+                      value={selectedDate}
+                      onChange={(newValue) => setSelectedDate(newValue)}
+                      slotProps={{
+                        textField: {
+                          fullWidth: true,
+                        },
+                      }}
                       sx={{
-                        color: '#42603c',
-                        '&.Mui-checked':{
-                          color: '#42603c'
-                        }
+                        width: '40%',
                       }}
                     />
-                  }
-                  label=""
-                />
-              }
-            >
-              <ListItemText
-                primary={`${event.eventName}${event.end < new Date() ? ' - Past Event' : ''}`}
-                secondary={
-                  <>
-                    <Typography component="span" variant="body2" color="text.primary">
-                      Start: {event.start.toLocaleString()}
-                    </Typography>
-                    <br />
-                    End: {event.end.toLocaleString()}
-                  </>
-                }
-              />
-            </ListItem>
-            ))}
-          </Box>
-          <Box padding={'15px'}>
-            <Button
+                  </LocalizationProvider>
+                </ThemeProvider>
+                <IconButton
+                  onClick={() => setSelectedDate(null)}
+                  aria-label="clear date filter"
+                >
+                  <Clear />
+                </IconButton>
+              </Stack>
+            </Box>
+            <Box
+              ref={scrollContainerRef}
               sx={{
-                backgroundColor: '#F0F5Ef',
-                fontFamily: 'Verdana',
-                color: 'black',
+                backgroundColor: '#F0F5EF',
+                height: '80%',
+                overflowY: 'auto',
               }}
             >
-              Export
-            </Button>
-          </Box>
-        </Stack>
-      </Grid>
-      <Grid item xs={9}>
-      <Box
+              {filteredEvents.map((event, index) => (
+                <ListItem
+                  key={index}
+                  ref={(el) => {
+                    itemRefs.current[index] = el;
+                  }}
+                  divider
+                  sx={{
+                    backgroundColor:
+                      event.end < new Date() ? '#e2e7e2' : 'inherit',
+                  }}
+                  secondaryAction={
+                    <FormControlLabel
+                      value={event.id}
+                      control={
+                        <Radio
+                          checked={selectedEventId === event.id}
+                          onChange={() => setSelectedEventId(event.id)}
+                          color="primary"
+                          sx={{
+                            color: '#42603c',
+                            '&.Mui-checked': {
+                              color: '#42603c',
+                            },
+                          }}
+                        />
+                      }
+                      label=""
+                    />
+                  }
+                >
+                  <ListItemText
+                    primary={`${event.eventName}${event.end < new Date() ? ' - Past Event' : ''}`}
+                    secondary={
+                      <>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          color="text.primary"
+                        >
+                          Start: {event.start.toLocaleString()}
+                        </Typography>
+                        <br />
+                        End: {event.end.toLocaleString()}
+                      </>
+                    }
+                  />
+                </ListItem>
+              ))}
+            </Box>
+            <Box padding={'15px'}>
+              <Button
+                sx={{
+                  backgroundColor: '#F0F5Ef',
+                  fontFamily: 'Verdana',
+                  color: 'black',
+                }}
+              >
+                Export
+              </Button>
+            </Box>
+          </Stack>
+        </Grid>
+        <Grid item xs={9}>
+          <Box
             sx={{
               backgroundColor: '#F0F5EF',
               height: '100%',
-              borderRadius: '5px'
+              borderRadius: '5px',
             }}
           >
-        <TableContainer component={Paper}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#42603C', color: 'white' }}>Name</TableCell>
-                <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#42603C', color: 'white' }}>Phone</TableCell>
-                <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#42603C', color: 'white' }}>Email</TableCell>
-                <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#42603C', color: 'white' }}>Pronouns</TableCell>
-                <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#42603C', color: 'white' }}>Accommodations</TableCell>
-                <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#42603C', color: 'white' }}>Emergency Contact</TableCell>
-                <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#42603C', color: 'white' }}>Tags</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedEventId ? (
-                filtUsers.map((user, index) => (
-                <TableRow key={index}>
-                  <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}>{user.name}</TableCell>
-                  <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}>{user.phone}</TableCell>
-                  <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}>{user.email}</TableCell>
-                  <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}>{user.pronouns}</TableCell>
-                  <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}>
-                    {user.accomm && user.accomm.length > 0 ? (
-                      user.accomm.map((item, idx) => (
-                        <Typography key={idx} variant="body2">
-                          {item}
-                        </Typography>
-                      ))
-                    ) : user.otherAccomm ? (
-                      <Typography variant="body2">{user.otherAccomm}</Typography>
-                    ) : (
-                      <Typography variant="body2">N/A</Typography>
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}>
-                    {user.emergencyContacts ? (
-                      <Typography variant='body2'>
-                        {user.emergencyContacts.ecName}
-                        <br />
-                        {user.emergencyContacts.ecPhone}
-                      </Typography>
-                    ) : (
-                      <span>N/A</span>
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}>
-                    {user.userTags && user.userTags.length > 0 ? (
-                      user.userTags.map((item, idx) => (
-                        <Typography key={idx} variant="body2">
-                          {item.tag}
-                          {item.tagProf !== 'N/A' && ` - ${item.tagProf}`}
-                        </Typography>
-                      ))
-                    ) : (
-                      <Typography variant="body2">N/A</Typography>
-                    )}
-                  </TableCell>
-                </TableRow>
-                ))) : (
+            <TableContainer component={Paper}>
+              <Table stickyHeader>
+                <TableHead>
                   <TableRow>
-                    <TableCell colSpan={2}>
-                      <Typography variant="body2" color="text.secondary" align="center">
-                        Select an event to view volunteers.
-                      </Typography>
+                    <TableCell
+                      sx={{
+                        fontFamily: 'Verdana',
+                        backgroundColor: '#42603C',
+                        color: 'white',
+                      }}
+                    >
+                      Name
                     </TableCell>
-                  </TableRow>          
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        </Box>
+                    <TableCell
+                      sx={{
+                        fontFamily: 'Verdana',
+                        backgroundColor: '#42603C',
+                        color: 'white',
+                      }}
+                    >
+                      Phone
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontFamily: 'Verdana',
+                        backgroundColor: '#42603C',
+                        color: 'white',
+                      }}
+                    >
+                      Email
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontFamily: 'Verdana',
+                        backgroundColor: '#42603C',
+                        color: 'white',
+                      }}
+                    >
+                      Pronouns
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontFamily: 'Verdana',
+                        backgroundColor: '#42603C',
+                        color: 'white',
+                      }}
+                    >
+                      Accommodations
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontFamily: 'Verdana',
+                        backgroundColor: '#42603C',
+                        color: 'white',
+                      }}
+                    >
+                      Emergency Contact
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontFamily: 'Verdana',
+                        backgroundColor: '#42603C',
+                        color: 'white',
+                      }}
+                    >
+                      Tags
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {selectedEventId ? (
+                    filtUsers.map((user, index) => (
+                      <TableRow key={index}>
+                        <TableCell
+                          sx={{
+                            fontFamily: 'Verdana',
+                            backgroundColor: '#F0F5Ef',
+                          }}
+                        >
+                          {user.name}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontFamily: 'Verdana',
+                            backgroundColor: '#F0F5Ef',
+                          }}
+                        >
+                          {user.phone}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontFamily: 'Verdana',
+                            backgroundColor: '#F0F5Ef',
+                          }}
+                        >
+                          {user.email}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontFamily: 'Verdana',
+                            backgroundColor: '#F0F5Ef',
+                          }}
+                        >
+                          {user.pronouns}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontFamily: 'Verdana',
+                            backgroundColor: '#F0F5Ef',
+                          }}
+                        >
+                          {user.accomm && user.accomm.length > 0 ? (
+                            user.accomm.map((item, idx) => (
+                              <Typography key={idx} variant="body2">
+                                {item}
+                              </Typography>
+                            ))
+                          ) : user.otherAccomm ? (
+                            <Typography variant="body2">
+                              {user.otherAccomm}
+                            </Typography>
+                          ) : (
+                            <Typography variant="body2">N/A</Typography>
+                          )}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontFamily: 'Verdana',
+                            backgroundColor: '#F0F5Ef',
+                          }}
+                        >
+                          {user.emergencyContacts ? (
+                            <Typography variant="body2">
+                              {user.emergencyContacts.ecName}
+                              <br />
+                              {user.emergencyContacts.ecPhone}
+                            </Typography>
+                          ) : (
+                            <span>N/A</span>
+                          )}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            fontFamily: 'Verdana',
+                            backgroundColor: '#F0F5Ef',
+                          }}
+                        >
+                          {Array.isArray(user.userTags) &&
+                          user.userTags.filter(Boolean).length > 0 ? (
+                            user.userTags
+                              .filter(
+                                (
+                                  tag
+                                ): tag is { tag: string; tagProf: string } =>
+                                  tag !== null
+                              )
+                              .map((item, idx) => (
+                                <Typography key={idx} variant="body2">
+                                  {item.tag}
+                                  {item.tagProf !== 'N/A' &&
+                                    ` - ${item.tagProf}`}
+                                </Typography>
+                              ))
+                          ) : (
+                            <Typography variant="body2">N/A</Typography>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={2}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          align="center"
+                        >
+                          Select an event to view volunteers.
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
     </Box>
   );
 }

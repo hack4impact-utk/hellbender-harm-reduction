@@ -10,6 +10,7 @@ import {
 import { Typography } from '@mui/material';
 import React from 'react';
 
+//needed interfaces
 interface emergContact {
   ecName: string;
   ecPhone: string;
@@ -27,7 +28,9 @@ interface DataTableProps {
   data: UserData[];
 }
 
+// exported component
 export function AllVolunteers({ data }: DataTableProps) {
+  // returns a table with volunteer data
   return (
     <TableContainer component={Paper}>
       <Table stickyHeader>
