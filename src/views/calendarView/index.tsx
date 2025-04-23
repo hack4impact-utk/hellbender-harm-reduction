@@ -1,5 +1,5 @@
 'use client';
-import Topbar from '@/components/navbar';
+import Navbar from '@/components/navbar';
 import { Box, Grid, Typography, Stack } from '@mui/material';
 import FullUserCalendar from '@/components/fullcalendar';
 import hhrColors from '@/utils/hhr-theme';
@@ -26,7 +26,7 @@ export default function CalendarView({ events }: CalendarProps) {
         overflow: 'hidden',
       }}
     >
-      <Topbar />
+      <Navbar userType={'Admin'} userId={''} page={'Calendar'} />
       <Grid
         container
         sx={{

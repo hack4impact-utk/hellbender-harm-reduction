@@ -1,6 +1,6 @@
 'use client';
 import { Box } from '@mui/material';
-import Topbar from '@/components/navbar';
+import Navbar from '@/components/navbar';
 import { EventList } from '@/components/eventlist';
 
 interface EventInfo {
@@ -29,7 +29,7 @@ export default function EventListView({ events }: EventViewProps) {
         backgroundColor: '#E2E7E2',
       }}
     >
-      <Topbar />
+      <Navbar userType={'Admin'} userId={''} page={'Events'} />
       <Box
         sx={{
           width: '100%',
