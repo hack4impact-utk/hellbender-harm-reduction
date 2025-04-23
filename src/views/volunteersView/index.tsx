@@ -1,15 +1,39 @@
 'use client';
 import { Typography, Box, Tab, Tabs, Button } from '@mui/material';
-import Topbar from '@/components/navbar';
+import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { AllVolunteers } from '@/components/allvolunteers';
+import { EventVolunteers } from '@/components/eventvolunteers';
+  
+  interface utag {
+    tag: string;
+    tagProf: string;
+  }
+  
+  interface UserData {
+    name: string;
+    phone: string;
+    email: string;
+    pronouns: string;
+    accomm?: string[];
+    otherAccomm?: string;
+    emergencyContacts?: emergContact;
+    userTags?: utag[] | null;
+    events: string[];
+  }
 
+  interface EventData {
+    id: string;
+    eventName: string;
+    start: Date;
+    end: Date;
+}
 interface emergContact {
   ecName: string;
   ecPhone: string;
 }
 
-interface UserData {
+interface AllUserData {
   name: string;
   phone: string;
   email: string;
@@ -18,10 +42,12 @@ interface UserData {
 }
 
 interface DataTableProps {
-  data: UserData[];
+  alldata: AllUserData[];
+  userdata: UserData[];
+  eventdata: EventData[];
 }
 
-export default function VolunteersView({ data }: DataTableProps) {
+export default function VolunteersView({ alldata, userdata, eventdata }: DataTableProps) {
   const [selected, setSelected] = useState<number>(0);
 
   const handleTabChange = (
@@ -38,7 +64,7 @@ export default function VolunteersView({ data }: DataTableProps) {
         height: '100vh',
       }}
     >
-      <Topbar />
+      <Navbar userType={'Admin'} userId={''} page={'Volunteers'}/>
       <Box
         sx={{
           height: '90%',
@@ -74,7 +100,7 @@ export default function VolunteersView({ data }: DataTableProps) {
             }}
           />
           <Tab
-            label="Volunteers By Events"
+            label="Volunteers By Event"
             sx={{
               color: '#6E8569',
               '&.Mui-selected': {
@@ -94,7 +120,7 @@ export default function VolunteersView({ data }: DataTableProps) {
           {selected === 0 && <Typography>Volunteer Metrics</Typography>}
           {selected === 1 && (
             <Box padding={'15px'}>
-              <AllVolunteers data={data} />
+              <AllVolunteers data={alldata} />
               <Box padding={'10px'}>
                 <Button
                   sx={{
@@ -108,7 +134,7 @@ export default function VolunteersView({ data }: DataTableProps) {
               </Box>
             </Box>
           )}
-          {selected === 2 && <Typography>Volunteers By Events</Typography>}
+          {selected === 2 && <Box sx={{height: '100%'}}><EventVolunteers users={userdata} events={eventdata}/></Box>}
         </Box>
       </Box>
     </Box>
