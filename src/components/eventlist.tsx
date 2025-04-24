@@ -45,7 +45,7 @@ export function EventList({ events }: EventInfoProps) {
   }, [events]);
 
   // 2) Sort events into upcoming and past events
-  const now = new Date();
+  const now = useMemo(() => new Date(), []);
   const upcomingEvents = useMemo(
     () => sortedEvents.filter((e) => e.eventStart.getTime() > now.getTime()),
     [sortedEvents, now]
@@ -58,25 +58,6 @@ export function EventList({ events }: EventInfoProps) {
   const toggleEvents = (isUpcoming: boolean) => {
     setShowUpcoming(isUpcoming);
   };
-
-  //// 2) Find index of the first future event
-  //const now = new Date();
-  //const closestFutureIndex = sortedEvents.findIndex(
-  //  (e) => e.eventStart.getTime() > now.getTime()
-  //);
-
-  // 3) Create refs for each event, so we can scroll the future one into view
-  //const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // 4) After rendering, scroll to the future event (if any)
-  //useEffect(() => {
-  //  if (closestFutureIndex >= 0 && itemRefs.current[closestFutureIndex]) {
-  //    itemRefs.current[closestFutureIndex]?.scrollIntoView({
-  //      behavior: 'smooth',
-  //      block: 'start',
-  //    });
-  //  }
-  //}, [closestFutureIndex]);
 
   return (
     <Box
