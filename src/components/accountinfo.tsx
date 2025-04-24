@@ -1,6 +1,5 @@
 'use client'; // Makes the client use their resources to render the component instead of having the server render it first (epic)
-import { ArrowDownward } from '@mui/icons-material';
-import { TextField, Stack, Typography, Grid, Accordion, AccordionSummary, AccordionDetails, AccordionActions, Box } from '@mui/material';
+import { TextField, Stack, Typography, Grid, Box } from '@mui/material';
 
 interface Tag {
   tagName: string;
