@@ -37,13 +37,14 @@ export function SignUpInfoForm() {
       ecPhone: '',
     },
 
-    languages: [],
+    userTags: [],
     eventPreferences: [],
     wantsNewEventNotifications: false,
 
     certifications: [{ certName: '', certDescription: '' }],
     referralSource: '',
-    accommodations: [],
+    accomm: [],
+    otherAccomm: '',
   });
 
   const handleChange = (updated: SignUpFormData) => {
@@ -108,11 +109,38 @@ export function SignUpInfoForm() {
               }
             ></SetEmergencyContact>
             <Box mt={3}></Box>
-            <AddAccommodations></AddAccommodations>
+            <AddAccommodations
+              data={{
+                accomm: signUpData.accomm || [],
+                otherAccomm: signUpData.otherAccomm || '',
+              }}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  accomm: updated.accomm,
+                  otherAccomm: updated.otherAccomm,
+                })
+              }
+            />
           </div>
         )}
         {currentForm === FormEnum.LanguageInfo && (
-          <AddLang Languages={['Spanish']} UserTags={[null]}></AddLang>
+          <AddLang
+            Languages={['Spanish', 'Chinese', 'Arabic', 'ASL']}
+            UserTags={[null]}
+          />
+          // <AddLang
+          //   data={{
+          //     Languages: ['Spanish', 'French', 'ASL', 'Arabic'], // or fetch from API
+          //     UserTags: signUpData.userTags,
+          //   }}
+          //   onChange={(updated) =>
+          //     handleChange({
+          //       ...signUpData,
+          //       userTags: updated.userTags,
+          //     })
+          //   }
+          // />
         )}
         {currentForm === FormEnum.EventPreferences && (
           <div>
