@@ -2,21 +2,21 @@
 import { ArrowDownward } from '@mui/icons-material';
 import { TextField, Stack, Typography, Grid, Accordion, AccordionSummary, AccordionDetails, AccordionActions } from '@mui/material';
 
-export interface Tag {
+interface Tag {
   tagName: string;
   certification: boolean;
 }
 
-// enum tagProfEnum {
+// enum tagProfEnum {   // according to the schema there is an enum, but what we actually have in the database is a string
 //   "Beginner",
 //   "Intermediate", 
 //   "Expert",
 //   "N/A",
 // }
 
-export interface userTag {
+interface userTag {
   tag: Tag;
-  tagProf: "Beginner" | "Intermediate" | "Expert" | "N/A";
+  tagProf: "Beginner" | "Intermediate" | "Expert" | "N/A";  // Not an enum but a union of possible strings (goes against schema)
 }
 
 interface AccountInfoProps {
