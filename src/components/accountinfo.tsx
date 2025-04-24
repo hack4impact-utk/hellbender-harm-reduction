@@ -33,18 +33,22 @@ export function AccountInfo(props: AccountInfoProps) {
         <Typography variant="h5"> Phone Number </Typography>
         <TextField disabled defaultValue={props.phone} />
 
-        <Grid container spacing={2}>
-          {props.tags.map((userTag) => {
-            return (
-              <Grid item xs={6} key={userTag.tag.tagName}>
-                <Box>
-                  <Typography variant="h6" align="center"> {userTag.tag.tagName}: {userTag.tagProf} </Typography>
-                </Box>
-              </Grid>
-            );
-          })}
-        </Grid>
       </Stack>
+      <Grid container spacing={2}>
+        {props.tags.map((userTag) => {
+          return (
+            <Grid item xs={6} key={userTag.tag.tagName}>
+              <Box sx={
+                { border: 1,
+                  borderRadius: 2
+                }
+                }>
+                <Typography variant="h6" align="center"> {userTag.tag.tagName}: {userTag.tagProf} </Typography>
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
     </div>
   );
 }
