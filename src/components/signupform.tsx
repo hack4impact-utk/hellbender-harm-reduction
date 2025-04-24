@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SignUpBasicInfo } from './signupbasicinfo';
 import { Box, Button } from '@mui/material';
 import { SignUpContactInfo } from './signupcontactinfo';
@@ -14,7 +14,6 @@ import { SetEmergencyContact } from './setemergencycontact';
 import { SignUpFormData } from '@/types/form/signUp';
 // import { SetReminders } from './setreminders';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 import Pagination from '@mui/material/Pagination';
 
 export enum FormEnum {
@@ -25,27 +24,29 @@ export enum FormEnum {
   CertificationInfo = 5,
 }
 
-export function SignUpInfoForm() {
+export function SignUpInfoForm({ user }: { user?: Partial<SignUpFormData> }) {
   const [signUpData, setSignUpFormData] = useState<SignUpFormData>({
-    name: '',
-    image: '',
-    email: '',
-    phone: '',
-    pronouns: '',
+    name: user?.name || '',
+    image: user?.image || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    pronouns: user?.pronouns || '',
 
     emergencyContact: {
-      ecName: '',
-      ecPhone: '',
+      ecName: user?.emergencyContact?.ecName || '',
+      ecPhone: user?.emergencyContact?.ecPhone || '',
     },
 
-    userTags: [],
-    eventPreferences: [],
-    eventNotif: 'Never',
+    userTags: user?.userTags || [],
+    eventPreferences: user?.eventPreferences || [],
+    eventNotif: user?.eventNotif || 'No Events',
 
-    certifications: [{ certName: '', certDescription: '' }],
-    referralSource: [],
-    accomm: [],
-    otherAccomm: '',
+    certifications: user?.certifications || [
+      { certName: '', certDescription: '' },
+    ],
+    referralSource: user?.referralSource || [],
+    accomm: user?.accomm || [],
+    otherAccomm: user?.otherAccomm || '',
   });
 
   const handleChange = (updated: SignUpFormData) => {
@@ -55,19 +56,28 @@ export function SignUpInfoForm() {
   const router = useRouter();
 
   const totalPages = 5;
-  const initialStep = Math.min(
-    Math.max(parseInt(searchParams.get('step') || '1'), 1),
-    totalPages
-  );
+
+  // Only read `step` param on first render
+  const initialStep = useMemo(() => {
+    const param = parseInt(searchParams.get('step') || '1');
+    return Math.min(Math.max(isNaN(param) ? 1 : param, 1), totalPages);
+  }, [searchParams]); // empty dependency array ensures it's read only once
+
   const [currentForm, setCurrentForm] = useState<FormEnum>(
-    isNaN(initialStep) ? FormEnum.BasicInfo : initialStep
+    initialStep as FormEnum
   );
 
-  useEffect(() => {
+  const handleFormChange = (formNum: number) => {
     const params = new URLSearchParams(window.location.search);
-    params.set('step', currentForm.toString());
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [currentForm]);
+    const currentStepParam = params.get('step');
+
+    if (currentStepParam !== formNum.toString()) {
+      // Avoid recursive updates
+      params.set('step', formNum.toString());
+      router.replace(`?${params.toString()}`, { scroll: false }); // avoids pushing multiple history entries
+    }
+    setCurrentForm(formNum);
+  };
 
   return (
     <Box display="flex" flexDirection="column" height="95%">
@@ -201,7 +211,7 @@ export function SignUpInfoForm() {
         <Pagination
           count={totalPages}
           page={currentForm}
-          onChange={(event, value) => setCurrentForm(value)}
+          onChange={(event, value) => handleFormChange(value)}
           variant="outlined"
         ></Pagination>
         {currentForm == totalPages && (
