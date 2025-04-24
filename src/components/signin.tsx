@@ -1,22 +1,32 @@
 'use client';
 import {
   Box,
-  FilledInput,
-  FormControl,
+  Button,
   Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
   Link,
-  TextField,
   ThemeProvider,
   Typography,
 } from '@mui/material';
-import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-import { useState } from 'react';
+// import {
+//   Box,
+//   Button,
+//   FilledInput,
+//   FormControl,
+//   Grid,
+//   IconButton,
+//   InputAdornment,
+//   InputLabel,
+//   Link,
+//   TextField,
+//   ThemeProvider,
+//   Typography,
+// } from '@mui/material';
+// import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+// import { useState } from 'react';
 import hhrColors from '@/utils/hhr-theme';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import router from 'next/router';
+// import { Visibility, VisibilityOff } from '@mui/icons-material';
+// import router from 'next/router';
+import { signIn } from 'next-auth/react';
 
 interface signInProps {
   email: string;
@@ -24,44 +34,45 @@ interface signInProps {
 }
 
 export default function SignInForm(props: signInProps) {
-  const [email, setEmail] = useState(props.email);
-  const [password, setPassword] = useState(props.password);
+  console.log(props);
+  // const [email, setEmail] = useState(props.email);
+  // const [password, setPassword] = useState(props.password);
 
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  // const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
+  // const handleMouseDownPassword = (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ) => {
+  //   event.preventDefault();
+  // };
 
-  const handleMouseUpPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
+  // const handleMouseUpPassword = (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ) => {
+  //   event.preventDefault();
+  // };
 
-  const handleSignIn = async () => {
-    // This code should attempt to fetch the user based on the email entered and go to the users profile page (not working yet)
-    try {
-      // Call the API to get the user by email
-      const response = await fetch(`/api/users?email=${email}`);
-      if (!response.ok) {
-        throw new Error('User not found or error fetching user.');
-      }
-      const user = await response.json();
-      if (!user || !user.id) {
-        throw new Error('Invalid user data received.');
-      }
-      // Redirect to profile/[id] page
-      router.push(`/profile/${user.id}`);
-    } catch (error) {
-      console.error('Sign-in error:', error);
-      // setError('Failed to sign in. Please check your credentials.');
-    }
-  };
+  // const handleSignIn = async () => {
+  //   // This code should attempt to fetch the user based on the email entered and go to the users profile page (not working yet)
+  //   try {
+  //     // Call the API to get the user by email
+  //     const response = await fetch(`/api/users?email=${email}`);
+  //     if (!response.ok) {
+  //       throw new Error('User not found or error fetching user.');
+  //     }
+  //     const user = await response.json();
+  //     if (!user || !user.id) {
+  //       throw new Error('Invalid user data received.');
+  //     }
+  //     // Redirect to profile/[id] page
+  //     router.push(`/profile/${user.id}`);
+  //   } catch (error) {
+  //     console.error('Sign-in error:', error);
+  //     // setError('Failed to sign in. Please check your credentials.');
+  //   }
+  // };
 
   return (
     <>
@@ -99,7 +110,7 @@ export default function SignInForm(props: signInProps) {
             justifyContent="center"
             sx={{ flexGrow: 1, width: '100%' }} // Ensures content is centered and responsive
           >
-            <Grid item>
+            {/* <Grid item>
               <TextField
                 required
                 label="Email"
@@ -156,7 +167,7 @@ export default function SignInForm(props: signInProps) {
                 />
               </FormControl>
               <Box marginTop={0} sx={{ width: '100%', textAlign: 'right' }}>
-                {/* Forgot Password */}
+                {/* Forgot Password
                 <Link
                   href="/resetPassword"
                   underline="hover"
@@ -165,9 +176,34 @@ export default function SignInForm(props: signInProps) {
                   Forgot Password?
                 </Link>
               </Box>
+            </Grid> */}
+            <Grid item display={'flex'} justifyContent={'center'}>
+              <Button
+                variant="contained"
+                startIcon={
+                  <img
+                    src="/google-color-icon.svg"
+                    alt="Google icon"
+                    width={50}
+                    style={{
+                      backgroundColor: 'white',
+                      padding: '8px',
+                      borderRadius: '4px',
+                      margin: '0px',
+                    }}
+                  />
+                }
+                onClick={() => signIn('google')}
+                sx={{
+                  p: 0,
+                  pr: 2,
+                }}
+              >
+                Sign in with Google
+              </Button>
             </Grid>
-            <Grid item>
-              {/* Sign-In Button */}
+            {/* <Grid item>
+              {/* Sign-In Button
               <Box sx={{ marginTop: 2, textAlign: 'right' }}>
                 <IconButton
                   aria-label="Next"
@@ -179,7 +215,7 @@ export default function SignInForm(props: signInProps) {
                   />
                 </IconButton>
               </Box>
-            </Grid>
+            </Grid> */}
           </Grid>
 
           {/* Footer */}
