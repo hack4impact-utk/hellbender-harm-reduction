@@ -26,6 +26,7 @@ interface AccountInfoProps {
 }
 
 export function AccountInfo(props: AccountInfoProps) {
+  console.log("ass");
   return (
     <div>
       <Stack spacing={2}>
