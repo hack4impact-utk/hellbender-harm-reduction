@@ -21,7 +21,7 @@ interface userTag {
 interface AccountInfoProps {
   email: string;
   phone: string;
-  tags:  userTag[];
+  tags: userTag[];
 }
 
 export function AccountInfo(props: AccountInfoProps) {
@@ -32,7 +32,7 @@ export function AccountInfo(props: AccountInfoProps) {
         <TextField disabled defaultValue={props.email} />
         <Typography variant="h5"> Phone Number </Typography>
         <TextField disabled defaultValue={props.phone} />
-        
+
         <Grid container spacing={2}>
           {props.tags.map((userTag) => {
             return (
