@@ -1,6 +1,6 @@
 'use client'; // Makes the client use their resources to render the component instead of having the server render it first (epic)
 import { ArrowDownward } from '@mui/icons-material';
-import { TextField, Stack, Typography, Grid, Accordion, AccordionSummary, AccordionDetails, AccordionActions } from '@mui/material';
+import { TextField, Stack, Typography, Grid, Accordion, AccordionSummary, AccordionDetails, AccordionActions, Box } from '@mui/material';
 
 interface Tag {
   tagName: string;
@@ -35,18 +35,15 @@ export function AccountInfo(props: AccountInfoProps) {
         <TextField disabled defaultValue={props.phone} />
         
         <Grid container spacing={2}>
-          
-          <Grid item xs={6}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ArrowDownward />} aria-controls="tag-information">
-                <Typography variant="h5"> {props.tags[0].tag.tagName} </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                Ur mom is hot and also gay
-              </AccordionDetails>
-            </Accordion>
-          </Grid>
-          
+          {props.tags.map((userTag) => {
+            return (
+              <Grid item xs={6} key={userTag.tag.tagName}>
+                <Box>
+                  <Typography variant="h6" align="center"> {userTag.tag.tagName}: {userTag.tagProf} </Typography>
+                </Box>
+              </Grid>
+            );
+          })}
         </Grid>
       </Stack>
     </div>
