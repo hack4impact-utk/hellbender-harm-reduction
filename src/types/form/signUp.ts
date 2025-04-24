@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { zUserTag } from '../user';
 
 export const zSignUpFormData = z.object({
   name: z.string().min(1, { message: 'Required' }),
@@ -16,9 +15,9 @@ export const zSignUpFormData = z.object({
     ecPhone: z.string().min(1, { message: 'Required' }),
   }),
 
-  userTags: z.array(zUserTag),
+  userTags: z.array(z.object({ tagName: z.string(), tagProf: z.string() })),
   eventPreferences: z.array(z.string()),
-  wantsNewEventNotifications: z.boolean(),
+  eventNotif: z.string(),
 
   certifications: z.array(
     z.object({
@@ -27,7 +26,7 @@ export const zSignUpFormData = z.object({
     })
   ),
 
-  referralSource: z.string().optional(),
+  referralSource: z.array(z.string()).optional(),
   accomm: z.array(z.string()).optional(),
   otherAccomm: z.string().optional(),
 });

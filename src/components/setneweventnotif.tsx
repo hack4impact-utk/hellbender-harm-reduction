@@ -8,7 +8,16 @@ import {
   FormControlLabel,
 } from '@mui/material';
 
-export function SetNewEventNotif() {
+interface SetNewEventNotifProps {
+  data: string;
+  onChange: (value: string) => void;
+}
+
+export function SetNewEventNotif({ data, onChange }: SetNewEventNotifProps) {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(event.target.value);
+  };
+
   return (
     <Stack
       spacing={2}
@@ -25,12 +34,14 @@ export function SetNewEventNotif() {
       </FormLabel>
       <RadioGroup
         defaultValue="Never"
+        value={data}
         name="neweventnotifs"
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
         }}
+        onChange={handleChange}
       >
         <FormControlLabel
           value="All New Events"

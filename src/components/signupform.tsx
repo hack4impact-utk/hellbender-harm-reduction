@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { SignUpBasicInfo } from './signupbasicinfo';
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { SignUpContactInfo } from './signupcontactinfo';
 import { AddLang } from './addlang';
 import { SetEventPref } from './seteventpref';
@@ -10,21 +10,22 @@ import { SetNewEventNotif } from './setneweventnotif';
 import { CertificationInfo } from './certificationinfo';
 import { AddAccommodations } from './addaccommodation';
 import { SignUpReferral } from './signupreferral';
-import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 import { SetEmergencyContact } from './setemergencycontact';
 import { SignUpFormData } from '@/types/form/signUp';
 // import { SetReminders } from './setreminders';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import Pagination from '@mui/material/Pagination';
 
 export enum FormEnum {
-  BasicInfo,
-  Emergency,
-  LanguageInfo,
-  EventPreferences,
-  CertificationInfo,
+  BasicInfo = 1,
+  Emergency = 2,
+  LanguageInfo = 3,
+  EventPreferences = 4,
+  CertificationInfo = 5,
 }
 
 export function SignUpInfoForm() {
-  const [currentForm, setCurrentForm] = useState<FormEnum>(FormEnum.BasicInfo);
   const [signUpData, setSignUpFormData] = useState<SignUpFormData>({
     name: '',
     image: '',
@@ -39,10 +40,10 @@ export function SignUpInfoForm() {
 
     userTags: [],
     eventPreferences: [],
-    wantsNewEventNotifications: false,
+    eventNotif: 'Never',
 
     certifications: [{ certName: '', certDescription: '' }],
-    referralSource: '',
+    referralSource: [],
     accomm: [],
     otherAccomm: '',
   });
@@ -50,6 +51,23 @@ export function SignUpInfoForm() {
   const handleChange = (updated: SignUpFormData) => {
     setSignUpFormData(updated);
   };
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const totalPages = 5;
+  const initialStep = Math.min(
+    Math.max(parseInt(searchParams.get('step') || '1'), 1),
+    totalPages
+  );
+  const [currentForm, setCurrentForm] = useState<FormEnum>(
+    isNaN(initialStep) ? FormEnum.BasicInfo : initialStep
+  );
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('step', currentForm.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [currentForm]);
 
   return (
     <Box display="flex" flexDirection="column" height="95%">
@@ -126,27 +144,39 @@ export function SignUpInfoForm() {
         )}
         {currentForm === FormEnum.LanguageInfo && (
           <AddLang
-            Languages={['Spanish', 'Chinese', 'Arabic', 'ASL']}
-            UserTags={[null]}
+            data={{
+              languages: ['Spanish', 'French', 'ASL', 'Arabic'], // or fetch from API
+              userTags: signUpData.userTags,
+            }}
+            onChange={(updated) =>
+              handleChange({
+                ...signUpData,
+                userTags: updated.userTags,
+              })
+            }
           />
-          // <AddLang
-          //   data={{
-          //     Languages: ['Spanish', 'French', 'ASL', 'Arabic'], // or fetch from API
-          //     UserTags: signUpData.userTags,
-          //   }}
-          //   onChange={(updated) =>
-          //     handleChange({
-          //       ...signUpData,
-          //       userTags: updated.userTags,
-          //     })
-          //   }
-          // />
         )}
         {currentForm === FormEnum.EventPreferences && (
           <div>
-            <SetEventPref></SetEventPref>
+            <SetEventPref
+              data={signUpData.eventPreferences}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  eventPreferences: updated,
+                })
+              }
+            />
             <Box mt={3}></Box>
-            <SetNewEventNotif></SetNewEventNotif>
+            <SetNewEventNotif
+              data={signUpData.eventNotif}
+              onChange={(value) =>
+                handleChange({
+                  ...signUpData,
+                  eventNotif: value,
+                })
+              }
+            />
           </div>
         )}
         {currentForm === FormEnum.CertificationInfo && (
@@ -155,38 +185,29 @@ export function SignUpInfoForm() {
               data={[{ certName: '', certDescription: '' }]}
             ></CertificationInfo>
             <Box mt={3}></Box>
-            <SignUpReferral></SignUpReferral>
+            <SignUpReferral
+              data={signUpData.referralSource || []}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  referralSource: updated, // keep only the first selected
+                })
+              }
+            />
           </div>
         )}
       </Box>
-      <Grid container spacing={2} width={'100%'} alignSelf="center">
-        <Grid item xs={6} sm={6} display={'flex'} justifyContent={'flex-begin'}>
-          <Button
-            onClick={() => setCurrentForm((currentForm - 1) % 5)}
-            variant="contained"
-            color="primary"
-            startIcon={<NavigateBefore />}
-            sx={{
-              mt: 2,
-            }}
-          >
-            Back
-          </Button>
-        </Grid>
-        <Grid item xs={6} sm={6} display={'flex'} justifyContent={'flex-end'}>
-          <Button
-            onClick={() => setCurrentForm((currentForm + 1) % 5)}
-            variant="contained"
-            color="primary"
-            endIcon={<NavigateNext />}
-            sx={{
-              mt: 2,
-            }}
-          >
-            Next
-          </Button>
-        </Grid>
-      </Grid>
+      <Box display={'flex'} justifyContent={'center'} p={1}>
+        <Pagination
+          count={totalPages}
+          page={currentForm}
+          onChange={(event, value) => setCurrentForm(value)}
+          variant="outlined"
+        ></Pagination>
+        {currentForm == totalPages && (
+          <Button variant="contained">Submit</Button>
+        )}
+      </Box>
     </Box>
   );
 }
