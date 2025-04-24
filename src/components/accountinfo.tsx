@@ -39,10 +39,11 @@ export function AccountInfo(props: AccountInfoProps) {
           return (
             <Grid item xs={6} key={userTag.tag.tagName}>
               <Box sx={
-                { border: 1,
+                {
+                  border: 1,
                   borderRadius: 2
                 }
-                }>
+              }>
                 <Typography variant="h6" align="center"> {userTag.tag.tagName}: {userTag.tagProf} </Typography>
               </Box>
             </Grid>
