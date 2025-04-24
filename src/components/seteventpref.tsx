@@ -1,4 +1,5 @@
-'use client'; // Makes the client use their resources to render the component instead of having the server render it first (epic)
+'use client';
+import React, { useEffect, useState } from 'react';
 import {
   Typography,
   Stack,
@@ -7,35 +8,65 @@ import {
   Checkbox,
 } from '@mui/material';
 
-export function SetEventPref() {
+interface SetEventPrefProps {
+  data: string[];
+  onChange: (selectedEvents: string[]) => void;
+}
+
+export function SetEventPref({ data, onChange }: SetEventPrefProps) {
+  const [selectedEvents, setSelectedEvents] = useState<string[]>(data || []);
+
+  useEffect(() => {
+    onChange(selectedEvents);
+  }, [onChange, selectedEvents]);
+
+  const eventOptions = [
+    'Harm Reduction Services',
+    'Syringe Pick-Up',
+    'In-Kind Fundraising',
+    'Building Work Days',
+    'Fundraising',
+    'Special Events',
+    'Community Education and Advocacy',
+  ];
+
+  const handleToggle = (eventLabel: string) => {
+    setSelectedEvents((prev) =>
+      prev.includes(eventLabel)
+        ? prev.filter((item) => item !== eventLabel)
+        : [...prev, eventLabel]
+    );
+  };
+
   return (
-    <Stack textAlign={'center'}>
+    <Stack textAlign="center">
       <Typography variant="h5">What Events Are You Interested In?</Typography>
-      <br></br>
-      <Grid container spacing={2} maxWidth={400} alignSelf={'center'}>
-        <Grid item xs={6} textAlign={'left'}>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Harm Reduction Services"
-          />
-          <br></br>
-          <FormControlLabel control={<Checkbox />} label="Syringe Pick-Up" />
-          <br></br>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="In-Kind Fundraising"
-          />
-        </Grid>
-        <Grid item xs={6} textAlign={'left'}>
-          <FormControlLabel control={<Checkbox />} label="Building Work Days" />
-          <br></br>
-          <FormControlLabel control={<Checkbox />} label="Fundraising" />
-          <br></br>
-          <FormControlLabel control={<Checkbox />} label="Special Events" />
-        </Grid>
+      <Grid container spacing={2} alignSelf="center" mt={2} textAlign={'left'}>
+        {eventOptions.slice(0, 6).map((label) => (
+          <Grid item xs={6} key={label}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedEvents.includes(label)}
+                  onChange={() => handleToggle(label)}
+                />
+              }
+              label={label}
+            />
+          </Grid>
+        ))}
         <Grid item xs={12}>
           <FormControlLabel
-            control={<Checkbox />}
+            control={
+              <Checkbox
+                checked={selectedEvents.includes(
+                  'Community Education and Advocacy'
+                )}
+                onChange={() =>
+                  handleToggle('Community Education and Advocacy')
+                }
+              />
+            }
             label="Community Education and Advocacy"
           />
         </Grid>

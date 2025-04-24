@@ -8,7 +8,16 @@ import {
   FormControlLabel,
 } from '@mui/material';
 
-export function SetNewEventNotif() {
+interface SetNewEventNotifProps {
+  data: string;
+  onChange: (value: string) => void;
+}
+
+export function SetNewEventNotif({ data, onChange }: SetNewEventNotifProps) {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(event.target.value);
+  };
+
   return (
     <Stack
       spacing={2}
@@ -18,19 +27,21 @@ export function SetNewEventNotif() {
         alignItems: 'center',
       }}
     >
-      <Typography variant="h4">Want to Know About New Events?</Typography>
+      <Typography variant="h5">Want to Know About New Events?</Typography>
       <br />
-      <FormLabel id="demo-radio-buttons-group-label">
+      <FormLabel id="demo-radio-buttons-group-label" sx={{ color: 'white' }}>
         I want email notifications for...
       </FormLabel>
       <RadioGroup
         defaultValue="Never"
+        value={data}
         name="neweventnotifs"
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
         }}
+        onChange={handleChange}
       >
         <FormControlLabel
           value="All New Events"

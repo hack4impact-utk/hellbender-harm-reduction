@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { SignUpBasicInfo } from './signupbasicinfo';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { SignUpContactInfo } from './signupcontactinfo';
 import { AddLang } from './addlang';
 import { SetEventPref } from './seteventpref';
@@ -10,57 +10,204 @@ import { SetNewEventNotif } from './setneweventnotif';
 import { CertificationInfo } from './certificationinfo';
 import { AddAccommodations } from './addaccommodation';
 import { SignUpReferral } from './signupreferral';
+import { SetEmergencyContact } from './setemergencycontact';
+import { SignUpFormData } from '@/types/form/signUp';
 // import { SetReminders } from './setreminders';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import Pagination from '@mui/material/Pagination';
 
 export enum FormEnum {
-  BasicInfo,
-  Emergency,
-  LanguageInfo,
-  EventPreferences,
-  CertificationInfo,
+  BasicInfo = 1,
+  Emergency = 2,
+  LanguageInfo = 3,
+  EventPreferences = 4,
+  CertificationInfo = 5,
 }
 
 export function SignUpInfoForm() {
-  const [currentForm, setCurrentForm] = useState<FormEnum>(FormEnum.BasicInfo);
+  const [signUpData, setSignUpFormData] = useState<SignUpFormData>({
+    name: '',
+    image: '',
+    email: '',
+    phone: '',
+    pronouns: '',
+
+    emergencyContact: {
+      ecName: '',
+      ecPhone: '',
+    },
+
+    userTags: [],
+    eventPreferences: [],
+    eventNotif: 'Never',
+
+    certifications: [{ certName: '', certDescription: '' }],
+    referralSource: [],
+    accomm: [],
+    otherAccomm: '',
+  });
+
+  const handleChange = (updated: SignUpFormData) => {
+    setSignUpFormData(updated);
+  };
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const totalPages = 5;
+  const initialStep = Math.min(
+    Math.max(parseInt(searchParams.get('step') || '1'), 1),
+    totalPages
+  );
+  const [currentForm, setCurrentForm] = useState<FormEnum>(
+    isNaN(initialStep) ? FormEnum.BasicInfo : initialStep
+  );
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('step', currentForm.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [currentForm]);
 
   return (
-    <div>
-      {currentForm === FormEnum.BasicInfo && (
-        <div>
-          <SignUpBasicInfo></SignUpBasicInfo>
-          <SignUpContactInfo></SignUpContactInfo>
-        </div>
-      )}
-      {currentForm === FormEnum.Emergency && (
-        <div>
-          <p>Emergency Contact</p>
-          <AddAccommodations></AddAccommodations>
-        </div>
-      )}
-      {currentForm === FormEnum.LanguageInfo && (
-        <AddLang Languages={['Spanish']} UserTags={[null]}></AddLang>
-      )}
-      {currentForm === FormEnum.EventPreferences && (
-        <div>
-          <SetEventPref></SetEventPref>
-          <SetNewEventNotif></SetNewEventNotif>
-          {/*<SetReminders></SetReminders>*/}
-        </div>
-      )}
-      {currentForm === FormEnum.CertificationInfo && (
-        <div>
-          <CertificationInfo
-            data={[{ certName: '', certDescription: '' }]}
-          ></CertificationInfo>
-          <SignUpReferral></SignUpReferral>
-        </div>
-      )}
-      <Button
-        onClick={() => setCurrentForm((currentForm + 1) % 5)}
-        variant="contained"
+    <Box display="flex" flexDirection="column" height="95%">
+      <Box
+        pb={3}
+        sx={{
+          flexGrow: 1,
+          overflow: 'auto',
+          pr: 2,
+        }}
       >
-        Next
-      </Button>
-    </div>
+        {currentForm === FormEnum.BasicInfo && (
+          <div>
+            <SignUpBasicInfo
+              data={{
+                name: signUpData.name,
+                image: signUpData.image,
+                pronouns: signUpData.pronouns,
+              }}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  ...updated,
+                })
+              }
+            ></SignUpBasicInfo>
+            <Box mt={3}></Box>
+            <SignUpContactInfo
+              data={{
+                phone: signUpData.phone,
+                email: signUpData.email,
+              }}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  ...updated,
+                })
+              }
+            ></SignUpContactInfo>
+          </div>
+        )}
+        {currentForm === FormEnum.Emergency && (
+          <div>
+            <SetEmergencyContact
+              data={{
+                ecName: signUpData.emergencyContact.ecName,
+                ecPhone: signUpData.emergencyContact.ecPhone,
+              }}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  emergencyContact: {
+                    ...signUpData.emergencyContact,
+                    ...updated,
+                  },
+                })
+              }
+            ></SetEmergencyContact>
+            <Box mt={3}></Box>
+            <AddAccommodations
+              data={{
+                accomm: signUpData.accomm || [],
+                otherAccomm: signUpData.otherAccomm || '',
+              }}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  accomm: updated.accomm,
+                  otherAccomm: updated.otherAccomm,
+                })
+              }
+            />
+          </div>
+        )}
+        {currentForm === FormEnum.LanguageInfo && (
+          <AddLang
+            data={{
+              languages: ['Spanish', 'French', 'ASL', 'Arabic'], // or fetch from API
+              userTags: signUpData.userTags,
+            }}
+            onChange={(updated) =>
+              handleChange({
+                ...signUpData,
+                userTags: updated.userTags,
+              })
+            }
+          />
+        )}
+        {currentForm === FormEnum.EventPreferences && (
+          <div>
+            <SetEventPref
+              data={signUpData.eventPreferences}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  eventPreferences: updated,
+                })
+              }
+            />
+            <Box mt={3}></Box>
+            <SetNewEventNotif
+              data={signUpData.eventNotif}
+              onChange={(value) =>
+                handleChange({
+                  ...signUpData,
+                  eventNotif: value,
+                })
+              }
+            />
+          </div>
+        )}
+        {currentForm === FormEnum.CertificationInfo && (
+          <div>
+            <CertificationInfo
+              data={[{ certName: '', certDescription: '' }]}
+            ></CertificationInfo>
+            <Box mt={3}></Box>
+            <SignUpReferral
+              data={signUpData.referralSource || []}
+              onChange={(updated) =>
+                handleChange({
+                  ...signUpData,
+                  referralSource: updated, // keep only the first selected
+                })
+              }
+            />
+          </div>
+        )}
+      </Box>
+      <Box display={'flex'} justifyContent={'center'} p={1}>
+        <Pagination
+          count={totalPages}
+          page={currentForm}
+          onChange={(event, value) => setCurrentForm(value)}
+          variant="outlined"
+        ></Pagination>
+        {currentForm == totalPages && (
+          <Button variant="contained">Submit</Button>
+        )}
+      </Box>
+    </Box>
   );
 }
