@@ -106,6 +106,7 @@ export default function DashCalendar({
 
     document.head.appendChild(style);
 
+    // adds very slight delay to make sure that fullcalendar fully loads everything when you first open the page
     const calendarApi = calendarRef.current?.getApi();
     if (calendarApi) {
       setTimeout(() => {

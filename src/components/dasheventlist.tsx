@@ -18,6 +18,7 @@ import {
   Typography,
 } from '@mui/material';
 
+// needed interfaces
 interface EventInfo {
   eventName: string;
   eventStart: Date;
@@ -33,6 +34,7 @@ interface EventInfoProps {
   events: EventInfo;
 }
 
+// exports event description, edited version of eventlist component
 export function DashEventList({ events }: EventInfoProps) {
   return (
     <Box

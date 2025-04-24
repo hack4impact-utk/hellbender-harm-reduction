@@ -13,7 +13,7 @@ export default async function Home() {
     return <Typography>No Events Found</Typography>;
   }
 
-  // collects data, saves tagname in requirement and preference arrays instead of the tag id
+  // collects event data for dasheventlist component, saves tagname in requirement and preference arrays instead of the tag id
   const cleanData = await Promise.all(
     allevents.map(async (event: any) => {
       const eventRequirements = await Promise.all(
@@ -44,6 +44,7 @@ export default async function Home() {
     })
   );
 
+  // gets event data for the calendar component
   const calendardata = allevents.map((event) => {
     return {
       title: event.eventName,
@@ -53,10 +54,10 @@ export default async function Home() {
     };
   });
 
-  // gets user info for all volunteers
+  // gets all users
   const userdata = await getAllUsers();
 
-  // gets user info for volunteers by event
+  // cleans user info and gets info needed for volunteer list
   const cleanUser = await Promise.all(
     userdata.map(async (user) => {
       const userTags = await Promise.all(
@@ -89,12 +90,14 @@ export default async function Home() {
     })
   );
 
+  // gets soonest upcoming event
   const now = new Date();
   const soonEvent =
     cleanData
       .filter((event) => event.eventStart > now)
       .sort((a, b) => a.eventStart - b.eventStart)[0] ?? null;
 
+  // returns actual page
   return (
     <div>
       <AdminDashView

@@ -7,6 +7,7 @@ import { EventClickArg } from '@fullcalendar/core';
 import { DashVolunteerList } from '@/components/dashvolunteerlist';
 import NavBar from '@/components/navbar';
 
+// information for event
 interface ListEventInfo {
   eventName: string;
   eventStart: Date;
@@ -18,6 +19,7 @@ interface ListEventInfo {
   id: string;
 }
 
+// information for calendar
 interface CalEventInfo {
   title: string;
   start: Date;
@@ -25,6 +27,7 @@ interface CalEventInfo {
   description: string;
 }
 
+// information for list of volunteers
 interface emergContact {
   ecName: string;
   ecPhone: string;
@@ -54,14 +57,17 @@ interface EventInfoProps {
   users: UserData[];
 }
 
+// exports admin dashboard
 export default function AdminDashView({
   listevents,
   calevents,
   recentEvent,
   users,
 }: EventInfoProps) {
+  // stores which event is currently selected by user, defaults/initializes to soonest upcoming event
   const [selectedEvent, setSelectedEvent] = useState(recentEvent);
 
+  // function for setting selected event once event is clicked
   const handleCalendarEventClick = (eventInfo: EventClickArg) => {
     const { description } = eventInfo.event.extendedProps;
     const matchingListEvent = listevents.find((evt) => {
@@ -71,10 +77,12 @@ export default function AdminDashView({
     setSelectedEvent(matchingListEvent ?? recentEvent);
   };
 
+  // gets users signed up for that event
   const filtUsers = selectedEvent
     ? users.filter((user) => user.events.includes(selectedEvent.id))
     : [];
 
+  // returns the actual page
   return (
     <Box
       sx={{
