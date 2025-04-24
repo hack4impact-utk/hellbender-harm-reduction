@@ -26,7 +26,6 @@ interface AccountInfoProps {
 }
 
 export function AccountInfo(props: AccountInfoProps) {
-  console.log("ass");
   return (
     <div>
       <Stack spacing={2}>
@@ -40,7 +39,7 @@ export function AccountInfo(props: AccountInfoProps) {
           <Grid item xs={6}>
             <Accordion>
               <AccordionSummary expandIcon={<ArrowDownward />} aria-controls="tag-information">
-                {/* <Typography variant="h5"> {props.tags[0].tag.tagName} </Typography> */}
+                <Typography variant="h5"> {props.tags[0].tag.tagName} </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 Ur mom is hot and also gay
