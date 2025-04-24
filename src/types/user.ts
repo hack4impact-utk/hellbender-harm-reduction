@@ -68,6 +68,7 @@ export const tagProfEnum = [
   'N/A',
 ] as const;
 export const zTagProfEnum = z.enum(tagProfEnum);
+export type profEnum = z.infer<typeof zTagProfEnum>;
 
 export const zCustomReminder = z.object({
   daysPrior: z.number(),

@@ -13,7 +13,7 @@ interface CertificationInfoProps {
 export function CertificationInfo(props: CertificationInfoProps) {
   return (
     <Box>
-      <Typography variant="h4" textAlign={'center'}>
+      <Typography variant="h5" textAlign={'center'}>
         Interested In Learning More About Harm Reduction?
       </Typography>
       <br></br>
