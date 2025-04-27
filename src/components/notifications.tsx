@@ -36,7 +36,7 @@ const iconMap = {
   'Community Education and Advocacy': <HandshakeIcon />,
   'In-Kind Fundraising': <AddBusinessIcon />,
   'Building Work Days': <HomeWorkIcon />,
-  Fundraising: <AttachMoneyIcon />,
+  'Fundraising': <AttachMoneyIcon />,
   'Special Events': <LocalActivityIcon />,
 };
 
@@ -82,19 +82,19 @@ export function NotificationInfo(props: NotificationInfoProps) {
             <FormControl component="fieldset">
               <RadioGroup value={props.newEvents}>
                 <FormControlLabel
-                  value="All Events"
+                  value='All Events'
                   control={<Radio disabled />}
-                  label="All Events"
+                  label='All Events'
                 />
                 <FormControlLabel
-                  value="Preferred Events"
+                  value='Preferred Events'
                   control={<Radio disabled />}
-                  label="Preferred Events"
+                  label='Preferred Events'
                 />
                 <FormControlLabel
-                  value="None"
+                  value='None'
                   control={<Radio disabled />}
-                  label="None"
+                  label='None'
                 />
               </RadioGroup>
             </FormControl>
