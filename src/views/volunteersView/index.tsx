@@ -1,9 +1,14 @@
 'use client';
-import { Typography, Box, Tab, Tabs, Button } from '@mui/material';
+import { Box, Tab, Tabs, Button, Grid, Typography, Stack } from '@mui/material';
 import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { AllVolunteers } from '@/components/allvolunteers';
 import { EventVolunteers } from '@/components/eventvolunteers';
+import VolsRegistered from '@/components/volsregistered';
+import ReferralInfo from '@/components/referralinfo';
+import PrefEventMetrics from '@/components/prefeventmetrics';
+import { EventTypeEnum } from '@/types/event';
+import { EventDistribution } from '@/components/eventsdistribution';
 
 //interfaces for the data in all three components/tabs
 interface utag {
@@ -42,16 +47,41 @@ interface AllUserData {
   emergencyContacts?: emergContact;
 }
 
+interface Referrals {
+  source: string;
+  count: number;
+}
+
+interface Events {
+  type: string;
+  count: number;
+}
+
+interface events {
+  event_years_start: number;
+  event_types: Map<number, Map<EventTypeEnum, number>>;
+  event_total: Map<number, number>;
+}
+
+interface MetricData {
+  volsregistered: number;
+  distribution: events;
+  referrals: Referrals[];
+  prefevents: Events[];
+}
+
 interface DataTableProps {
   alldata: AllUserData[];
   userdata: UserData[];
   eventdata: EventData[];
+  metrics: MetricData;
 }
 
 export default function VolunteersView({
   alldata,
   userdata,
   eventdata,
+  metrics,
 }: DataTableProps) {
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
@@ -70,12 +100,15 @@ export default function VolunteersView({
       sx={{
         backgroundColor: '#E2E7E2',
         height: '100vh',
+        width: '100vw',
       }}
     >
       <Navbar userType={'Admin'} userId={''} page={'Volunteers'} />
       <Box
         sx={{
           height: '90%',
+          width: '99%',
+          padding: '10px',
         }}
       >
         <Tabs
@@ -121,11 +154,74 @@ export default function VolunteersView({
         <Box
           sx={{
             height: '90%',
-            borderRadius: '0 0 8px 8px',
+            width: '100%',
+            borderRadius: '0 0 15px 15px',
             backgroundColor: '#6E8569',
           }}
         >
-          {selected === 0 && <Typography>Volunteer Metrics</Typography>}
+          {selected === 0 && (
+            <Grid container sx={{ height: '100%', width: '100%' }}>
+              <Grid item xs={4} sx={{ height: '100%', width: '100%' }}>
+                <Stack
+                  spacing="20px"
+                  sx={{
+                    height: '100%',
+                    padding: '15px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: 'center',
+                  }}
+                >
+                  <VolsRegistered amount={metrics.volsregistered} />
+                  <Box
+                    sx={{
+                      backgroundColor: '#f0f5ef',
+                      border: '2px solid',
+                      borderColor: '#42603c',
+                      borderRadius: '15px',
+                      height: '45%',
+                    }}
+                  >
+                    <Typography>Fun Facts Here!</Typography>
+                  </Box>
+                </Stack>
+              </Grid>
+              <Grid
+                item
+                xs={4}
+                sx={{
+                  height: '100%',
+                  width: '100%',
+                  padding: '15px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'center',
+                }}
+              >
+                <EventDistribution
+                  event_years_start={metrics.distribution.event_years_start}
+                  event_types={metrics.distribution.event_types}
+                  event_total={metrics.distribution.event_total}
+                />
+              </Grid>
+              <Grid item xs={4} sx={{ height: '100%', width: '100%' }}>
+                <Stack
+                  spacing="20px"
+                  sx={{
+                    height: '100%',
+                    width: '95%',
+                    padding: '15px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: 'center',
+                  }}
+                >
+                  <ReferralInfo referrals={metrics.referrals} />
+                  <PrefEventMetrics events={metrics.prefevents} />
+                </Stack>
+              </Grid>
+            </Grid>
+          )}
           {selected === 1 && (
             <Box padding={'15px'}>
               <AllVolunteers data={alldata} />

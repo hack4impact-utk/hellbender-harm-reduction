@@ -2,6 +2,8 @@ import VolunteersView from '@/views/volunteersView';
 import { getAllUsers } from '@/server/actions/user';
 import { getAllEvents } from '@/server/actions/event';
 import { getTag } from '@/server/actions/tag';
+import { EventTypeEnum } from '@/types/event';
+import { getEvent } from '@/server/actions/event';
 
 export default async function Home() {
   // gets user info for all volunteers
@@ -52,6 +54,74 @@ export default async function Home() {
     };
   });
 
+  // gets count of currently registered volunteers
+  const count = userdata.filter((user) => user.userType === 'Volunteer').length;
+
+  // gets data for referral sources bar graph
+  const refCounts: Record<string, number> = {};
+  userdata.forEach((user) => {
+    if (user.referrals && Array.isArray(user.referrals)) {
+      user.referrals.forEach((referral) => {
+        refCounts[referral] = (refCounts[referral] || 0) + 1;
+      });
+    }
+  });
+  const refs = Object.entries(refCounts).map(([source, count]) => ({
+    source,
+    count,
+  }));
+
+  // gets data for preferred events bar chart
+  const eventCounts: Record<string, number> = {};
+  userdata.forEach((user) => {
+    if (user.eventPreferences && Array.isArray(user.eventPreferences)) {
+      user.eventPreferences.forEach((event) => {
+        eventCounts[event] = (eventCounts[event] || 0) + 1;
+      });
+    }
+  });
+  const eventTypeCount = Object.entries(eventCounts).map(([type, count]) => ({
+    type,
+    count,
+  }));
+
+  // gets information for event types per year pie chart
+  let startingYear: number = 99999;
+  const eventsPerYear = new Map<number, Map<EventTypeEnum, number>>();
+  const totalsPerYear = new Map<number, number>();
+  const allEventIds = userdata
+    .flatMap((user) => user.events || [])
+    .map((eventObj) => eventObj.uevent.toString());
+  const fetchedEvents = await Promise.all(allEventIds.map(getEvent));
+  for (const e of fetchedEvents) {
+    if (!e) continue;
+
+    const year = e.eventStart.getFullYear();
+    startingYear = Math.min(startingYear, year);
+
+    if (!eventsPerYear.has(year)) {
+      eventsPerYear.set(year, new Map());
+    }
+
+    const typeMap = eventsPerYear.get(year)!;
+    typeMap.set(e.eventType, (typeMap.get(e.eventType) ?? 0) + 1);
+
+    totalsPerYear.set(year, (totalsPerYear.get(year) ?? 0) + 1);
+  }
+  const dist = {
+    event_years_start: startingYear,
+    event_types: eventsPerYear,
+    event_total: totalsPerYear,
+  };
+
+  // puts all metrics data into one object
+  const metrics = {
+    volsregistered: count,
+    distribution: dist,
+    referrals: refs,
+    prefevents: eventTypeCount,
+  };
+
   // returns actual page
   return (
     <div>
@@ -59,6 +129,7 @@ export default async function Home() {
         alldata={safeUsers}
         userdata={cleanData}
         eventdata={filtevents}
+        metrics={metrics}
       />
     </div>
   );

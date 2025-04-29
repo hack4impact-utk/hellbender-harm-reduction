@@ -12,9 +12,9 @@ interface ReferralInfoProps {
   referrals: Referrals[];
 }
 
+// component for a bar chart that shows the count of referral sources across users
 export default function ReferralInfo({ referrals }: ReferralInfoProps) {
-  console.log(referrals);
-
+  // formats info for use in bar chart
   const dataset = [
     referrals.reduce(
       (acc, curr) => {
@@ -25,23 +25,28 @@ export default function ReferralInfo({ referrals }: ReferralInfoProps) {
     ),
   ];
 
-  // Each source becomes a separate series (1 bar per series)
+  // each source becomes a separate series (1 bar per series)
   const series = referrals.map((item) => ({
     dataKey: item.source,
     label: item.source,
   }));
 
+  // returns actual bar chart
   return (
     <Box
       sx={{
         backgroundColor: '#f0f5ef',
         border: '2px solid',
         borderColor: '#42603c',
-        borderRadius: '10px',
+        borderRadius: '15px',
+        height: '45%',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <BarChart
-        height={300}
         dataset={dataset}
         layout="horizontal"
         series={series}
@@ -53,6 +58,22 @@ export default function ReferralInfo({ referrals }: ReferralInfoProps) {
           },
         ]}
         colors={mangoFusionPalette}
+        sx={{ height: '90%', width: '90%', paddingRight: '20px' }}
+        slotProps={{
+          legend: {
+            position: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+            sx: {
+              color: '#42603c',
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              mt: 2,
+            },
+          },
+        }}
       />
     </Box>
   );

@@ -23,15 +23,16 @@ interface events {
 // literally just takes in a number and presents it in a nice little box.
 export function EventDistribution(_props: events) {
   const theme = useTheme();
-  const [year, setYear] = React.useState('');
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = React.useState(currentYear.toString()); // sets default year as current year
 
+  // handles when a year is selected
   const handleChange = (event: SelectChangeEvent) => {
     setYear(event.target.value);
   };
 
   // Calculates the range of years.
   const startYear = _props.event_years_start;
-  const currentYear = new Date().getFullYear();
   const years = Array.from(
     { length: currentYear - startYear + 1 },
     (_, year_length) => startYear + year_length
@@ -54,7 +55,15 @@ export function EventDistribution(_props: events) {
   const totalForYear = _props.event_total.get(Number(year)) ?? 0;
 
   return (
-    <Box>
+    <Box
+      sx={{
+        backgroundColor: '#f0f5ef',
+        border: '2px solid',
+        borderColor: '#42603c',
+        borderRadius: '15px',
+        height: '100%',
+      }}
+    >
       {/* Header Typography */}
       <Box
         display="flex"
@@ -63,25 +72,24 @@ export function EventDistribution(_props: events) {
         justifyContent="center"
         sx={{
           my: 2,
-          flexWrap: 'nowrap',
+          width: '95%',
         }}
       >
         <Typography
-          variant="h6"
           noWrap
           sx={{
-            flex: '0 1 auto',
-            minWidth: 'fit-content',
             fontWeight: 'bold',
-            pr: 1,
-            color: 'text.primary',
+            fontSize: '30px',
+            pr: 2,
+            color: '#42603c',
           }}
         >
           Events in
         </Typography>
         <FormControl
-          fullWidth
-          sx={{ flex: '1 1 200px', maxWidth: { xs: '100%', sm: '300px' } }}
+          sx={{
+            width: '20%',
+          }}
         >
           <InputLabel id="year-select-label">year</InputLabel>
           <Select
@@ -101,16 +109,17 @@ export function EventDistribution(_props: events) {
       </Box>
 
       {/* Total Events */}
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        sx={{ width: '100%', mt: 2 }}
+      <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 'bold',
+          color: '#42603c',
+          paddingTop: '15px',
+          paddingBottom: '5px',
+        }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          Total: {totalForYear}
-        </Typography>
-      </Box>
+        Total: {totalForYear}
+      </Typography>
 
       {/* Pie chart */}
       <Box
@@ -118,10 +127,9 @@ export function EventDistribution(_props: events) {
         flexDirection="column"
         justifyItems="center"
         alignItems="center"
-        sx={{ width: '100%', height: 400, my: 4 }}
+        sx={{ width: '100%', height: '70%' }}
       >
         <PieChart
-          height={400}
           series={[
             {
               data: dataForPie,
@@ -137,7 +145,9 @@ export function EventDistribution(_props: events) {
               direction: 'horizontal',
               sx: {
                 flexDirection: 'column',
+                paddingTop: '15px',
                 alignItems: 'flex-start',
+                color: '#42603c',
                 '& .MuiChartsLegend-series': {
                   flexBasis: '100%',
                   maxWidth: '100% !important',
