@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TextField,
   Stack,
@@ -11,19 +11,24 @@ import {
 } from '@mui/material';
 
 interface AddAccommodationsProps {
-  userAccomms?: string[];
-  otherAccomm?: string;
+  data: {
+    accomm: string[];
+    otherAccomm: string;
+  };
+  onChange: (updated: { accomm: string[]; otherAccomm: string }) => void;
 }
 
-export function AddAccommodations({
-  userAccomms = [],
-  otherAccomm = '',
-}: AddAccommodationsProps) {
+export function AddAccommodations({ data, onChange }: AddAccommodationsProps) {
   // Local state to manage which accommodations are checked
-  const [checkedAccomms, setCheckedAccomms] = useState<string[]>(userAccomms);
+  const [checkedAccomms, setCheckedAccomms] = useState<string[]>(data.accomm);
 
   // Local state to manage the value of the "Other" text field
-  const [otherText, setOtherText] = useState<string>(otherAccomm);
+  const [otherText, setOtherText] = useState<string>(data.otherAccomm);
+
+  // Push changes to parent
+  useEffect(() => {
+    onChange({ accomm: checkedAccomms, otherAccomm: otherText });
+  }, [checkedAccomms, otherText]);
 
   // List of available accommodations
   const accommodations = [
@@ -98,7 +103,10 @@ export function AddAccommodations({
             value={otherText}
             onChange={handleOtherChange}
             fullWidth
-            variant="outlined"
+            variant="filled"
+            sx={{
+              backgroundColor: '#4d6a48',
+            }}
           />
         </Grid>
       </Grid>

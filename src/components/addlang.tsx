@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography,
   Grid,
@@ -21,11 +21,14 @@ interface Tags {
 }
 
 interface AddLangProps {
-  Languages: string[];
-  UserTags: (Tags | null)[];
+  data: {
+    languages: string[];
+    userTags: Tags[];
+  };
+  onChange: (updated: { userTags: Tags[] }) => void;
 }
 
-export function AddLang({ Languages, UserTags }: AddLangProps) {
+export function AddLang({ data, onChange }: AddLangProps) {
   // state for list item
   const [selectedItem, setSelectedItem] = useState<string | null>('Spanish');
 
@@ -34,8 +37,13 @@ export function AddLang({ Languages, UserTags }: AddLangProps) {
 
   // state for all tags (imported and added)
   const [userTags, setUserTags] = useState<Tags[]>(
-    UserTags.filter((tag): tag is Tags => tag !== null)
+    data.userTags.filter((tag): tag is Tags => tag !== null)
   );
+
+  // Use effect to keep parent updated
+  useEffect(() => {
+    onChange({ userTags });
+  }, [onChange, userTags]);
 
   // if list item is clicked
   const handleListItemClick = (item: string) => {
@@ -94,7 +102,7 @@ export function AddLang({ Languages, UserTags }: AddLangProps) {
       >
         <Typography variant="h6">Select a Language:</Typography>
         <List component="nav">
-          {Languages.map((item) => (
+          {data.languages.map((item) => (
             <ListItem key={item}>
               <ListItemButton
                 selected={selectedItem === item}
