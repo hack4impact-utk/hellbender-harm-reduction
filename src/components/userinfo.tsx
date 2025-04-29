@@ -1,4 +1,5 @@
-import { Avatar, TextField, Stack } from '@mui/material';
+import { Typography } from '@mui/material';
+import { Avatar, Stack, Box } from '@mui/material';
 
 interface userInfoProps {
   profilePicture: string;
@@ -11,24 +12,66 @@ interface userInfoProps {
 // Remove the disabled attribute when it's time to allow the fields to be edited
 export function UserInfo(props: userInfoProps) {
   return (
-    <Stack spacing={2} alignItems="center">
+    <Stack
+      spacing={2}
+      alignItems="center"
+      sx={{
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <Avatar
         alt={props.name}
         src={props.profilePicture}
-        sx={{ width: 200, height: 200 }}
+        sx={{
+          width: '60%',
+          height: '50%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       />
-      <TextField
-        disabled
-        id="outlined-basic"
-        defaultValue={props.name}
-        inputProps={{ min: 0, style: { textAlign: 'center' } }}
-      />
-      <TextField
-        disabled
-        id="outlined-basic"
-        defaultValue={props.pronouns}
-        inputProps={{ min: 0, style: { textAlign: 'center' } }}
-      />
+      <Box
+        sx={{
+          height: '12%',
+          width: '90%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#42603c',
+          borderRadius: '10px',
+        }}
+      >
+        <Typography
+          fontSize="20px"
+          fontFamily="Verdana"
+          sx={{ color: '#f0f5ef' }}
+        >
+          {props.name}
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          height: '12%',
+          width: '90%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#42603c',
+          borderRadius: '10px',
+        }}
+      >
+        <Typography
+          fontSize="20px"
+          fontFamily="Verdana"
+          sx={{ color: '#f0f5ef' }}
+        >
+          {props.pronouns}
+        </Typography>
+      </Box>
     </Stack>
   );
 }
