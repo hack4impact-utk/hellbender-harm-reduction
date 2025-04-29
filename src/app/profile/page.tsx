@@ -5,7 +5,7 @@ import ProfileView from '@/views/profileView';
 import { Typography } from '@mui/material';
 
 export default async function Home() {
-  const user = await getUser('67daca61a3a78172a40ec740');
+  const user = await getUser('67daca60a3a78172a40ec73e');
 
   if (!user) {
     return <Typography>User Not Found</Typography>;
@@ -36,7 +36,7 @@ export default async function Home() {
     accomm: user?.accomm,
     otherAccomm: user?.otherAccomm,
     userTags: userTags.filter((tag) => tag !== null),
-    emergencyContacts: user.emergencyContacts
+    emergencyContact: user.emergencyContacts
       ? JSON.parse(JSON.stringify(user.emergencyContacts))
       : [],
   };

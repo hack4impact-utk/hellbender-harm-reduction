@@ -4,6 +4,7 @@ import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { UserInfo } from '@/components/userinfo';
 import { YearlyEvents } from '@/components/yearlyevents';
+import { EmergencyInfo } from '@/components/emergency';
 
 interface EmergencyContact {
   ecName: string;
@@ -25,7 +26,7 @@ interface User {
   email: string;
   image: string;
   userType: string;
-  emergencyContact?: EmergencyContact | [];
+  emergencyContact?: EmergencyContact;
   pronouns: string;
   userTags?: (userTags | null)[];
   phone: string;
@@ -35,7 +36,7 @@ interface User {
   newEvents: string;
   referrals: string[];
   accomm?: string[];
-  otherAccom?: string;
+  otherAccomm?: string;
 }
 
 interface ProfileProps {
@@ -44,6 +45,16 @@ interface ProfileProps {
 }
 
 export default function ProfileView({ user, count }: ProfileProps) {
+  //const combinedRems = [
+  //  ...(user.reminders ?? []),
+  //  ...(user.custReminders ?? []).map(obj => `${String(obj.daysPrior)} days prior at ${obj.time}`),
+  //];
+
+  const combinedAccomms = [
+    ...(user.accomm ?? []),
+    ...(user.otherAccomm ? [user.otherAccomm] : []),
+  ];
+
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
 
@@ -144,7 +155,7 @@ export default function ProfileView({ user, count }: ProfileProps) {
             }}
           >
             <Tab
-              label="Metrics"
+              label="Account Info"
               sx={{
                 color: '#6E8569',
                 '&.Mui-selected': {
@@ -154,7 +165,7 @@ export default function ProfileView({ user, count }: ProfileProps) {
               }}
             />
             <Tab
-              label="All Volunteers"
+              label="Emergency Info"
               sx={{
                 color: '#6E8569',
                 '&.Mui-selected': {
@@ -164,7 +175,7 @@ export default function ProfileView({ user, count }: ProfileProps) {
               }}
             />
             <Tab
-              label="Volunteers By Event"
+              label="Notification Info"
               sx={{
                 color: '#6E8569',
                 '&.Mui-selected': {
@@ -182,7 +193,13 @@ export default function ProfileView({ user, count }: ProfileProps) {
             }}
           >
             {selected === 0 && <Typography>Volunteer Metrics</Typography>}
-            {selected === 1 && <Typography>Hello</Typography>}
+            {selected === 1 && (
+              <EmergencyInfo
+                name={user.emergencyContact?.ecName}
+                phone={user.emergencyContact?.ecPhone}
+                accommodations={combinedAccomms}
+              />
+            )}
             {selected === 2 && <Typography>Hello</Typography>}
           </Box>
         </Grid>
