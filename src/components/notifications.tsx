@@ -10,7 +10,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Container,
   Box,
 } from '@mui/material';
 
@@ -31,22 +30,30 @@ interface NotificationInfoProps {
 
 // Maps a specific phrase to an icon
 const iconMap = {
-  'Harm Reduction Services': <HealingIcon />,
-  'Syringe Pick-Up': <VaccinesIcon />,
-  'Community Education and Advocacy': <HandshakeIcon />,
-  'In-Kind Fundraising': <AddBusinessIcon />,
-  'Building Work Days': <HomeWorkIcon />,
-  'Fundraising': <AttachMoneyIcon />,
-  'Special Events': <LocalActivityIcon />,
+  'Harm Reduction Services': <HealingIcon sx={{ color: '#f0f5ef' }} />,
+  'Syringe Pick-Up': <VaccinesIcon sx={{ color: '#f0f5ef' }} />,
+  'Community Education and Advocacy': (
+    <HandshakeIcon sx={{ color: '#f0f5ef' }} />
+  ),
+  'In-Kind Fundraising': <AddBusinessIcon sx={{ color: '#f0f5ef' }} />,
+  'Building Work Days': <HomeWorkIcon sx={{ color: '#f0f5ef' }} />,
+  Fundraising: <AttachMoneyIcon sx={{ color: '#f0f5ef' }} />,
+  'Special Events': <LocalActivityIcon sx={{ color: '#f0f5ef' }} />,
 };
 
 // Main function
 export function NotificationInfo(props: NotificationInfoProps) {
   return (
     // Styling for preferred events
-    <Container maxWidth="md" sx={{ mt: 5, mb: 5 }}>
-      <Box sx={{ backgroundColor: 'hhr.light', p: 4, borderRadius: 2 }}>
-        <Typography variant="h6" gutterBottom>
+    <Grid container direction="column" sx={{ height: '100%', padding: '25px' }}>
+      <Grid item xs={5}>
+        <Typography
+          gutterBottom
+          fontFamily="Verdana"
+          fontWeight={'bold'}
+          variant="h3"
+          color="#f0f5ef"
+        >
           Preferred Events
         </Typography>
         <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 3 }}>
@@ -58,72 +65,147 @@ export function NotificationInfo(props: NotificationInfoProps) {
               icon={iconMap[pref as keyof typeof iconMap]}
               label={pref}
               sx={{
-                backgroundColor: 'hhr.light',
-                color: 'text.primary',
-                border: '1px solid',
-                borderColor: 'hhr.dark',
-                fontWeight: 500,
+                backgroundColor: '#42603c',
+                color: '#f0f5ef',
+                fontSize: '20px',
                 mb: 1,
+                padding: '20px',
+                '& .MuiChip-icon': {
+                  color: '#f0f5ef !important',
+                },
               }}
             />
           ))}
         </Stack>
-
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" gutterBottom>
-              Email Settings
-            </Typography>
+      </Grid>
+      <Grid item xs={7}>
+        <Typography
+          gutterBottom
+          fontFamily="Verdana"
+          fontWeight={'bold'}
+          variant="h3"
+          color="#f0f5ef"
+        >
+          Email Settings
+        </Typography>
+        <Grid container spacing={4} sx={{ height: '100%' }}>
+          <Grid item xs={12} md={6} sx={{ height: '100%' }}>
             {/*Displays in disabled radio format, what option the user picked
               for event notifications */}
-            <Typography variant="subtitle1" gutterBottom>
-              New Event Notifications
-            </Typography>
-            <FormControl component="fieldset">
-              <RadioGroup value={props.newEvents}>
-                <FormControlLabel
-                  value='All Events'
-                  control={<Radio disabled />}
-                  label='All Events'
-                />
-                <FormControlLabel
-                  value='Preferred Events'
-                  control={<Radio disabled />}
-                  label='Preferred Events'
-                />
-                <FormControlLabel
-                  value='None'
-                  control={<Radio disabled />}
-                  label='None'
-                />
-              </RadioGroup>
-            </FormControl>
+            <Box
+              sx={{
+                backgroundColor: '#42603c',
+                borderRadius: '20px',
+                height: '85%',
+              }}
+            >
+              <Box sx={{ padding: '20px', fontFamily: 'Verdana' }}>
+                <Typography
+                  variant="h5"
+                  fontFamily="Verdana"
+                  color="#f0f5ef"
+                  gutterBottom
+                >
+                  New Event Notifications
+                </Typography>
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    value={props.newEvents}
+                    sx={{
+                      '&.Mui-disabled': {
+                        opacity: 1, // override MUI's default faded look
+                      },
+                      '& .MuiFormControlLabel-root': {
+                        color: '#f0f5ef !important', // custom label color when disabled
+                        fontVariant: 'h6 !important',
+                      },
+                      '& .MuiRadio-root': {
+                        color: '#f0f5ef !important', // radio color when disabled
+                        fontVariant: 'h6 !important',
+                      },
+                      '& .MuiSvgIcon-root': {
+                        fill: '#f0f5ef', // circle color
+                      },
+                      '& .MuiFormControlLabel-label': {
+                        fontVariant: 'h4',
+                        fontFamily: 'Verdana',
+                      },
+                    }}
+                  >
+                    <FormControlLabel
+                      value="All Events"
+                      control={<Radio disabled />}
+                      label={
+                        <Typography variant="h6" color="#f0f5ef">
+                          All Events
+                        </Typography>
+                      }
+                    />
+                    <FormControlLabel
+                      value="Preferred Events"
+                      control={<Radio />}
+                      label={
+                        <Typography variant="h6" color="#f0f5ef">
+                          Preferred Events
+                        </Typography>
+                      }
+                      disabled
+                    />
+                    <FormControlLabel
+                      value="None"
+                      control={<Radio />}
+                      label={
+                        <Typography variant="h6" color="#f0f5ef">
+                          None
+                        </Typography>
+                      }
+                      disabled
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
+            </Box>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} sx={{ height: '100%' }}>
             {/*This displays what the user picked for event reminder type they prefer */}
-            <Typography variant="h6" gutterBottom>
-              Your Event Reminders
-            </Typography>
-            <List dense>
-              {props.reminders?.map((reminder, index) => (
-                <ListItem key={index} disablePadding>
-                  <ListItemText
-                    primary={
-                      <Typography
-                        variant="body1"
-                        sx={{ color: 'text.primary' }}
-                      >
-                        {reminder}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-              ))}
-            </List>
+            <Box
+              sx={{
+                backgroundColor: '#42603c',
+                borderRadius: '20px',
+                height: '85%',
+              }}
+            >
+              <Box sx={{ padding: '20px', fontFamily: 'Verdana' }}>
+                <Typography
+                  variant="h5"
+                  fontFamily="Verdana"
+                  color="#f0f5ef"
+                  gutterBottom
+                >
+                  Your Event Reminders
+                </Typography>
+                <List dense>
+                  {props.reminders?.map((reminder, index) => (
+                    <ListItem key={index} disablePadding>
+                      <ListItemText
+                        primary={
+                          <Typography
+                            variant="h6"
+                            sx={{ color: '#f0f5ef', paddingLeft: '10px' }}
+                          >
+                            - {reminder}
+                          </Typography>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Box>
           </Grid>
         </Grid>
-      </Box>
-    </Container>
+      </Grid>
+    </Grid>
   );
 }

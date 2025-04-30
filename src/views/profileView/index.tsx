@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { UserInfo } from '@/components/userinfo';
 import { YearlyEvents } from '@/components/yearlyevents';
 import { EmergencyInfo } from '@/components/emergency';
+import { NotificationInfo } from '@/components/notifications';
 
 interface EmergencyContact {
   ecName: string;
@@ -45,10 +46,12 @@ interface ProfileProps {
 }
 
 export default function ProfileView({ user, count }: ProfileProps) {
-  //const combinedRems = [
-  //  ...(user.reminders ?? []),
-  //  ...(user.custReminders ?? []).map(obj => `${String(obj.daysPrior)} days prior at ${obj.time}`),
-  //];
+  const combinedRems = [
+    ...(user.reminders ?? []),
+    ...(user.custReminders ?? []).map(
+      (obj) => `${String(obj.daysPrior)} days prior at ${obj.time}`
+    ),
+  ];
 
   const combinedAccomms = [
     ...(user.accomm ?? []),
@@ -78,7 +81,7 @@ export default function ProfileView({ user, count }: ProfileProps) {
       <Grid
         container
         spacing="10px"
-        sx={{ width: '100%', height: '90%', paddingTop: '5px' }}
+        sx={{ width: '100%', height: '90%', padding: '15px' }}
       >
         <Grid
           item
@@ -93,7 +96,7 @@ export default function ProfileView({ user, count }: ProfileProps) {
           <Stack
             spacing={5}
             alignItems="center"
-            sx={{ width: '100%', height: '100%', paddingTop: '20%' }}
+            sx={{ width: '100%', height: '100%', paddingTop: '10%' }}
           >
             <Box
               sx={{
@@ -128,79 +131,89 @@ export default function ProfileView({ user, count }: ProfileProps) {
           </Stack>
         </Grid>
         <Grid item xs={9}>
-          <Tabs
-            value={selected}
-            onChange={handleTabChange}
-            TabIndicatorProps={{
-              style: {
-                display: 'none',
-              },
-            }}
-            sx={{
-              '& .MuiTab-root': {
-                textTransform: 'none',
-                minWidth: 120,
-                marginRight: 0.25,
-                borderTopLeftRadius: 8,
-                borderTopRightRadius: 8,
-                borderBottom: 'none',
-                bgcolor: '#42603c',
-                color: '#f0f5ef',
-                '&.Mui-selected': {
-                  bgcolor: '#6e8569',
+          <Box sx={{ paddingTop: '25px', height: '100%' }}>
+            <Tabs
+              value={selected}
+              onChange={handleTabChange}
+              TabIndicatorProps={{
+                style: {
+                  display: 'none',
+                },
+              }}
+              sx={{
+                '& .MuiTab-root': {
+                  textTransform: 'none',
+                  minWidth: 120,
+                  marginRight: 0.25,
+                  borderTopLeftRadius: 8,
+                  borderTopRightRadius: 8,
+                  borderBottom: 'none',
+                  bgcolor: '#42603c',
                   color: '#f0f5ef',
-                  fontWeight: 'bold',
-                },
-              },
-            }}
-          >
-            <Tab
-              label="Account Info"
-              sx={{
-                color: '#6E8569',
-                '&.Mui-selected': {
-                  color: '#42603C',
-                  fontWeight: 'bold',
+                  '&.Mui-selected': {
+                    bgcolor: '#6e8569',
+                    color: '#f0f5ef',
+                    fontWeight: 'bold',
+                  },
                 },
               }}
-            />
-            <Tab
-              label="Emergency Info"
-              sx={{
-                color: '#6E8569',
-                '&.Mui-selected': {
-                  color: '#42603C',
-                  fontWeight: 'bold',
-                },
-              }}
-            />
-            <Tab
-              label="Notification Info"
-              sx={{
-                color: '#6E8569',
-                '&.Mui-selected': {
-                  color: '#42603C',
-                  fontWeight: 'bold',
-                },
-              }}
-            />
-          </Tabs>
-          <Box
-            sx={{
-              height: '90%',
-              borderRadius: '0 0 8px 8px',
-              backgroundColor: '#6E8569',
-            }}
-          >
-            {selected === 0 && <Typography>Volunteer Metrics</Typography>}
-            {selected === 1 && (
-              <EmergencyInfo
-                name={user.emergencyContact?.ecName}
-                phone={user.emergencyContact?.ecPhone}
-                accommodations={combinedAccomms}
+            >
+              <Tab
+                label="Account Info"
+                sx={{
+                  color: '#6E8569',
+                  '&.Mui-selected': {
+                    color: '#42603C',
+                    fontWeight: 'bold',
+                  },
+                }}
               />
-            )}
-            {selected === 2 && <Typography>Hello</Typography>}
+              <Tab
+                label="Emergency Info"
+                sx={{
+                  color: '#6E8569',
+                  '&.Mui-selected': {
+                    color: '#42603C',
+                    fontWeight: 'bold',
+                  },
+                }}
+              />
+              <Tab
+                label="Notification Info"
+                sx={{
+                  color: '#6E8569',
+                  '&.Mui-selected': {
+                    color: '#42603C',
+                    fontWeight: 'bold',
+                  },
+                }}
+              />
+            </Tabs>
+            <Box
+              sx={{
+                height: '90%',
+                borderRadius: '0 0 8px 8px',
+                backgroundColor: '#6E8569',
+              }}
+            >
+              {selected === 0 && <Typography>Volunteer Metrics</Typography>}
+              {selected === 1 && (
+                <EmergencyInfo
+                  name={user.emergencyContact?.ecName}
+                  phone={user.emergencyContact?.ecPhone}
+                  accommodations={combinedAccomms}
+                />
+              )}
+              {selected === 2 && (
+                <Box sx={{ height: '100%' }}>
+                  <NotificationInfo
+                    eventPreferences={user.eventPreferences}
+                    newEvents={user.newEvents}
+                    reminders={combinedRems}
+                  />
+                </Box>
+              )}
+            </Box>
           </Box>
         </Grid>
       </Grid>

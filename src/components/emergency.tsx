@@ -11,10 +11,11 @@ interface EmergencyInfoProps {
 // Styling things
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#42603c',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
+  ...theme.typography.h6,
+  padding: '5px',
   textAlign: 'center',
   color: '#f0f5ef',
+  borderRadius: '10px',
 }));
 
 // display, email, phone, and accomms based on array
