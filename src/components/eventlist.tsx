@@ -45,8 +45,8 @@ interface EventInfoProps {
 }
 
 export function EventList({ tags }: EventInfoProps) {
+  // various useStates for all the parts of the view
   const [showUpcoming, setShowUpcoming] = useState(true);
-
   const [selectedEventId, setSelectedEventId] = useState<string | undefined>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mode, setMode] = useState<'add' | 'edit'>('add');
@@ -56,12 +56,14 @@ export function EventList({ tags }: EventInfoProps) {
   >([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // function for handling when add/event dialog is opened to add an event
   const openAdd = () => {
     setMode('add');
     setSelectedEvent(undefined);
     setDialogOpen(true);
   };
 
+  // function for handling when add/event dialog is opened to edit an event
   const openEdit = (event: combinedEvents) => {
     setMode('edit');
     setSelectedEvent(event);
@@ -69,18 +71,20 @@ export function EventList({ tags }: EventInfoProps) {
     setDialogOpen(true);
   };
 
+  // function for when add/edit dialog is submitted
   const handleSubmit = async (eventObj: EventInfo & { _id?: string }) => {
     setDialogOpen(false);
     setSelectedEvent(undefined);
     setSelectedEventId(undefined);
 
+    // event without id
     const { ...cleanedEvent } = eventObj;
 
-    // Ensure dates are ISO strings
+    // ensure dates are ISO strings
     const eventStart = new Date(cleanedEvent.eventStart).toISOString();
     const eventEnd = new Date(cleanedEvent.eventEnd).toISOString();
 
-    // Clean and validate tag IDs (filter out nulls/undefined)
+    // clean and validate tag IDs (filter out nulls/undefined)
     const eventRequirements = (cleanedEvent.eventRequirements || []).filter(
       (id): id is string => typeof id === 'string' && id.trim() !== ''
     );
@@ -88,6 +92,7 @@ export function EventList({ tags }: EventInfoProps) {
       (id): id is string => typeof id === 'string' && id.trim() !== ''
     );
 
+    // redefine data based on cleaned/validated info
     const payload = {
       ...cleanedEvent,
       eventStart,
@@ -96,8 +101,10 @@ export function EventList({ tags }: EventInfoProps) {
       eventPreferences,
     };
 
+    // for debugging
     console.log(payload);
 
+    // tries to make a put or post request
     try {
       const response = await fetch(
         mode === 'edit' ? `/api/events/${selectedEventId}` : '/api/events',
@@ -110,6 +117,7 @@ export function EventList({ tags }: EventInfoProps) {
         }
       );
 
+      // throws error
       if (!response.ok) {
         throw new Error(`API ${mode === 'edit' ? 'update' : 'create'} failed`);
       }
@@ -117,12 +125,14 @@ export function EventList({ tags }: EventInfoProps) {
       const data = await response.json();
       console.log(`${mode === 'edit' ? 'Updated' : 'Created'} event:`, data);
     } catch (error) {
+      // more error handling
       console.error('Error submitting event:', error);
     }
-
+    // calls fetchEvents to load updated event info from backend
     fetchEvents();
   };
 
+  // function that makes delete fetch call when you delete an event
   const handleEventDelete = async (eventId: string) => {
     console.log(eventId);
     if (!confirm('Are you sure you want to delete this event?')) return;
@@ -143,6 +153,7 @@ export function EventList({ tags }: EventInfoProps) {
     fetchEvents();
   };
 
+  // combines basic event info with id
   type combinedEvents = EventInfo & { _id: string };
 
   // 1) Sort events by eventStart (earliest first)
@@ -170,10 +181,12 @@ export function EventList({ tags }: EventInfoProps) {
     [sortedEvents, now]
   );
 
+  // handles whether you're seeing past or upcoming events
   const toggleEvents = (isUpcoming: boolean) => {
     setShowUpcoming(isUpcoming);
   };
 
+  // function that loads event data from the backend
   const fetchEvents = async () => {
     const res = await fetch('/api/events');
     const data = await res.json();
@@ -181,10 +194,12 @@ export function EventList({ tags }: EventInfoProps) {
     setLoading(false);
   };
 
+  // makes sure to call for event info on page load
   useEffect(() => {
     fetchEvents();
   }, []);
 
+  // if you're waiting on event info to be called put up a loading circle
   if (loading) {
     return (
       <Box

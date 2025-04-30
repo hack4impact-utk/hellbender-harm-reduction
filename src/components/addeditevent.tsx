@@ -53,6 +53,7 @@ export function AddEditEvent({
   tags,
   event,
 }: AEEventProps) {
+  // event types
   const types = [
     'Harm Reduction Services',
     'Syringe Pick-Up',
@@ -63,15 +64,18 @@ export function AddEditEvent({
     'Special Events',
   ];
 
+  // values needed to save for event object
   const [eventName, setEventName] = useState('');
   const [eventType, setEventType] = useState('');
   const [eventDescription, setEventDescription] = useState('');
   const [eventStart, setEventStart] = useState<Dayjs | null>(null);
   const [eventEnd, setEventEnd] = useState<Dayjs | null>(null);
 
+  // keeps track of selected requirements
   const [selectedRequirements, setSelectedRequirements] = useState<Tag[]>([]);
   const [selectedReqName, setSelectedReqName] = useState<string>('');
 
+  // loads component with event info if you're editing an event
   useEffect(() => {
     if (event) {
       setEventName(event.eventName);
@@ -96,6 +100,7 @@ export function AddEditEvent({
     }
   }, [event, tags, open]);
 
+  // function for adding a requirement
   const handleAddReq = () => {
     const tagToAdd = tags.find((tag) => tag.tagName === selectedReqName);
     if (
@@ -107,15 +112,18 @@ export function AddEditEvent({
     setSelectedReqName('');
   };
 
+  // function for deleting a requirement
   const handleReqDelete = (tagNameToDelete: string) => {
     setSelectedRequirements((prev) =>
       prev.filter((tag) => tag.tagName !== tagNameToDelete)
     );
   };
 
+  // keeps track of preferred events
   const [selectedPreferences, setSelectedPreferences] = useState<Tag[]>([]);
   const [selectedPrefName, setSelectedPrefName] = useState<string>('');
 
+  // function for adding preferred event
   const handleAddPref = () => {
     const tagToAdd = tags.find((tag) => tag.tagName === selectedPrefName);
     if (
@@ -127,12 +135,14 @@ export function AddEditEvent({
     setSelectedPrefName('');
   };
 
+  // function for deleting a preferred event
   const handlePrefDelete = (tagNameToDelete: string) => {
     setSelectedPreferences((prev) =>
       prev.filter((tag) => tag.tagName !== tagNameToDelete)
     );
   };
 
+  // function that handles when the form/dialog is submitted
   const handleSubmit = () => {
     if (!eventName || !eventStart || !eventEnd || !eventType) return;
 
