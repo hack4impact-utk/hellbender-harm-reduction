@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   AddBusiness,
   AttachMoney,
@@ -9,6 +9,8 @@ import {
   LocalActivity,
   Vaccines,
   Event,
+  Edit,
+  Delete,
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
 import {
@@ -18,46 +20,185 @@ import {
   Box,
   Typography,
   Button,
+  IconButton,
+  CircularProgress,
 } from '@mui/material';
+import { AddEditEvent } from './addeditevent';
 
 interface EventInfo {
   eventName: string;
-  eventStart: Date;
-  eventEnd: Date;
+  eventStart: string;
+  eventEnd: string;
   eventDescription: string;
   eventType: string;
   eventRequirements?: (string | null)[];
   eventPreferences?: (string | null)[];
 }
 
-interface EventInfoProps {
-  events: EventInfo[];
+interface Tags {
+  _id: string;
+  tagName: string;
 }
 
-export function EventList({ events }: EventInfoProps) {
+interface EventInfoProps {
+  tags: Tags[];
+}
+
+export function EventList({ tags }: EventInfoProps) {
   const [showUpcoming, setShowUpcoming] = useState(true);
+
+  const [selectedEventId, setSelectedEventId] = useState<string | undefined>();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [mode, setMode] = useState<'add' | 'edit'>('add');
+  const [selectedEvent, setSelectedEvent] = useState<EventInfo | undefined>();
+  const [combinedEventList, setCombinedEventList] = useState<
+    (EventInfo & { _id: string })[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const openAdd = () => {
+    setMode('add');
+    setSelectedEvent(undefined);
+    setDialogOpen(true);
+  };
+
+  const openEdit = (event: combinedEvents) => {
+    setMode('edit');
+    setSelectedEvent(event);
+    setSelectedEventId(event._id);
+    setDialogOpen(true);
+  };
+
+  const handleSubmit = async (eventObj: EventInfo & { _id?: string }) => {
+    setDialogOpen(false);
+    setSelectedEvent(undefined);
+    setSelectedEventId(undefined);
+
+    const { ...cleanedEvent } = eventObj;
+
+    // Ensure dates are ISO strings
+    const eventStart = new Date(cleanedEvent.eventStart).toISOString();
+    const eventEnd = new Date(cleanedEvent.eventEnd).toISOString();
+
+    // Clean and validate tag IDs (filter out nulls/undefined)
+    const eventRequirements = (cleanedEvent.eventRequirements || []).filter(
+      (id): id is string => typeof id === 'string' && id.trim() !== ''
+    );
+    const eventPreferences = (cleanedEvent.eventPreferences || []).filter(
+      (id): id is string => typeof id === 'string' && id.trim() !== ''
+    );
+
+    const payload = {
+      ...cleanedEvent,
+      eventStart,
+      eventEnd,
+      eventRequirements,
+      eventPreferences,
+    };
+
+    console.log(payload);
+
+    try {
+      const response = await fetch(
+        mode === 'edit' ? `/api/events/${selectedEventId}` : '/api/events',
+        {
+          method: mode === 'edit' ? 'PUT' : 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`API ${mode === 'edit' ? 'update' : 'create'} failed`);
+      }
+
+      const data = await response.json();
+      console.log(`${mode === 'edit' ? 'Updated' : 'Created'} event:`, data);
+    } catch (error) {
+      console.error('Error submitting event:', error);
+    }
+
+    fetchEvents();
+  };
+
+  const handleEventDelete = async (eventId: string) => {
+    console.log(eventId);
+    if (!confirm('Are you sure you want to delete this event?')) return;
+
+    try {
+      const response = await fetch(`/api/events/${eventId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete event');
+      }
+
+      console.log('Event deleted');
+    } catch (error) {
+      console.error('Error deleting event:', error);
+    }
+    fetchEvents();
+  };
+
+  type combinedEvents = EventInfo & { _id: string };
 
   // 1) Sort events by eventStart (earliest first)
   const sortedEvents = useMemo(() => {
-    return [...events].sort(
-      (a, b) => a.eventStart.getTime() - b.eventStart.getTime()
+    return [...combinedEventList].sort(
+      (a, b) =>
+        new Date(a.eventStart).getTime() - new Date(b.eventStart).getTime()
     );
-  }, [events]);
+  }, [combinedEventList]);
 
   // 2) Sort events into upcoming and past events
   const now = useMemo(() => new Date(), []);
   const upcomingEvents = useMemo(
-    () => sortedEvents.filter((e) => e.eventStart.getTime() > now.getTime()),
+    () =>
+      sortedEvents.filter(
+        (e) => new Date(e.eventStart).getTime() > now.getTime()
+      ),
     [sortedEvents, now]
   );
   const pastEvents = useMemo(
-    () => sortedEvents.filter((e) => e.eventStart.getTime() <= now.getTime()),
+    () =>
+      sortedEvents.filter(
+        (e) => new Date(e.eventStart).getTime() <= now.getTime()
+      ),
     [sortedEvents, now]
   );
 
   const toggleEvents = (isUpcoming: boolean) => {
     setShowUpcoming(isUpcoming);
   };
+
+  const fetchEvents = async () => {
+    const res = await fetch('/api/events');
+    const data = await res.json();
+    setCombinedEventList(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -67,41 +208,86 @@ export function EventList({ events }: EventInfoProps) {
         overflowY: 'auto',
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'left', marginBottom: 2 }}>
+      <Box>
+        <AddEditEvent
+          open={dialogOpen}
+          onCancel={() => {
+            setDialogOpen(false);
+            setSelectedEvent(undefined);
+            setSelectedEventId(undefined);
+          }}
+          onSubmit={handleSubmit}
+          tags={tags}
+          event={
+            mode === 'edit' && selectedEvent
+              ? {
+                  ...selectedEvent,
+                  eventRequirements: (
+                    selectedEvent.eventRequirements || []
+                  ).filter((r): r is string => r !== null),
+                  eventPreferences: (
+                    selectedEvent.eventPreferences || []
+                  ).filter((p): p is string => p !== null),
+                }
+              : undefined
+          }
+        />
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom={2}
+      >
+        <Box>
+          <Button
+            variant="contained"
+            onClick={() => toggleEvents(true)}
+            sx={{
+              marginRight: 2,
+              backgroundColor: showUpcoming ? '#42603c' : '#6e8569',
+              '&:hover': {
+                backgroundColor: showUpcoming ? '#385233' : '#5d7159',
+              },
+            }}
+          >
+            Upcoming Events
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => toggleEvents(false)}
+            sx={{
+              backgroundColor: showUpcoming ? '#6e8569' : '#42603c',
+              '&:hover': {
+                backgroundColor: showUpcoming ? '#5d7159' : '#385233',
+              },
+            }}
+          >
+            Past Events
+          </Button>
+        </Box>
         <Button
           variant="contained"
-          onClick={() => toggleEvents(true)}
+          onClick={openAdd}
           sx={{
-            marginRight: 2,
-            backgroundColor: showUpcoming ? '#43533C' : '#5F7755',
+            backgroundColor: '#42603c',
             '&:hover': {
-              backgroundColor: showUpcoming ? '#394733' : '#516548',
+              backgroundColor: '#385233',
             },
           }}
         >
-          Upcoming Events
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => toggleEvents(false)}
-          sx={{
-            backgroundColor: showUpcoming ? '#5F7755' : '#43533C',
-            '&:hover': {
-              backgroundColor: showUpcoming ? '#516548' : '#394733',
-            },
-          }}
-        >
-          Past Events
+          Add Event
         </Button>
       </Box>
       {showUpcoming ? (
         upcomingEvents.length > 0 ? (
           upcomingEvents.map((event, index) => {
-            const isFutureEvent = event.eventStart.getTime() > now.getTime();
+            const isFutureEvent =
+              new Date(event.eventStart).getTime() > now.getTime();
 
             return (
               <Accordion
-                key={event.eventStart.toISOString()}
+                key={event.eventStart}
                 defaultExpanded={index === 0}
                 sx={{
                   backgroundColor: '#F0F5EF',
@@ -111,7 +297,7 @@ export function EventList({ events }: EventInfoProps) {
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   sx={{
-                    backgroundColor: '#5F7755',
+                    backgroundColor: '#42603c',
                     color: '#FFFFFF',
                     flexDirection: 'row-reverse',
                     '& .MuiAccordionSummary-content': {
@@ -160,22 +346,60 @@ export function EventList({ events }: EventInfoProps) {
 
                     {/* Right side: date(s) */}
                     <Typography>
-                      {event.eventStart.toLocaleDateString() ===
-                      event.eventEnd.toLocaleDateString()
-                        ? event.eventStart.toLocaleDateString()
-                        : `${event.eventStart.toLocaleDateString()} - ${event.eventEnd.toLocaleDateString()}`}
+                      {new Date(event.eventStart).toLocaleDateString() ===
+                      new Date(event.eventEnd).toLocaleDateString()
+                        ? new Date(event.eventStart).toLocaleDateString()
+                        : `${new Date(event.eventStart).toLocaleDateString()} - ${new Date(event.eventEnd).toLocaleDateString()}`}
                     </Typography>
                   </Box>
                 </AccordionSummary>
 
                 <AccordionDetails sx={{ backgroundColor: '#F0F5EF' }}>
                   {/* Description */}
-                  <Typography
-                    variant="body1"
-                    sx={{ fontSize: '1.1rem', marginBottom: 2 }}
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={2}
                   >
-                    {event.eventDescription}
-                  </Typography>
+                    <Box>
+                      <Typography
+                        variant="body1"
+                        sx={{ fontSize: '1.1rem', marginBottom: 2 }}
+                      >
+                        {event.eventDescription}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <IconButton
+                        onClick={() => openEdit(event)}
+                        sx={{
+                          color: '#43533C',
+                          border: '1px solid #43533C',
+                          '&:hover': {
+                            backgroundColor: '#e5ebe0',
+                            borderColor: '#394733',
+                          },
+                          mr: 1,
+                        }}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleEventDelete(event._id)}
+                        sx={{
+                          color: '#d32f2f',
+                          border: '1px solid #d32f2f',
+                          '&:hover': {
+                            backgroundColor: '#fddede',
+                            borderColor: '#c62828',
+                          },
+                        }}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Box>
+                  </Box>
 
                   {/* Times, Requirements, Preferences */}
                   <Typography
@@ -183,7 +407,7 @@ export function EventList({ events }: EventInfoProps) {
                     sx={{ marginBottom: 1, lineHeight: 1.6 }}
                   >
                     <strong>Event Start:</strong>{' '}
-                    {event.eventStart.toLocaleTimeString('en-US', {
+                    {new Date(event.eventStart).toLocaleTimeString('en-US', {
                       hour: 'numeric',
                       minute: '2-digit',
                       hour12: true,
@@ -195,7 +419,7 @@ export function EventList({ events }: EventInfoProps) {
                     sx={{ marginBottom: 1, lineHeight: 1.6 }}
                   >
                     <strong>Event End:</strong>{' '}
-                    {event.eventEnd.toLocaleTimeString('en-US', {
+                    {new Date(event.eventEnd).toLocaleTimeString('en-US', {
                       hour: 'numeric',
                       minute: '2-digit',
                       hour12: true,
@@ -208,7 +432,13 @@ export function EventList({ events }: EventInfoProps) {
                       sx={{ marginBottom: 1, lineHeight: 1.6 }}
                     >
                       <strong>Requirements:</strong>{' '}
-                      {event.eventRequirements.join(', ')}
+                      {event.eventRequirements
+                        ?.map(
+                          (id) =>
+                            tags.find((tag) => tag._id === id)?.tagName ||
+                            '(Unknown)'
+                        )
+                        .join(', ')}
                     </Typography>
                   ) : (
                     <Typography
@@ -222,7 +452,13 @@ export function EventList({ events }: EventInfoProps) {
                   {event.eventPreferences?.length ? (
                     <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
                       <strong>Preferences:</strong>{' '}
-                      {event.eventPreferences.join(', ')}
+                      {event.eventPreferences
+                        ?.map(
+                          (id) =>
+                            tags.find((tag) => tag._id === id)?.tagName ||
+                            '(Unknown)'
+                        )
+                        .join(', ')}
                     </Typography>
                   ) : (
                     <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
@@ -265,13 +501,13 @@ export function EventList({ events }: EventInfoProps) {
         pastEvents.map((event, index) => {
           return (
             <Accordion
-              key={event.eventStart.toISOString()}
+              key={new Date(event.eventStart).toISOString()}
               defaultExpanded={index === 0}
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 sx={{
-                  backgroundColor: '#5F7755',
+                  backgroundColor: '#42603c',
                   color: '#FFFFFF',
                   flexDirection: 'row-reverse',
                   '& .MuiAccordionSummary-content': {
@@ -320,10 +556,10 @@ export function EventList({ events }: EventInfoProps) {
 
                   {/* Right side: date(s) */}
                   <Typography>
-                    {event.eventStart.toLocaleDateString() ===
-                    event.eventEnd.toLocaleDateString()
-                      ? event.eventStart.toLocaleDateString()
-                      : `${event.eventStart.toLocaleDateString()} - ${event.eventEnd.toLocaleDateString()}`}
+                    {new Date(event.eventStart).toLocaleDateString() ===
+                    new Date(event.eventEnd).toLocaleDateString()
+                      ? new Date(event.eventStart).toLocaleDateString()
+                      : `${new Date(event.eventStart).toLocaleDateString()} - ${new Date(event.eventEnd).toLocaleDateString()}`}
                   </Typography>
                 </Box>
               </AccordionSummary>
@@ -343,7 +579,7 @@ export function EventList({ events }: EventInfoProps) {
                   sx={{ marginBottom: 1, lineHeight: 1.6 }}
                 >
                   <strong>Event Start:</strong>{' '}
-                  {event.eventStart.toLocaleTimeString('en-US', {
+                  {new Date(event.eventStart).toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: '2-digit',
                     hour12: true,
@@ -355,7 +591,7 @@ export function EventList({ events }: EventInfoProps) {
                   sx={{ marginBottom: 1, lineHeight: 1.6 }}
                 >
                   <strong>Event End:</strong>{' '}
-                  {event.eventEnd.toLocaleTimeString('en-US', {
+                  {new Date(event.eventEnd).toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: '2-digit',
                     hour12: true,
