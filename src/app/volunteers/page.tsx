@@ -123,6 +123,7 @@ export default async function Home() {
     prefevents: eventTypeCount,
   };
 
+  // gets fun facts
   const allfacts = await getAllFacts();
   const facts = allfacts.map((item) => item.fact);
 
