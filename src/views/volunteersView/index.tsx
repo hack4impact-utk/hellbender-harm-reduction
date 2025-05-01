@@ -1,5 +1,5 @@
 'use client';
-import { Box, Tab, Tabs, Button, Grid, Typography, Stack } from '@mui/material';
+import { Box, Tab, Tabs, Button, Grid, Stack } from '@mui/material';
 import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { AllVolunteers } from '@/components/allvolunteers';
@@ -9,6 +9,7 @@ import ReferralInfo from '@/components/referralinfo';
 import PrefEventMetrics from '@/components/prefeventmetrics';
 import { EventTypeEnum } from '@/types/event';
 import { EventDistribution } from '@/components/eventsdistribution';
+import { DisplayFacts } from '@/components/displayfacts';
 
 //interfaces for the data in all three components/tabs
 interface utag {
@@ -75,6 +76,7 @@ interface DataTableProps {
   userdata: UserData[];
   eventdata: EventData[];
   metrics: MetricData;
+  facts: string[];
 }
 
 export default function VolunteersView({
@@ -82,6 +84,7 @@ export default function VolunteersView({
   userdata,
   eventdata,
   metrics,
+  facts,
 }: DataTableProps) {
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
@@ -182,7 +185,7 @@ export default function VolunteersView({
                       height: '45%',
                     }}
                   >
-                    <Typography>Fun Facts Here!</Typography>
+                    <DisplayFacts facts={facts} />
                   </Box>
                 </Stack>
               </Grid>

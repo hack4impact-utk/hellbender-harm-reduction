@@ -4,6 +4,7 @@ import { getAllEvents } from '@/server/actions/event';
 import { getTag } from '@/server/actions/tag';
 import { EventTypeEnum } from '@/types/event';
 import { getEvent } from '@/server/actions/event';
+import { getAllFacts } from '@/server/actions/facts';
 
 export default async function Home() {
   // gets user info for all volunteers
@@ -122,6 +123,9 @@ export default async function Home() {
     prefevents: eventTypeCount,
   };
 
+  const allfacts = await getAllFacts();
+  const facts = allfacts.map((item) => item.fact);
+
   // returns actual page
   return (
     <div>
@@ -130,6 +134,7 @@ export default async function Home() {
         userdata={cleanData}
         eventdata={filtevents}
         metrics={metrics}
+        facts={facts}
       />
     </div>
   );
