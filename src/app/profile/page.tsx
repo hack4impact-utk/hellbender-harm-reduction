@@ -33,7 +33,9 @@ export default async function Home() {
     userType: user.userType,
     eventPreferences: user.eventPreferences,
     reminders: user?.reminders,
-    custReminders: user?.custReminders,
+    custReminders: (user?.custReminders ?? []).map((rem) =>
+      JSON.parse(JSON.stringify(rem))
+    ),
     newEvents: user.newEvents,
     referrals: user.referrals,
     pronouns: user.pronouns,

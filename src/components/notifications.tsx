@@ -525,7 +525,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
                           variant="contained"
                           onClick={() => {
                             if (customTime) {
-                              const formattedTime = customTime.format('HH:mm');
+                              const formattedTime = customTime.format('h:mm A');
                               const newReminder = {
                                 daysPrior: customDays,
                                 time: formattedTime,
@@ -557,8 +557,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
                             }}
                           >
                             <Typography sx={{ color: '#f0f5ef' }}>
-                              {rem.daysPrior} days before at{' '}
-                              {dayjs(rem.time, 'HH:mm').format('h:mm A')}
+                              {rem.daysPrior} days before at {rem.time}
                             </Typography>
                             <IconButton
                               size="small"
@@ -612,8 +611,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
                                   variant="h6"
                                   sx={{ color: '#f0f5ef', paddingLeft: '10px' }}
                                 >
-                                  - {rem.daysPrior} days before at{' '}
-                                  {dayjs(rem.time, 'HH:mm').format('h:mm A')}
+                                  - {rem.daysPrior} days before at {rem.time}
                                 </Typography>
                               }
                             />
