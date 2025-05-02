@@ -142,7 +142,7 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
                 borderColor: '#f0f5ef',
                 color: '#f0f5ef',
                 '&:hover': {
-                  backgroundColor: '#5a7a50',
+                  backgroundColor: '#42603c',
                   borderColor: '#f0f5ef',
                 },
               }}
@@ -153,9 +153,9 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
               onClick={handleSubmit}
               variant="contained"
               sx={{
-                backgroundColor: '#5a7a50',
+                backgroundColor: '#42603c',
                 color: '#f0f5ef',
-                '&:hover': { backgroundColor: '#6b8a60' },
+                '&:hover': { backgroundColor: '#354d30' },
               }}
             >
               Submit

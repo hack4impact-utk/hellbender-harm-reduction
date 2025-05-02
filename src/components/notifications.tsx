@@ -209,7 +209,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
                 borderColor: '#f0f5ef',
                 color: '#f0f5ef',
                 '&:hover': {
-                  backgroundColor: '#5a7a50',
+                  backgroundColor: '#42603c',
                   borderColor: '#f0f5ef',
                 },
               }}
@@ -220,9 +220,9 @@ export function NotificationInfo(props: NotificationInfoProps) {
               onClick={handleSubmit}
               variant="contained"
               sx={{
-                backgroundColor: '#5a7a50',
+                backgroundColor: '#42603c',
                 color: '#f0f5ef',
-                '&:hover': { backgroundColor: '#6b8a60' },
+                '&:hover': { backgroundColor: '#354d30' },
               }}
             >
               Submit
@@ -246,7 +246,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
         direction="column"
         sx={{ height: '100%', padding: '25px' }}
       >
-        <Grid item xs={5}>
+        <Grid item xs={4}>
           <Typography
             gutterBottom
             fontFamily="Verdana"
@@ -351,7 +351,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
             </Stack>
           )}
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={8}>
           <Typography
             gutterBottom
             fontFamily="Verdana"
@@ -361,7 +361,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
           >
             Email Settings
           </Typography>
-          <Grid container spacing={4} sx={{ height: '90%' }}>
+          <Grid container spacing={4} sx={{ height: '95%' }}>
             <Grid item xs={12} md={6} sx={{ height: '100%' }}>
               {/*Displays in disabled radio format, what option the user picked
               for event notifications */}
@@ -449,7 +449,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
                 }}
               >
                 {editMode ? (
-                  <Box>
+                  <Box p="25px">
                     <Stack spacing={2}>
                       <Select
                         value={reminderSelect}
@@ -461,7 +461,6 @@ export function NotificationInfo(props: NotificationInfoProps) {
                           setReminderSelect('');
                         }}
                         displayEmpty
-                        fullWidth
                         size="small"
                         sx={{
                           color: '#f0f5ef',
@@ -495,7 +494,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
                             sx={{
                               display: 'flex',
                               alignItems: 'center',
-                              backgroundColor: '#42603c',
+                              backgroundColor: '#6e8569',
                               padding: '2px 8px',
                               borderRadius: '16px',
                             }}
@@ -542,8 +541,18 @@ export function NotificationInfo(props: NotificationInfoProps) {
                             setCustomDays(Number(e.target.value))
                           }
                           sx={{
-                            input: { color: '#f0f5ef' },
-                            backgroundColor: '#42603c',
+                            '& .MuiInputBase-input': {
+                              color: '#f0f5ef', // text color
+                            },
+                            '& .MuiOutlinedInput-root': {
+                              backgroundColor: '#42603c',
+                              '& fieldset': {
+                                borderColor: '#f0f5ef',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: '#ffffff',
+                              },
+                            },
                           }}
                         />
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -587,7 +596,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
                             }
                           }}
                           sx={{
-                            backgroundColor: '#5a7a50',
+                            backgroundColor: '#6e8569',
                             color: '#f0f5ef',
                             '&:hover': { backgroundColor: '#6b8a60' },
                           }}
@@ -600,7 +609,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
                           <Paper
                             key={index}
                             sx={{
-                              backgroundColor: '#42603c',
+                              backgroundColor: '#6e8569',
                               padding: '8px 12px',
                               borderRadius: '12px',
                               marginBottom: '8px',

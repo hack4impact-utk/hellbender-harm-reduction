@@ -195,7 +195,12 @@ export function UserInfo(props: userInfoProps) {
                 variant="contained"
                 color="success"
                 onClick={handleSubmit} // Sends the updated data to the server
-                sx={{ alignSelf: 'center', backgroundColor: '#42603c' }}
+                sx={{
+                  alignSelf: 'center',
+                  backgroundColor: '#42603c',
+                  color: '#f0f5ef',
+                  '&:hover': { backgroundColor: '#354d30' },
+                }}
               >
                 Submit
               </Button>
@@ -203,7 +208,16 @@ export function UserInfo(props: userInfoProps) {
                 variant="outlined"
                 color="error"
                 onClick={handleCancel} // Cancels the changes and reverts to original values
-                sx={{ alignSelf: 'center', marginLeft: 2 }}
+                sx={{
+                  alignSelf: 'center',
+                  marginLeft: 2,
+                  borderColor: '#f0f5ef',
+                  color: '#f0f5ef',
+                  '&:hover': {
+                    backgroundColor: '#42603c',
+                    borderColor: '#f0f5ef',
+                  },
+                }}
               >
                 Cancel
               </Button>

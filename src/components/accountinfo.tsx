@@ -127,7 +127,7 @@ export function AccountInfo({
                 borderColor: '#f0f5ef',
                 color: '#f0f5ef',
                 '&:hover': {
-                  backgroundColor: '#5a7a50',
+                  backgroundColor: '#42603c',
                   borderColor: '#f0f5ef',
                 },
               }}
@@ -138,9 +138,9 @@ export function AccountInfo({
               onClick={handleSubmit}
               variant="contained"
               sx={{
-                backgroundColor: '#5a7a50',
+                backgroundColor: '#42603c',
                 color: '#f0f5ef',
-                '&:hover': { backgroundColor: '#6b8a60' },
+                '&:hover': { backgroundColor: '#354d30' },
               }}
             >
               Submit
@@ -160,8 +160,16 @@ export function AccountInfo({
         )}
       </Box>
       <Stack>
-        <Typography variant="h5"> Email </Typography>
-        <Box>
+        <Typography
+          fontFamily="Verdana"
+          fontWeight="bold"
+          variant="h4"
+          color="#f0f5ef"
+          mb="5px"
+        >
+          Email
+        </Typography>
+        <Box mb="25px">
           {editMode ? (
             <TextField
               variant="outlined"
@@ -169,12 +177,54 @@ export function AccountInfo({
               onChange={(e) => setNewEmail(e.target.value)}
               fullWidth
               size="small"
+              InputLabelProps={{ style: { color: '#f0f5ef' } }}
+              sx={{
+                '& .MuiInputBase-input': {
+                  color: '#f0f5ef', // text color
+                },
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#42603c',
+                  '& fieldset': {
+                    borderColor: '#f0f5ef',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#ffffff',
+                  },
+                },
+              }}
             />
           ) : (
-            <Typography>{newEmail}</Typography>
+            <Box
+              sx={{
+                height: '8%',
+                backgroundColor: '#42603c',
+                display: 'flex',
+                alignItems: 'center',
+                borderRadius: '10px',
+                paddingLeft: '10px',
+              }}
+            >
+              <Typography
+                fontFamily={'Verdana'}
+                color="#f0f5ef"
+                variant="h5"
+                padding="4px"
+              >
+                {newEmail}
+              </Typography>
+            </Box>
           )}
         </Box>
-        <Typography variant="h5"> Phone Number </Typography>
+        <Typography
+          fontFamily="Verdana"
+          fontWeight="bold"
+          variant="h4"
+          color="#f0f5ef"
+          mb="5px"
+        >
+          {' '}
+          Phone Number{' '}
+        </Typography>
         <Box>
           {editMode ? (
             <TextField
@@ -183,18 +233,59 @@ export function AccountInfo({
               onChange={(e) => setNewPhone(e.target.value)}
               fullWidth
               size="small"
+              InputLabelProps={{ style: { color: '#f0f5ef' } }}
+              sx={{
+                '& .MuiInputBase-input': {
+                  color: '#f0f5ef', // text color
+                },
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#42603c',
+                  '& fieldset': {
+                    borderColor: '#f0f5ef',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#ffffff',
+                  },
+                },
+              }}
             />
           ) : (
-            <Typography>{newPhone}</Typography>
+            <Box
+              sx={{
+                height: '8%',
+                backgroundColor: '#42603c',
+                display: 'flex',
+                alignItems: 'center',
+                borderRadius: '10px',
+                paddingLeft: '10px',
+              }}
+            >
+              <Typography
+                fontFamily={'Verdana'}
+                color="#f0f5ef"
+                variant="h5"
+                padding="4px"
+              >
+                {newPhone}
+              </Typography>
+            </Box>
           )}
         </Box>
-        <Grid container>
+        <Grid container pt="25px">
           <Grid item xs={12}>
-            <Typography>Tags:</Typography>
+            <Typography
+              fontFamily="Verdana"
+              fontWeight="bold"
+              variant="h4"
+              color="#f0f5ef"
+              mb="5px"
+            >
+              Tags:
+            </Typography>
           </Grid>
           {priorityTags.map((tag) => {
             const hasTag = userTagIds.has(tag._id.trim());
-            const bgColor = hasTag ? '#DFF0D8' : '#F2DEDE'; // green if has, red if not
+            const bgColor = hasTag ? '#42603c' : '#5d7159'; // green if has, red if not
 
             return (
               <Grid
@@ -206,9 +297,10 @@ export function AccountInfo({
                   padding: 1,
                   m: 2,
                   borderRadius: 1,
+                  border: '1px solid',
                 }}
               >
-                <Typography variant="h6">
+                <Typography fontFamily="Verdana" color="#f0f5ef" variant="h6">
                   {tag.tagName} {hasTag ? '' : '+'}
                 </Typography>
               </Grid>
@@ -221,17 +313,30 @@ export function AccountInfo({
             .map((tag) => (
               <Grid
                 item
-                xs={4}
+                xs={5}
                 key={tag._id}
-                sx={{ padding: 1, borderRadius: 1 }}
+                sx={{
+                  padding: 1,
+                  m: 2,
+                  borderRadius: 1,
+                  backgroundColor: '#42603c',
+                  border: '1px solid',
+                }}
               >
-                <Typography variant="h6">{tag.tagName}</Typography>
+                <Typography fontFamily="Verdana" color="#f0f5ef" variant="h6">
+                  {tag.tagName}
+                </Typography>
               </Grid>
             ))}
         </Grid>
         {editMode && (
           <>
-            <Grid container spacing={2} alignItems="center" sx={{ mt: 2 }}>
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              sx={{ mt: 2, ml: 0.2 }}
+            >
               <Grid item xs={5}>
                 <TextField
                   select
@@ -239,6 +344,20 @@ export function AccountInfo({
                   SelectProps={{ native: true }}
                   value={selectedLangId}
                   onChange={(e) => setSelectedLangId(e.target.value)}
+                  sx={{
+                    '& .MuiInputBase-input': {
+                      color: 'black', // text color
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      backgroundColor: '#42603c',
+                      '& fieldset': {
+                        borderColor: '#f0f5ef',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: '#ffffff',
+                      },
+                    },
+                  }}
                 >
                   <option value="">Select a language</option>
                   {langs.map((tag) => (
@@ -255,6 +374,20 @@ export function AccountInfo({
                   SelectProps={{ native: true }}
                   value={selectedProficiency}
                   onChange={(e) => setSelectedProficiency(e.target.value)}
+                  sx={{
+                    '& .MuiInputBase-input': {
+                      color: 'black', // text color
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      backgroundColor: '#42603c',
+                      '& fieldset': {
+                        borderColor: '#f0f5ef',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: '#ffffff',
+                      },
+                    },
+                  }}
                 >
                   <option value="">Select proficiency</option>
                   <option value="Beginner">Beginner</option>
@@ -287,6 +420,11 @@ export function AccountInfo({
                     setSelectedLangId('');
                     setSelectedProficiency('');
                   }}
+                  sx={{
+                    backgroundColor: '#42603c',
+                    color: '#f0f5ef',
+                    '&:hover': { backgroundColor: '#354d30' },
+                  }}
                 >
                   Add
                 </Button>
@@ -294,7 +432,9 @@ export function AccountInfo({
             </Grid>
 
             {/* Show added language tags as chips */}
-            <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            <Box
+              sx={{ mt: 2, ml: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}
+            >
               {(newTags ?? [])
                 .filter((t) => langs.some((lang) => lang._id === t.tagId))
                 .map((t, i) => (
@@ -302,7 +442,10 @@ export function AccountInfo({
                     key={i}
                     label={`${t.tag} – ${t.tagProf}`}
                     onDelete={() => handleRemoveTag(t.tagId)}
-                    sx={{ backgroundColor: '#e0e0e0' }}
+                    sx={{
+                      backgroundColor: '#42603c',
+                      color: '#f0f5ef',
+                    }}
                   />
                 ))}
             </Box>
