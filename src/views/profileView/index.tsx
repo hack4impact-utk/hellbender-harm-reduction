@@ -48,13 +48,6 @@ interface ProfileProps {
 export default function ProfileView({ user, count }: ProfileProps) {
   const id = '681439a152a6f8d14f5ec44b';
 
-  const combinedRems = [
-    ...(user.reminders ?? []),
-    ...(user.custReminders ?? []).map(
-      (obj) => `${String(obj.daysPrior)} days prior at ${obj.time}`
-    ),
-  ];
-
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
 
@@ -207,9 +200,11 @@ export default function ProfileView({ user, count }: ProfileProps) {
               {selected === 2 && (
                 <Box sx={{ height: '100%' }}>
                   <NotificationInfo
+                    id={id}
                     eventPreferences={user.eventPreferences}
                     newEvents={user.newEvents}
-                    reminders={combinedRems}
+                    reminders={user.reminders}
+                    custReminders={user.custReminders}
                   />
                 </Box>
               )}
