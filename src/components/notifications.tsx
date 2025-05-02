@@ -101,6 +101,38 @@ export function NotificationInfo(props: NotificationInfoProps) {
   const [customDays, setCustomDays] = useState<number>(1);
   const [customTime, setCustomTime] = useState<Dayjs | null>(dayjs());
 
+  const [initialState, setInitialState] = useState({
+    eventPreferences: props.eventPreferences || [],
+    newEvents: props.newEvents || '',
+    reminders: props.reminders || [],
+    custReminders: (props.custReminders || []).map((rem) => ({
+      daysPrior: rem.daysPrior,
+      time: typeof rem.time === 'string' ? rem.time : String(rem.time),
+    })),
+    selectedReminders: props.reminders || [],
+    selectedPreferences: props.eventPreferences || [],
+    prefSelect: '',
+    reminderSelect: '',
+    customDays: 1,
+    customTime: dayjs() as Dayjs | null,
+  });
+
+  const handleEdit = () => {
+    setInitialState({
+      eventPreferences: [...eventPreferences],
+      newEvents,
+      reminders: [...reminders],
+      custReminders: [...custReminders],
+      selectedReminders: [...selectedReminders],
+      selectedPreferences: [...selectedPreferences],
+      prefSelect: '',
+      reminderSelect: '',
+      customDays: customDays,
+      customTime: customTime,
+    });
+    setEditMode(true);
+  };
+
   const handleSubmit = async () => {
     try {
       await fetch(`/api/users/${props.id}`, {
@@ -117,7 +149,20 @@ export function NotificationInfo(props: NotificationInfoProps) {
         }),
       });
 
-      // Immediately reflect the updates in local state
+      setInitialState({
+        eventPreferences: [...selectedPreferences],
+        newEvents,
+        reminders: [...selectedReminders],
+        custReminders: [...custReminders],
+        selectedReminders,
+        selectedPreferences,
+        prefSelect: '',
+        reminderSelect: '',
+        customDays,
+        customTime,
+      });
+
+      // Reflect updates in local state
       setEventPreferences([...selectedPreferences]);
       setReminders([...selectedReminders]);
       setCustReminders([...custReminders]);
@@ -130,10 +175,18 @@ export function NotificationInfo(props: NotificationInfoProps) {
 
   const handleCancel = () => {
     setEditMode(false);
-    setSelectedPreferences(props.eventPreferences || []);
-    setNewEvents(props.newEvents || '');
-    setSelectedReminders(props.reminders || []);
-    setCustReminders(props.custReminders || []);
+
+    // Reset values to the initial state captured when the user started editing
+    setEventPreferences(initialState.eventPreferences);
+    setNewEvents(initialState.newEvents);
+    setReminders(initialState.reminders);
+    setCustReminders(initialState.custReminders);
+    setSelectedReminders(initialState.selectedReminders);
+    setSelectedPreferences(initialState.selectedPreferences);
+    setPrefSelect(initialState.prefSelect);
+    setReminderSelect(initialState.reminderSelect);
+    setCustomDays(initialState.customDays);
+    setCustomTime(initialState.customTime);
   };
 
   return (
@@ -177,7 +230,7 @@ export function NotificationInfo(props: NotificationInfoProps) {
           </>
         ) : (
           <IconButton
-            onClick={() => setEditMode(true)}
+            onClick={handleEdit}
             sx={{
               color: '#f0f5ef',
               backgroundColor: '#42603c',

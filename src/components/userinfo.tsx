@@ -54,6 +54,9 @@ export function UserInfo(props: userInfoProps) {
   const [name, setName] = useState(props.name);
   const [pronouns, setPronouns] = useState(props.pronouns);
 
+  const [originalName, setOriginalName] = useState(props.name);
+  const [originalPronouns, setOriginalPronouns] = useState(props.pronouns);
+
   const handleSubmit = async () => {
     try {
       const response = await fetch(`/api/users/${props.id}`, {
@@ -71,10 +74,19 @@ export function UserInfo(props: userInfoProps) {
         throw new Error('Failed to update user information');
       }
 
+      setOriginalName(name);
+      setOriginalPronouns(pronouns);
       setEditMode(false);
     } catch (err) {
       console.error('Update failed:', err);
     }
+  };
+
+  const handleCancel = () => {
+    // Revert back to the original values
+    setName(originalName);
+    setPronouns(originalPronouns);
+    setEditMode(false); // Exit edit mode without saving
   };
 
   return (
@@ -178,14 +190,24 @@ export function UserInfo(props: userInfoProps) {
         </Box>
         <Box>
           {editMode && (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleSubmit}
-              sx={{ alignSelf: 'center', backgroundColor: '#42603c' }}
-            >
-              Submit
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleSubmit} // Sends the updated data to the server
+                sx={{ alignSelf: 'center', backgroundColor: '#42603c' }}
+              >
+                Submit
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleCancel} // Cancels the changes and reverts to original values
+                sx={{ alignSelf: 'center', marginLeft: 2 }}
+              >
+                Cancel
+              </Button>
+            </>
           )}
         </Box>
       </Stack>

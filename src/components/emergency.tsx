@@ -60,6 +60,14 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
   const [editMode, setEditMode] = useState(false);
   const [name, setName] = useState(props.ecName || '');
   const [phone, setPhone] = useState(props.ecPhone || '');
+
+  const [initialState, setInitialState] = useState({
+    name: props.ecName || '',
+    phone: props.ecPhone || '',
+    selectedAccoms: [...(props.accomm || [])],
+    otherAccomm: props.otherAccomm || '',
+  });
+
   const combinedAccommodations = [
     ...(props.accomm || []),
     ...(props.otherAccomm ? [props.otherAccomm] : []),
@@ -69,6 +77,24 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
   );
   const [otherAccomm, setOtherAccomm] = useState(props.otherAccomm || '');
   const [accomSelect, setAccomSelect] = useState('');
+
+  const handleEdit = () => {
+    setInitialState({
+      name,
+      phone,
+      selectedAccoms: [...selectedAccoms],
+      otherAccomm,
+    });
+    setEditMode(true);
+  };
+
+  const handleCancel = () => {
+    setEditMode(false);
+    setName(initialState.name);
+    setPhone(initialState.phone);
+    setSelectedAccoms(initialState.selectedAccoms);
+    setOtherAccomm(initialState.otherAccomm);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -84,6 +110,12 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
           otherAccomm,
         }),
       });
+      setInitialState({
+        name,
+        phone,
+        selectedAccoms: [...selectedAccoms],
+        otherAccomm,
+      });
       setEditMode(false);
     } catch (err) {
       console.error('Update failed:', err);
@@ -92,19 +124,56 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
 
   return (
     <Box sx={{ position: 'relative', padding: '20px' }}>
-      <IconButton
-        onClick={() => setEditMode(!editMode)}
+      <Box
         sx={{
           position: 'absolute',
           top: 15,
           right: 15,
-          color: '#f0f5ef',
-          backgroundColor: '#42603c',
-          '&:hover': { backgroundColor: '#5a7a50' },
+          display: 'flex',
+          gap: 1,
         }}
       >
-        <Edit />
-      </IconButton>
+        {editMode ? (
+          <>
+            <Button
+              onClick={handleCancel}
+              variant="outlined"
+              sx={{
+                borderColor: '#f0f5ef',
+                color: '#f0f5ef',
+                '&:hover': {
+                  backgroundColor: '#5a7a50',
+                  borderColor: '#f0f5ef',
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              sx={{
+                backgroundColor: '#5a7a50',
+                color: '#f0f5ef',
+                '&:hover': { backgroundColor: '#6b8a60' },
+              }}
+            >
+              Submit
+            </Button>
+          </>
+        ) : (
+          <IconButton
+            onClick={handleEdit}
+            sx={{
+              color: '#f0f5ef',
+              backgroundColor: '#42603c',
+              '&:hover': { backgroundColor: '#5a7a50' },
+            }}
+          >
+            <Edit />
+          </IconButton>
+        )}
+      </Box>
       <Stack
         spacing={2}
         sx={{ width: '95%', margin: '0 auto', padding: '10px' }}
@@ -327,16 +396,6 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
           >
             No Accommodations
           </Typography>
-        )}
-        {editMode && (
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleSubmit}
-            sx={{ alignSelf: 'center', backgroundColor: '#42603c' }}
-          >
-            Submit
-          </Button>
         )}
       </Stack>
     </Box>
