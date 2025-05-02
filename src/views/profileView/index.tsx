@@ -55,11 +55,6 @@ export default function ProfileView({ user, count }: ProfileProps) {
     ),
   ];
 
-  const combinedAccomms = [
-    ...(user.accomm ?? []),
-    ...(user.otherAccomm ? [user.otherAccomm] : []),
-  ];
-
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
 
@@ -195,16 +190,18 @@ export default function ProfileView({ user, count }: ProfileProps) {
             <Box
               sx={{
                 height: '90%',
-                borderRadius: '0 0 8px 8px',
+                borderRadius: '0 10px 10px 10px',
                 backgroundColor: '#6E8569',
               }}
             >
               {selected === 0 && <Typography>Volunteer Metrics</Typography>}
               {selected === 1 && (
                 <EmergencyInfo
-                  name={user.emergencyContact?.ecName}
-                  phone={user.emergencyContact?.ecPhone}
-                  accommodations={combinedAccomms}
+                  id={id}
+                  ecName={user.emergencyContact?.ecName}
+                  ecPhone={user.emergencyContact?.ecPhone}
+                  accomm={user.accomm}
+                  otherAccomm={user.otherAccomm}
                 />
               )}
               {selected === 2 && (
