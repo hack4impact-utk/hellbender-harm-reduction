@@ -46,7 +46,12 @@ interface EventInfoProps {
 
 export function EventList({ tags }: EventInfoProps) {
   // various useStates for all the parts of the view
+  const userId = '681439a152a6f8d14f5ec44b';
   const [showUpcoming, setShowUpcoming] = useState(true);
+  const [signUpStatus, setSignUpStatus] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [userTags, setUserTags] = useState<string[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string | undefined>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mode, setMode] = useState<'add' | 'edit'>('add');
@@ -154,36 +159,38 @@ export function EventList({ tags }: EventInfoProps) {
   };
 
   const handleSignUp = async (eventId: string) => {
-    const userId = '681439a152a6f8d14f5ec44b';
     const appDate = new Date().toISOString();
-
-    const newEvent = {
-      uevent: eventId,
-      appDate,
-    };
+    const newEvent = { uevent: eventId, appDate };
 
     try {
-      // Step 1: Get current user data
       const userRes = await fetch(`/api/users/${userId}`);
       if (!userRes.ok) throw new Error('Failed to fetch user data');
 
       const userData = await userRes.json();
-
-      // Step 2: Merge the new event into the existing events array
       const currentEvents = userData.events || [];
 
-      // Optional: Check if user already signed up for the event
-      const alreadySignedUp = currentEvents.some(
-        (e: any) => e.uevent === eventId
-      );
-      if (alreadySignedUp) {
-        alert('You have already signed up for this event.');
-        return;
+      let updatedEvents;
+
+      if (signUpStatus[eventId]) {
+        // If already signed up, un-sign up (remove event from array)
+        if (!confirm('Are you sure you want to un-sign up?')) return;
+        updatedEvents = currentEvents.filter((e: any) => e.uevent !== eventId);
+        setSignUpStatus((prevState) => ({
+          ...prevState,
+          [eventId]: false, // Update status for this event
+        }));
+        console.log('Un-signed up from event');
+      } else {
+        // If not signed up, sign up (add event to array)
+        updatedEvents = [...currentEvents, newEvent];
+        setSignUpStatus((prevState) => ({
+          ...prevState,
+          [eventId]: true, // Update status for this event
+        }));
+        console.log('Signed up for event');
       }
 
-      const updatedEvents = [...currentEvents, newEvent];
-
-      // Step 3: Send the full updated array to backend
+      // Send the updated events list to the backend
       const updateRes = await fetch(`/api/users/${userId}`, {
         method: 'PUT',
         headers: {
@@ -193,11 +200,32 @@ export function EventList({ tags }: EventInfoProps) {
       });
 
       if (!updateRes.ok) throw new Error('Failed to update user events');
-
       const updatedData = await updateRes.json();
-      console.log('Successfully signed up:', updatedData);
+      console.log('Updated user events:', updatedData);
+
+      // Re-check the status after update (optional)
+      checkUserSignUpStatus(eventId);
     } catch (error) {
-      console.error('Error during sign-up:', error);
+      console.error('Error during sign-up/un-sign-up:', error);
+    }
+  };
+
+  const checkUserSignUpStatus = async (eventId: string) => {
+    try {
+      const userRes = await fetch(`/api/users/${userId}`);
+      if (!userRes.ok) throw new Error('Failed to fetch user data');
+
+      const userData = await userRes.json();
+      const userEvents = userData.events || [];
+
+      // Check if the user is signed up for the event
+      const alreadySignedUp = userEvents.some((e: any) => e.uevent === eventId);
+      setSignUpStatus((prevState) => ({
+        ...prevState,
+        [eventId]: alreadySignedUp, // Update sign-up status for this event
+      }));
+    } catch (error) {
+      console.error('Error checking user sign up status:', error);
     }
   };
 
@@ -242,10 +270,30 @@ export function EventList({ tags }: EventInfoProps) {
     setLoading(false);
   };
 
+  const fetchUserTags = async () => {
+    try {
+      const res = await fetch(`/api/users/${userId}`);
+      const data = await res.json();
+      const tagIds = (data.userTags || []).map((tagObj: any) => tagObj.tag); // assuming shape: { tag: string, name: string }
+      setUserTags(tagIds);
+    } catch (err) {
+      console.error('Failed to fetch user tags:', err);
+    }
+  };
+
+  const userMeetsRequirements = (eventRequirements: string[] = []) => {
+    if (eventRequirements.length === 0) return true; // no requirements
+    return eventRequirements.some((reqId) => userTags.includes(reqId));
+  };
+
   // makes sure to call for event info on page load
   useEffect(() => {
     fetchEvents();
-  }, []);
+    fetchUserTags();
+    combinedEventList.forEach((event) => {
+      checkUserSignUpStatus(event._id); // Call for each eventId
+    });
+  }, [combinedEventList]);
 
   // if you're waiting on event info to be called put up a loading circle
   if (loading) {
@@ -548,9 +596,16 @@ export function EventList({ tags }: EventInfoProps) {
                               : '#394733',
                           },
                         }}
-                        onClick={() => handleSignUp(event._id)} // Add event ID here
+                        onClick={() => handleSignUp(event._id)}
+                        disabled={
+                          !userMeetsRequirements(
+                            (event.eventRequirements ?? []).filter(
+                              (id): id is string => id !== null
+                            )
+                          )
+                        }
                       >
-                        Sign Up
+                        {signUpStatus[event._id] ? 'Un-sign Up' : 'Sign Up'}
                       </Button>
                     </Box>
                   )}
