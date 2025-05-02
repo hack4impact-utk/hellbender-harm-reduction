@@ -88,13 +88,37 @@ export function SignUpInfoForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const updateRequest = {
+      name: signUpData.name,
+      email: signUpData.email,
+      image: signUpData.image,
+      phone: signUpData.phone,
+      userType: 'Volunteer', // Default or determined elsewhere
+      pronouns: signUpData.pronouns,
+      emergencyContacts: {
+        ecName: signUpData.emergencyContact.ecName,
+        ecPhone: signUpData.emergencyContact.ecPhone,
+      },
+      userTags: signUpData.userTags ?? [],
+      eventPreferences: signUpData.eventPreferences ?? [],
+      reminders: [], // TODO: Add if you implement reminders
+      custReminders: [], // TODO: Add if implemented
+      newEvents: signUpData.eventNotif,
+      referrals: signUpData.referralSource ?? [],
+      accomm: signUpData.accomm ?? [],
+      otherAccomm: signUpData.otherAccomm ?? '',
+      events: [], // Could also be left undefined if your zod schema marks it as optional
+    };
+
     try {
+      // const parsed = zUpdateUserRequest.parse(signUpData);
+      const parsed = updateRequest;
       const response = await fetch(`/api/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(signUpData), // Ensure it matches zod schema
+        body: JSON.stringify(parsed), // Ensure it matches zod schema
       });
 
       if (!response.ok) {
@@ -105,6 +129,7 @@ export function SignUpInfoForm({
 
       console.log('User updated successfully');
       // Optionally redirect or show success state
+      // router.push('/calendar');
     } catch (error) {
       console.error('Unexpected error:', error);
     }
