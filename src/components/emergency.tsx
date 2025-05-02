@@ -1,7 +1,6 @@
 'use client';
 import {
   Box,
-  Grid,
   Paper,
   Stack,
   styled,
@@ -41,10 +40,10 @@ const accommodations = [
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#42603c',
   ...theme.typography.h6,
-  padding: '5px',
   textAlign: 'center',
   color: '#f0f5ef',
   borderRadius: '10px',
+  padding: '10px',
 }));
 
 const boxStyle = {
@@ -54,12 +53,6 @@ const boxStyle = {
   alignItems: 'center',
   borderRadius: '10px',
   paddingLeft: '10px',
-};
-
-const typoStyle = {
-  fontFamily: 'Verdana',
-  fontSize: '1.1rem',
-  color: '#f0f5ef',
 };
 
 // display, email, phone, and accomms based on array
@@ -103,8 +96,8 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
         onClick={() => setEditMode(!editMode)}
         sx={{
           position: 'absolute',
-          top: 8,
-          right: 8,
+          top: 15,
+          right: 15,
           color: '#f0f5ef',
           backgroundColor: '#42603c',
           '&:hover': { backgroundColor: '#5a7a50' },
@@ -112,14 +105,17 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
       >
         <Edit />
       </IconButton>
-      <Stack spacing={2} sx={{ height: '100%', padding: '20px' }}>
+      <Stack
+        spacing={2}
+        sx={{ width: '95%', margin: '0 auto', padding: '10px' }}
+      >
         <Typography
           fontFamily="Verdana"
           fontWeight="bold"
           variant="h4"
           color="#f0f5ef"
         >
-          Name
+          Emergency Contact Name
         </Typography>
         {editMode ? (
           <TextField
@@ -129,7 +125,14 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
           />
         ) : (
           <Box sx={boxStyle}>
-            <Typography sx={typoStyle}>{name || 'N/A'}</Typography>
+            <Typography
+              fontFamily={'Verdana'}
+              color="#f0f5ef"
+              variant="h5"
+              padding="4px"
+            >
+              {name || 'N/A'}
+            </Typography>
           </Box>
         )}
         <Typography
@@ -138,7 +141,7 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
           variant="h4"
           color="#f0f5ef"
         >
-          Phone Number
+          Emergency Contact Phone Number
         </Typography>
         {editMode ? (
           <TextField
@@ -148,9 +151,25 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
           />
         ) : (
           <Box sx={boxStyle}>
-            <Typography sx={typoStyle}>{phone || 'N/A'}</Typography>
+            <Typography
+              fontFamily={'Verdana'}
+              color="#f0f5ef"
+              variant="h5"
+              padding="4px"
+            >
+              {phone || 'N/A'}
+            </Typography>
           </Box>
         )}
+        <Typography
+          fontFamily="Verdana"
+          fontWeight="bold"
+          variant="h4"
+          color="#f0f5ef"
+          paddingTop="30px"
+        >
+          Accommodations
+        </Typography>
         {editMode ? (
           <Stack spacing={2}>
             <Select
@@ -211,17 +230,26 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
             />
           </Stack>
         ) : combinedAccommodations.length > 0 ? (
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 2, // spacing between items
+              width: '100%',
+            }}
           >
             {combinedAccommodations.map((accom, i) => (
-              <Grid item key={i} xs={12} sm={6} md={6}>
+              <Box
+                key={i}
+                sx={{
+                  flex: '1 1 calc(50% - 16px)', // 2 items per row with a 16px gap
+                  minWidth: '250px', // optional: minimum width for smaller screens
+                }}
+              >
                 <Item>{accom}</Item>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         ) : (
           <Typography
             fontFamily="Verdana"
