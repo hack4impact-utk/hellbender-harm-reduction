@@ -12,10 +12,12 @@ export default async function Home({
 }) {
   const userId = params?.userid;
   let formattedUser: Partial<SignUpFormData> = {};
+  let id: string | undefined = '';
 
   if (userId) {
     try {
       const user: UserResponse | null = await getUser(userId);
+      id = user?._id?.toString();
 
       // Map user to form format
       formattedUser = {
@@ -42,7 +44,7 @@ export default async function Home({
 
   return (
     <div>
-      <SignInUpView _form={<SignUpInfoForm user={formattedUser} />} />
+      <SignInUpView _form={<SignUpInfoForm user={formattedUser} id={id} />} />
     </div>
   );
 }

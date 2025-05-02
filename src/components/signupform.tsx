@@ -24,7 +24,13 @@ export enum FormEnum {
   CertificationInfo = 5,
 }
 
-export function SignUpInfoForm({ user }: { user?: Partial<SignUpFormData> }) {
+export function SignUpInfoForm({
+  user,
+  id,
+}: {
+  user?: Partial<SignUpFormData>;
+  id?: string | undefined;
+}) {
   const [signUpData, setSignUpFormData] = useState<SignUpFormData>({
     name: user?.name || '',
     image: user?.image || '',
@@ -77,6 +83,31 @@ export function SignUpInfoForm({ user }: { user?: Partial<SignUpFormData> }) {
       router.replace(`?${params.toString()}`, { scroll: false }); // avoids pushing multiple history entries
     }
     setCurrentForm(formNum);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`/api/users/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(signUpData), // Ensure it matches zod schema
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Update failed:', errorData.message);
+        return;
+      }
+
+      console.log('User updated successfully');
+      // Optionally redirect or show success state
+    } catch (error) {
+      console.error('Unexpected error:', error);
+    }
   };
 
   return (
@@ -215,7 +246,9 @@ export function SignUpInfoForm({ user }: { user?: Partial<SignUpFormData> }) {
           variant="outlined"
         ></Pagination>
         {currentForm == totalPages && (
-          <Button variant="contained">Submit</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Submit
+          </Button>
         )}
       </Box>
     </Box>
