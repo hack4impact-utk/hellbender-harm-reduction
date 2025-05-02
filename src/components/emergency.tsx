@@ -120,8 +120,24 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
         {editMode ? (
           <TextField
             value={name}
+            variant="outlined"
             onChange={(e) => setName(e.target.value)}
             fullWidth
+            InputLabelProps={{ style: { color: '#f0f5ef' } }}
+            sx={{
+              '& .MuiInputBase-input': {
+                color: '#f0f5ef', // text color
+              },
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#42603c',
+                '& fieldset': {
+                  borderColor: '#f0f5ef',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#ffffff',
+                },
+              },
+            }}
           />
         ) : (
           <Box sx={boxStyle}>
@@ -145,9 +161,25 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
         </Typography>
         {editMode ? (
           <TextField
-            value={phone}
+            value={name}
+            variant="outlined"
             onChange={(e) => setPhone(e.target.value)}
             fullWidth
+            InputLabelProps={{ style: { color: '#f0f5ef' } }}
+            sx={{
+              '& .MuiInputBase-input': {
+                color: '#f0f5ef', // text color
+              },
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: '#42603c',
+                '& fieldset': {
+                  borderColor: '#f0f5ef',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#ffffff',
+                },
+              },
+            }}
           />
         ) : (
           <Box sx={boxStyle}>
@@ -184,7 +216,22 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
               displayEmpty
               fullWidth
               size="small"
-              sx={{ backgroundColor: '#fff' }}
+              sx={{
+                color: '#f0f5ef',
+                backgroundColor: '#42603c',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#f0f5ef',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#f0f5ef',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#f0f5ef',
+                },
+                '& .MuiSelect-icon': {
+                  color: '#f0f5ef', // dropdown arrow icon
+                },
+              }}
             >
               <MenuItem value="">Select an accommodation</MenuItem>
               {accommodations.map((option) => (
@@ -201,12 +248,16 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    backgroundColor: '#8ca98c',
+                    backgroundColor: '#42603c',
                     padding: '2px 8px',
                     borderRadius: '16px',
                   }}
                 >
-                  <Typography sx={{ marginRight: 1 }}>{accom}</Typography>
+                  <Typography
+                    sx={{ marginRight: 1, marginLeft: 1, color: '#f0f5ef' }}
+                  >
+                    {accom}
+                  </Typography>
                   <IconButton
                     size="small"
                     onClick={() =>
@@ -214,19 +265,36 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
                         selectedAccoms.filter((_, i) => i !== index)
                       )
                     }
+                    sx={{ color: '#f0f5ef' }}
                   >
                     ×
                   </IconButton>
                 </Paper>
               ))}
             </Box>
-
+            <Typography variant="body1" fontFamily={'Verdana'} color="#f0f5ef">
+              Other Accommodation:
+            </Typography>
             <TextField
-              label="Other Accommodation"
               value={otherAccomm}
+              variant="outlined"
               onChange={(e) => setOtherAccomm(e.target.value)}
               fullWidth
-              sx={{ backgroundColor: '#fff' }}
+              InputLabelProps={{ style: { color: '#f0f5ef' } }}
+              sx={{
+                '& .MuiInputBase-input': {
+                  color: '#f0f5ef', // text color
+                },
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#42603c',
+                  '& fieldset': {
+                    borderColor: '#f0f5ef',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#ffffff',
+                  },
+                },
+              }}
             />
           </Stack>
         ) : combinedAccommodations.length > 0 ? (
@@ -265,7 +333,7 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
             variant="contained"
             color="success"
             onClick={handleSubmit}
-            sx={{ alignSelf: 'center' }}
+            sx={{ alignSelf: 'center', backgroundColor: '#42603c' }}
           >
             Submit
           </Button>

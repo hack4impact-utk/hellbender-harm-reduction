@@ -144,10 +144,20 @@ export function UserInfo(props: userInfoProps) {
               fullWidth
               size="small"
               sx={{
-                ...textFieldStyle,
-                backgroundColor: '#42603c',
                 color: '#f0f5ef',
-                '& .MuiSelect-icon': { color: '#f0f5ef' },
+                backgroundColor: '#42603c',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#f0f5ef',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#f0f5ef',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#f0f5ef',
+                },
+                '& .MuiSelect-icon': {
+                  color: '#f0f5ef', // dropdown arrow icon
+                },
               }}
             >
               {[
