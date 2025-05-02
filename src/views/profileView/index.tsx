@@ -46,6 +46,8 @@ interface ProfileProps {
 }
 
 export default function ProfileView({ user, count }: ProfileProps) {
+  const id = '681439a152a6f8d14f5ec44b';
+
   const combinedRems = [
     ...(user.reminders ?? []),
     ...(user.custReminders ?? []).map(
@@ -110,6 +112,7 @@ export default function ProfileView({ user, count }: ProfileProps) {
               }}
             >
               <UserInfo
+                id={id}
                 profilePicture={user.image}
                 name={user.name}
                 pronouns={user.pronouns}

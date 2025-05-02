@@ -5,7 +5,7 @@ import ProfileView from '@/views/profileView';
 import { Typography } from '@mui/material';
 
 export default async function Home() {
-  const user = await getUser('67daca60a3a78172a40ec73e');
+  const user = await getUser('681439a152a6f8d14f5ec44b');
 
   if (!user) {
     return <Typography>User Not Found</Typography>;
