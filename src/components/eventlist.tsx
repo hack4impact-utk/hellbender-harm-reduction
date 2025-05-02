@@ -153,6 +153,54 @@ export function EventList({ tags }: EventInfoProps) {
     fetchEvents();
   };
 
+  const handleSignUp = async (eventId: string) => {
+    const userId = '681439a152a6f8d14f5ec44b';
+    const appDate = new Date().toISOString();
+
+    const newEvent = {
+      uevent: eventId,
+      appDate,
+    };
+
+    try {
+      // Step 1: Get current user data
+      const userRes = await fetch(`/api/users/${userId}`);
+      if (!userRes.ok) throw new Error('Failed to fetch user data');
+
+      const userData = await userRes.json();
+
+      // Step 2: Merge the new event into the existing events array
+      const currentEvents = userData.events || [];
+
+      // Optional: Check if user already signed up for the event
+      const alreadySignedUp = currentEvents.some(
+        (e: any) => e.uevent === eventId
+      );
+      if (alreadySignedUp) {
+        alert('You have already signed up for this event.');
+        return;
+      }
+
+      const updatedEvents = [...currentEvents, newEvent];
+
+      // Step 3: Send the full updated array to backend
+      const updateRes = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ events: updatedEvents }),
+      });
+
+      if (!updateRes.ok) throw new Error('Failed to update user events');
+
+      const updatedData = await updateRes.json();
+      console.log('Successfully signed up:', updatedData);
+    } catch (error) {
+      console.error('Error during sign-up:', error);
+    }
+  };
+
   // combines basic event info with id
   type combinedEvents = EventInfo & { _id: string };
 
@@ -500,6 +548,7 @@ export function EventList({ tags }: EventInfoProps) {
                               : '#394733',
                           },
                         }}
+                        onClick={() => handleSignUp(event._id)} // Add event ID here
                       >
                         Sign Up
                       </Button>
