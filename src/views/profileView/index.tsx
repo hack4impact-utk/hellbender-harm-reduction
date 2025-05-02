@@ -1,11 +1,12 @@
 'use client';
-import { Typography, Box, Tab, Tabs, Grid, Stack } from '@mui/material';
+import { Box, Tab, Tabs, Grid, Stack } from '@mui/material';
 import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { UserInfo } from '@/components/userinfo';
 import { YearlyEvents } from '@/components/yearlyevents';
 import { EmergencyInfo } from '@/components/emergency';
 import { NotificationInfo } from '@/components/notifications';
+import { AccountInfo } from '@/components/accountinfo';
 
 interface EmergencyContact {
   ecName: string;
@@ -13,6 +14,7 @@ interface EmergencyContact {
 }
 
 interface userTags {
+  tagId: string;
   tag: string;
   tagProf: string;
 }
@@ -29,7 +31,7 @@ interface User {
   userType: string;
   emergencyContact?: EmergencyContact;
   pronouns: string;
-  userTags?: (userTags | null)[];
+  userTags?: userTags[];
   phone: string;
   eventPreferences: string[];
   reminders?: string[];
@@ -40,12 +42,19 @@ interface User {
   otherAccomm?: string;
 }
 
+interface Tag {
+  _id: string;
+  tagName: string;
+  certification: boolean;
+}
+
 interface ProfileProps {
   user: User;
   count: number;
+  tags: Tag[];
 }
 
-export default function ProfileView({ user, count }: ProfileProps) {
+export default function ProfileView({ user, count, tags }: ProfileProps) {
   const id = '681439a152a6f8d14f5ec44b';
 
   // keeps track of which tab is selected
@@ -187,7 +196,17 @@ export default function ProfileView({ user, count }: ProfileProps) {
                 backgroundColor: '#6E8569',
               }}
             >
-              {selected === 0 && <Typography>Volunteer Metrics</Typography>}
+              {selected === 0 && (
+                <Box sx={{ height: '100%' }}>
+                  <AccountInfo
+                    id={id}
+                    email={user.email}
+                    phone={user.phone}
+                    utags={user.userTags}
+                    tags={tags}
+                  />
+                </Box>
+              )}
               {selected === 1 && (
                 <EmergencyInfo
                   id={id}

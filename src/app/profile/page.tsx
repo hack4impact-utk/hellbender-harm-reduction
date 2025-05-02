@@ -1,6 +1,6 @@
 import { getEvent } from '@/server/actions/event';
 import { getUser } from '@/server/actions/user';
-import { getTag } from '@/server/actions/tag';
+import { getAllTags, getTag } from '@/server/actions/tag';
 import ProfileView from '@/views/profileView';
 import { Typography } from '@mui/material';
 
@@ -16,7 +16,11 @@ export default async function Home() {
       const tagIdString = String(userTag.tag);
       const utagName = await getTag(tagIdString);
       return utagName
-        ? { tagProf: userTag.tagProf, tag: utagName.tagName }
+        ? {
+            tagId: tagIdString,
+            tagProf: userTag.tagProf,
+            tag: utagName.tagName,
+          }
         : null;
     })
   );
@@ -35,7 +39,9 @@ export default async function Home() {
     pronouns: user.pronouns,
     accomm: user?.accomm,
     otherAccomm: user?.otherAccomm,
-    userTags: userTags.filter((tag) => tag !== null),
+    userTags: userTags.filter(
+      (tag): tag is NonNullable<typeof tag> => tag !== null
+    ),
     emergencyContact: user.emergencyContacts
       ? JSON.parse(JSON.stringify(user.emergencyContacts))
       : [],
@@ -65,9 +71,12 @@ export default async function Home() {
     )
   ).filter(({ keep }) => keep).length;
 
+  const alltags = await getAllTags();
+  const cleantags = alltags.map((tag) => JSON.parse(JSON.stringify(tag)));
+
   return (
     <div>
-      <ProfileView user={cleanData} count={filtered_events} />
+      <ProfileView user={cleanData} count={filtered_events} tags={cleantags} />
     </div>
   );
 }
