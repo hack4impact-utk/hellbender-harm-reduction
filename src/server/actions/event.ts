@@ -6,6 +6,8 @@ import {
   UpdateEventRequest,
 } from '@/types/event';
 import { isValidObjectId } from 'mongoose';
+import user from '../models/user';
+import mongoose from 'mongoose';
 
 export async function getAllEvents(): Promise<EventResponse[]> {
   let response: EventResponse[];
@@ -41,6 +43,12 @@ export async function deleteEvent(eventId: string): Promise<void> {
       if (!res) {
         throw new Error('500 Could Not Delete');
       }
+
+      const eventObjectId = new mongoose.Types.ObjectId(eventId);
+      await user.updateMany(
+        { 'events.uevent': eventObjectId },
+        { $pull: { events: { uevent: eventObjectId } } }
+      );
     } catch (error) {
       throw error;
     }

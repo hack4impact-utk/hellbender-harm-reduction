@@ -50,8 +50,8 @@ export default async function Home() {
     return {
       id: String(event._id),
       eventName: event.eventName,
-      start: event.eventStart,
-      end: event.eventEnd,
+      start: new Date(event.eventStart),
+      end: new Date(event.eventEnd),
     };
   });
 
