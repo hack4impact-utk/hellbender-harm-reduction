@@ -17,8 +17,13 @@ export function SetEventPref({ data, onChange }: SetEventPrefProps) {
   const [selectedEvents, setSelectedEvents] = useState<string[]>(data || []);
 
   useEffect(() => {
+    setSelectedEvents(data || []);
+  }, [data]);
+
+  // Notify parent *only* when selectedEvents changes (not during render)
+  useEffect(() => {
     onChange(selectedEvents);
-  }, [onChange, selectedEvents]);
+  }, [selectedEvents]);
 
   const eventOptions = [
     'Harm Reduction Services',

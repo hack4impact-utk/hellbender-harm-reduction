@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Typography,
   Grid,
@@ -40,11 +40,6 @@ export function AddLang({ data, onChange }: AddLangProps) {
     data.userTags.filter((tag): tag is Tags => tag !== null)
   );
 
-  // Use effect to keep parent updated
-  useEffect(() => {
-    onChange({ userTags });
-  }, [onChange, userTags]);
-
   // if list item is clicked
   const handleListItemClick = (item: string) => {
     setSelectedItem(item);
@@ -78,6 +73,7 @@ export function AddLang({ data, onChange }: AddLangProps) {
     }
     // Reset selected values after submission
     setSelectedProf(''); // Reset selected profession
+    onChange({ userTags });
   };
 
   // if you delete one of the languages at the bottom
