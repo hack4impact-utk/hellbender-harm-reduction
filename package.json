@@ -30,6 +30,7 @@
     "bson": "^6.10.3",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
+    "file-saver": "^2.0.5",
     "install": "^0.13.0",
     "mongodb": "^6.15.0",
     "mongoose": "^8.11.0",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.3.1",
+    "@types/file-saver": "^2.0.7",
     "@types/jest": "^29.5.14",
     "@types/node": "20.12.5",
     "@typescript-eslint/eslint-plugin": "^7.18.0",

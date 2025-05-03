@@ -4,6 +4,8 @@ import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { AllVolunteers } from '@/components/allvolunteers';
 import { EventVolunteers } from '@/components/eventvolunteers';
+import { AsyncParser } from '@json2csv/node';
+import { saveAs } from 'file-saver';
 
 //interfaces for the data in all three components/tabs
 interface utag {
@@ -46,6 +48,18 @@ interface DataTableProps {
   alldata: AllUserData[];
   userdata: UserData[];
   eventdata: EventData[];
+}
+
+async function allDataToCSV(data: AllUserData[]) {
+  const opts = {};
+  const transformOpts = {};
+  const asyncOpts = {};
+  const parser = new AsyncParser(opts, asyncOpts, transformOpts); // json2csv setup
+
+  const csv = await parser.parse(data).promise();
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+  saveAs(blob, 'volunteers.csv');
 }
 
 export default function VolunteersView({
@@ -136,6 +150,7 @@ export default function VolunteersView({
                     fontFamily: 'Verdana',
                     color: 'black',
                   }}
+                  onClick={() => allDataToCSV(alldata)}
                 >
                   Export
                 </Button>
