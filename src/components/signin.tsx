@@ -193,7 +193,9 @@ export default function SignInForm(props: signInProps) {
                     }}
                   />
                 }
-                onClick={() => signIn('google')}
+                onClick={() =>
+                  signIn('google', { callbackUrl: '/auth/callback' })
+                }
                 sx={{
                   p: 0,
                   pr: 2,

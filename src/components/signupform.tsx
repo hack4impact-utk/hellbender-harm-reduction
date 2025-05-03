@@ -1,7 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SignUpBasicInfo } from './signupbasicinfo';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import { SignUpContactInfo } from './signupcontactinfo';
 import { AddLang } from './addlang';
 import { SetEventPref } from './seteventpref';
@@ -14,7 +14,6 @@ import { SetEmergencyContact } from './setemergencycontact';
 import { SignUpFormData } from '@/types/form/signUp';
 // import { SetReminders } from './setreminders';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 import Pagination from '@mui/material/Pagination';
 
 export enum FormEnum {
@@ -25,27 +24,35 @@ export enum FormEnum {
   CertificationInfo = 5,
 }
 
-export function SignUpInfoForm() {
+export function SignUpInfoForm({
+  user,
+  id,
+}: {
+  user?: Partial<SignUpFormData>;
+  id?: string | undefined;
+}) {
   const [signUpData, setSignUpFormData] = useState<SignUpFormData>({
-    name: '',
-    image: '',
-    email: '',
-    phone: '',
-    pronouns: '',
+    name: user?.name || '',
+    image: user?.image || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    pronouns: user?.pronouns || '',
 
     emergencyContact: {
-      ecName: '',
-      ecPhone: '',
+      ecName: user?.emergencyContact?.ecName || '',
+      ecPhone: user?.emergencyContact?.ecPhone || '',
     },
 
-    userTags: [],
-    eventPreferences: [],
-    eventNotif: 'Never',
+    userTags: user?.userTags || [],
+    eventPreferences: user?.eventPreferences || [],
+    eventNotif: user?.eventNotif || 'No Events',
 
-    certifications: [{ certName: '', certDescription: '' }],
-    referralSource: [],
-    accomm: [],
-    otherAccomm: '',
+    certifications: user?.certifications || [
+      { certName: '', certDescription: '' },
+    ],
+    referralSource: user?.referralSource || [],
+    accomm: user?.accomm || [],
+    otherAccomm: user?.otherAccomm || '',
   });
 
   const handleChange = (updated: SignUpFormData) => {
@@ -55,19 +62,78 @@ export function SignUpInfoForm() {
   const router = useRouter();
 
   const totalPages = 5;
-  const initialStep = Math.min(
-    Math.max(parseInt(searchParams.get('step') || '1'), 1),
-    totalPages
-  );
+
+  // Only read `step` param on first render
+  const initialStep = useMemo(() => {
+    const param = parseInt(searchParams.get('step') || '1');
+    return Math.min(Math.max(isNaN(param) ? 1 : param, 1), totalPages);
+  }, [searchParams]); // empty dependency array ensures it's read only once
+
   const [currentForm, setCurrentForm] = useState<FormEnum>(
-    isNaN(initialStep) ? FormEnum.BasicInfo : initialStep
+    initialStep as FormEnum
   );
 
-  useEffect(() => {
+  const handleFormChange = (formNum: number) => {
     const params = new URLSearchParams(window.location.search);
-    params.set('step', currentForm.toString());
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [currentForm]);
+    const currentStepParam = params.get('step');
+
+    if (currentStepParam !== formNum.toString()) {
+      // Avoid recursive updates
+      params.set('step', formNum.toString());
+      router.replace(`?${params.toString()}`, { scroll: false }); // avoids pushing multiple history entries
+    }
+    setCurrentForm(formNum);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const updateRequest = {
+      name: signUpData.name,
+      email: signUpData.email,
+      image: signUpData.image,
+      phone: signUpData.phone,
+      userType: 'Volunteer', // Default or determined elsewhere
+      pronouns: signUpData.pronouns,
+      emergencyContacts: {
+        ecName: signUpData.emergencyContact.ecName,
+        ecPhone: signUpData.emergencyContact.ecPhone,
+      },
+      userTags: signUpData.userTags ?? [],
+      eventPreferences: signUpData.eventPreferences ?? [],
+      reminders: [], // TODO: Add if you implement reminders
+      custReminders: [], // TODO: Add if implemented
+      newEvents: signUpData.eventNotif,
+      referrals: signUpData.referralSource ?? [],
+      accomm: signUpData.accomm ?? [],
+      otherAccomm: signUpData.otherAccomm ?? '',
+      events: [], // Could also be left undefined if your zod schema marks it as optional
+    };
+
+    try {
+      // const parsed = zUpdateUserRequest.parse(signUpData);
+      const parsed = updateRequest;
+      const response = await fetch(`/api/users/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(parsed), // Ensure it matches zod schema
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Update failed:', errorData.message);
+        return;
+      }
+
+      console.log('User updated successfully');
+      // Optionally redirect or show success state
+      router.push('/profile');
+    } catch (error) {
+      console.error('Unexpected error:', error);
+    }
+  };
 
   return (
     <Box display="flex" flexDirection="column" height="95%">
@@ -197,17 +263,28 @@ export function SignUpInfoForm() {
           </div>
         )}
       </Box>
-      <Box display={'flex'} justifyContent={'center'} p={1}>
-        <Pagination
-          count={totalPages}
-          page={currentForm}
-          onChange={(event, value) => setCurrentForm(value)}
-          variant="outlined"
-        ></Pagination>
-        {currentForm == totalPages && (
-          <Button variant="contained">Submit</Button>
-        )}
-      </Box>
+      {/* <Box display={'flex'} justifyContent={'center'} p={1}> */}
+      <Grid container spacing={2}>
+        <Grid item sm={3}></Grid>
+        <Grid item sm={6}>
+          <Pagination
+            count={totalPages}
+            page={currentForm}
+            onChange={(event, value) => handleFormChange(value)}
+            variant="outlined"
+          ></Pagination>
+        </Grid>
+        <Grid item sm={3}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={currentForm != totalPages}
+          >
+            Submit
+          </Button>
+        </Grid>
+      </Grid>
+      {/* </Box> */}
     </Box>
   );
 }

@@ -106,6 +106,7 @@ export function AddAccommodations({ data, onChange }: AddAccommodationsProps) {
             variant="filled"
             sx={{
               backgroundColor: '#4d6a48',
+              '& .MuiInputBase-input': { color: '#ffffff' },
             }}
           />
         </Grid>

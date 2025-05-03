@@ -11,7 +11,7 @@ export interface SignUpContactInfoProps {
 
 export function SignUpContactInfo({ data, onChange }: SignUpContactInfoProps) {
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ '& .MuiInputBase-input': { color: '#ffffff' } }}>
       <Typography variant="h5" align="center">
         How Can We Contact You?
       </Typography>

@@ -33,7 +33,7 @@ export function SetNewEventNotif({ data, onChange }: SetNewEventNotifProps) {
         I want email notifications for...
       </FormLabel>
       <RadioGroup
-        defaultValue="Never"
+        defaultValue="No Events"
         value={data}
         name="neweventnotifs"
         sx={{
@@ -44,17 +44,17 @@ export function SetNewEventNotif({ data, onChange }: SetNewEventNotifProps) {
         onChange={handleChange}
       >
         <FormControlLabel
-          value="All New Events"
+          value="All Events"
           control={<Radio />}
           label="All New Events"
         />
         <FormControlLabel
-          value="Preferred New Events"
+          value="Preferred Events"
           control={<Radio />}
           label="Preferred New Events"
         />
         <FormControlLabel
-          value="Never"
+          value="No Events"
           control={<Radio />}
           label="No New Events"
         />

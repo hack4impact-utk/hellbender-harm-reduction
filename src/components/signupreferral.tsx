@@ -62,8 +62,13 @@ export function SignUpReferral({ data, onChange }: SignUpReferralProps) {
   const [selectedSources, setSelectedSources] = useState<string[]>(data || []);
 
   useEffect(() => {
+    setSelectedSources(data || []);
+  }, [data]);
+
+  // Notify parent *only* when selectedEvents changes (not during render)
+  useEffect(() => {
     onChange(selectedSources);
-  }, [onChange, selectedSources]);
+  }, [selectedSources]);
 
   const toggleSource = (source: string) => {
     setSelectedSources((prev) =>

@@ -13,6 +13,7 @@ export async function GET(req: Request): Promise<NextResponse> {
       return NextResponse.json(response, { status: 200 });
     } else {
       // If there are query parameters, return filtered users
+
       const response = await getUserBy(query);
       return NextResponse.json(response, { status: 200 });
     }

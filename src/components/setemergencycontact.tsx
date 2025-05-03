@@ -14,7 +14,7 @@ export function SetEmergencyContact({
   onChange,
 }: SetEmergencyContactProps) {
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ '& .MuiInputBase-input': { color: '#ffffff' } }}>
       <Typography variant="h5" align="center">
         Who Can We Contact in Case of an Emergency?
       </Typography>
