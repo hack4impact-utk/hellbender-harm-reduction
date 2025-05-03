@@ -24,6 +24,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
+import { Parser } from '@json2csv/plainjs';
+import { saveAs } from 'file-saver';
 
 // needed interfaces
 interface emergContact {
@@ -133,6 +135,21 @@ const custTheme = createTheme({
     },
   },
 });
+
+async function dataToCSV(data: UserData[]) {
+  try {
+    const opts = {};
+    const parser = new Parser(opts); // json2csv setup (supposedly this parser can work on the browser)
+
+    const csv = parser.parse(data);
+    // console.log(csv); // for debugging
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+    saveAs(blob, 'volunteersByEvent.csv');
+  } catch (error) {
+    console.error('Error converting data to CSV:', error);
+  }
+}
 
 // exports list of volunteers by event
 export function EventVolunteers({ users, events }: DataTableProps) {
@@ -316,6 +333,7 @@ export function EventVolunteers({ users, events }: DataTableProps) {
                   fontFamily: 'Verdana',
                   color: 'black',
                 }}
+                onClick={() => dataToCSV(filtUsers)}
               >
                 Export
               </Button>
