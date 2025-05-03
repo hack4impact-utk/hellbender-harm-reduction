@@ -129,7 +129,7 @@ export function SignUpInfoForm({
 
       console.log('User updated successfully');
       // Optionally redirect or show success state
-      router.push('/calendar');
+      router.push('/profile');
     } catch (error) {
       console.error('Unexpected error:', error);
     }
