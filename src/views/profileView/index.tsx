@@ -1,12 +1,13 @@
 'use client';
 import { Box, Tab, Tabs, Grid, Stack } from '@mui/material';
 import Navbar from '@/components/navbar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserInfo } from '@/components/userinfo';
 import { YearlyEvents } from '@/components/yearlyevents';
 import { EmergencyInfo } from '@/components/emergency';
 import { NotificationInfo } from '@/components/notifications';
 import { AccountInfo } from '@/components/accountinfo';
+import { useSession } from 'next-auth/react';
 
 interface EmergencyContact {
   ecName: string;
@@ -29,7 +30,7 @@ interface User {
   email: string;
   image: string;
   userType: string;
-  emergencyContact?: EmergencyContact;
+  emergencyContacts?: EmergencyContact;
   pronouns: string;
   userTags?: userTags[];
   phone: string;
@@ -48,14 +49,12 @@ interface Tag {
   certification: boolean;
 }
 
-interface ProfileProps {
-  user: User;
-  count: number;
-  tags: Tag[];
-}
-
-export default function ProfileView({ user, count, tags }: ProfileProps) {
+export default function ProfileView() {
   const id = '681439a152a6f8d14f5ec44b';
+  const { data: session } = useSession();
+  const [user, setUser] = useState<User | null>(null);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [count, setCount] = useState(0);
 
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
@@ -67,6 +66,35 @@ export default function ProfileView({ user, count, tags }: ProfileProps) {
   ) => {
     setSelected(newSelected);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!session?.user?.email) return;
+
+      const userRes = await fetch(
+        `/api/users?email=${encodeURIComponent(session.user.email)}`
+      );
+
+      const userData = await userRes.json();
+      const user = userData?.[0];
+      setUser(user);
+
+      const tagRes = await fetch('/api/tags');
+      const tagData = await tagRes.json();
+      setTags(tagData);
+
+      const currentYear = new Date().getFullYear();
+      const eventsThisYear =
+        userData.events?.filter((e: any) => {
+          const date = new Date(e.appDate);
+          return date.getFullYear() === currentYear;
+        }) ?? [];
+
+      setCount(eventsThisYear.length);
+    };
+
+    fetchData();
+  }, [session]);
 
   // returns actual page
   return (
@@ -110,9 +138,9 @@ export default function ProfileView({ user, count, tags }: ProfileProps) {
             >
               <UserInfo
                 id={id}
-                profilePicture={user.image}
-                name={user.name}
-                pronouns={user.pronouns}
+                profilePicture={user?.image || ''}
+                name={user?.name || ''}
+                pronouns={user?.pronouns || ''}
               />
             </Box>
             <Box
@@ -200,9 +228,9 @@ export default function ProfileView({ user, count, tags }: ProfileProps) {
                 <Box sx={{ height: '100%' }}>
                   <AccountInfo
                     id={id}
-                    email={user.email}
-                    phone={user.phone}
-                    utags={user.userTags}
+                    email={user?.email || ''}
+                    phone={user?.phone || ''}
+                    utags={user?.userTags || []}
                     tags={tags}
                   />
                 </Box>
@@ -210,20 +238,20 @@ export default function ProfileView({ user, count, tags }: ProfileProps) {
               {selected === 1 && (
                 <EmergencyInfo
                   id={id}
-                  ecName={user.emergencyContact?.ecName}
-                  ecPhone={user.emergencyContact?.ecPhone}
-                  accomm={user.accomm}
-                  otherAccomm={user.otherAccomm}
+                  ecName={user?.emergencyContacts?.ecName}
+                  ecPhone={user?.emergencyContacts?.ecPhone}
+                  accomm={user?.accomm}
+                  otherAccomm={user?.otherAccomm}
                 />
               )}
               {selected === 2 && (
                 <Box sx={{ height: '100%' }}>
                   <NotificationInfo
                     id={id}
-                    eventPreferences={user.eventPreferences}
-                    newEvents={user.newEvents}
-                    reminders={user.reminders}
-                    custReminders={user.custReminders}
+                    eventPreferences={user?.eventPreferences || []}
+                    newEvents={user?.newEvents || ''}
+                    reminders={user?.reminders || []}
+                    custReminders={user?.custReminders || []}
                   />
                 </Box>
               )}
