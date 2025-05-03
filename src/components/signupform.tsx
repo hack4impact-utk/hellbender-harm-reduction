@@ -1,7 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { SignUpBasicInfo } from './signupbasicinfo';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import { SignUpContactInfo } from './signupcontactinfo';
 import { AddLang } from './addlang';
 import { SetEventPref } from './seteventpref';
@@ -129,7 +129,7 @@ export function SignUpInfoForm({
 
       console.log('User updated successfully');
       // Optionally redirect or show success state
-      // router.push('/calendar');
+      router.push('/calendar');
     } catch (error) {
       console.error('Unexpected error:', error);
     }
@@ -263,19 +263,28 @@ export function SignUpInfoForm({
           </div>
         )}
       </Box>
-      <Box display={'flex'} justifyContent={'center'} p={1}>
-        <Pagination
-          count={totalPages}
-          page={currentForm}
-          onChange={(event, value) => handleFormChange(value)}
-          variant="outlined"
-        ></Pagination>
-        {currentForm == totalPages && (
-          <Button variant="contained" onClick={handleSubmit}>
+      {/* <Box display={'flex'} justifyContent={'center'} p={1}> */}
+      <Grid container spacing={2}>
+        <Grid item sm={3}></Grid>
+        <Grid item sm={6}>
+          <Pagination
+            count={totalPages}
+            page={currentForm}
+            onChange={(event, value) => handleFormChange(value)}
+            variant="outlined"
+          ></Pagination>
+        </Grid>
+        <Grid item sm={3}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={currentForm != totalPages}
+          >
             Submit
           </Button>
-        )}
-      </Box>
+        </Grid>
+      </Grid>
+      {/* </Box> */}
     </Box>
   );
 }

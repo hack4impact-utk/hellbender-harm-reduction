@@ -29,7 +29,7 @@ export interface SignUpBasicInfoProps {
 export function SignUpBasicInfo({ data, onChange }: SignUpBasicInfoProps) {
   return (
     <Box textAlign="center">
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ '& .MuiInputBase-input': { color: '#ffffff' } }}>
         <Typography variant="h4" align="center">
           Tell Us More About You!
         </Typography>
