@@ -52,7 +52,7 @@ interface DataTableProps {
 
 async function allDataToCSV(data: AllUserData[]) {
   const opts = {};
-  const parser = new Parser(opts); // json2csv setup
+  const parser = new Parser(opts); // json2csv setup (supposedly this parser can work on the browser)
 
   const csv = parser.parse(data);
   console.log(csv); // for debugging
