@@ -77,7 +77,7 @@ export const zCustomReminder = z.object({
 });
 
 export const zUserTag = z.object({
-  tag: zTagEntity,
+  tag: zObjectId,
   tagProf: zTagProfEnum,
 });
 

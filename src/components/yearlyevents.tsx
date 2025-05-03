@@ -14,13 +14,25 @@ export function YearlyEvents(props: events) {
       justifyItems="center"
       alignItems="center"
     >
-      <Typography variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+      <Typography
+        variant="h6"
+        fontFamily="Verdana"
+        sx={{ textAlign: 'center', color: '#f0f5ef' }}
+      >
         You&apos;ve Signed Up For
       </Typography>
-      <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+      <Typography
+        variant="h4"
+        fontFamily="Verdana"
+        sx={{ fontWeight: 'bold', textAlign: 'center', color: '#f0f5ef' }}
+      >
         {props.number_events}
       </Typography>
-      <Typography variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+      <Typography
+        variant="h6"
+        fontFamily="Verdana"
+        sx={{ textAlign: 'center', color: '#f0f5ef' }}
+      >
         {plurality} This Year!
       </Typography>
     </Box>
