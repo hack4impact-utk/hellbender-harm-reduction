@@ -51,14 +51,18 @@ interface DataTableProps {
 }
 
 async function allDataToCSV(data: AllUserData[]) {
-  const opts = {};
-  const parser = new Parser(opts); // json2csv setup (supposedly this parser can work on the browser)
+  try {
+    const opts = {};
+    const parser = new Parser(opts); // json2csv setup (supposedly this parser can work on the browser)
 
-  const csv = parser.parse(data);
-  console.log(csv); // for debugging
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const csv = parser.parse(data);
+    // console.log(csv); // for debugging
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 
-  saveAs(blob, 'volunteers.csv');
+    saveAs(blob, 'volunteers.csv');
+  } catch (error) {
+    console.error('Error converting data to CSV:', error);
+  }
 }
 
 export default function VolunteersView({
