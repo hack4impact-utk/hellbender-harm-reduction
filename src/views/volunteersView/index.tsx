@@ -4,7 +4,7 @@ import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { AllVolunteers } from '@/components/allvolunteers';
 import { EventVolunteers } from '@/components/eventvolunteers';
-import { AsyncParser } from '@json2csv/node';
+import { Parser } from '@json2csv/plainjs';
 import { saveAs } from 'file-saver';
 
 //interfaces for the data in all three components/tabs
@@ -52,11 +52,10 @@ interface DataTableProps {
 
 async function allDataToCSV(data: AllUserData[]) {
   const opts = {};
-  const transformOpts = {};
-  const asyncOpts = {};
-  const parser = new AsyncParser(opts, asyncOpts, transformOpts); // json2csv setup
+  const parser = new Parser(opts); // json2csv setup
 
-  const csv = await parser.parse(data).promise();
+  const csv = parser.parse(data);
+  console.log(csv); // for debugging
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 
   saveAs(blob, 'volunteers.csv');
@@ -69,7 +68,6 @@ export default function VolunteersView({
 }: DataTableProps) {
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
-
   // for handling when someone swaps tabs
   const handleTabChange = (
     event: React.SyntheticEvent,
