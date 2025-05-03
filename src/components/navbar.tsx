@@ -60,7 +60,7 @@ export default function NavBar({ userType, userId, page }: NavBarProps) {
             <Button
               color="inherit"
               component={Link}
-              href={`/dashboard/${userId}`}
+              href={`/VolunteerDashboard`}
               sx={{
                 fontWeight: 'bold',
                 fontSize: 30,
