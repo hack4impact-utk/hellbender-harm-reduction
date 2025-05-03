@@ -32,7 +32,6 @@ export async function PUT(
     }
 
     const data = await req.json();
-    console.log('Received data:', JSON.stringify(data, null, 2));
     const validationResult = zUpdateUserRequest.safeParse(data);
     if (!validationResult.success) {
       return NextResponse.json(
