@@ -97,7 +97,7 @@ export default async function Home() {
   for (const e of fetchedEvents) {
     if (!e) continue;
 
-    const year = e.eventStart.getFullYear();
+    const year = new Date(e.eventStart).getFullYear();
     startingYear = Math.min(startingYear, year);
 
     if (!eventsPerYear.has(year)) {

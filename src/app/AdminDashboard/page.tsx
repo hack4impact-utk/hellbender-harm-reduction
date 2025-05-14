@@ -94,8 +94,11 @@ export default async function Home() {
   const now = new Date();
   const soonEvent =
     cleanData
-      .filter((event) => event.eventStart > now)
-      .sort((a, b) => a.eventStart - b.eventStart)[0] ?? null;
+      .filter((event) => new Date(event.eventStart) > now)
+      .sort(
+        (a, b) =>
+          new Date(a.eventStart).getTime() - new Date(b.eventStart).getTime()
+      )[0] ?? null;
 
   // returns actual page
   return (

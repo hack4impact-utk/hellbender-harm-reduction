@@ -78,16 +78,17 @@ export function AddEditEvent({
   // loads component with event info if you're editing an event
   useEffect(() => {
     if (event) {
+      console.log(event.eventRequirements);
       setEventName(event.eventName);
       setEventType(event.eventType);
       setEventDescription(event.eventDescription);
       setEventStart(dayjs(event.eventStart));
       setEventEnd(dayjs(event.eventEnd));
       setSelectedRequirements(
-        tags.filter((tag) => event.eventRequirements?.includes(tag.tagName))
+        tags.filter((tag) => event.eventRequirements?.includes(tag._id))
       );
       setSelectedPreferences(
-        tags.filter((tag) => event.eventPreferences?.includes(tag.tagName))
+        tags.filter((tag) => event.eventPreferences?.includes(tag._id))
       );
     } else {
       setEventName('');

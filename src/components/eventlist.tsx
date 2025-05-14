@@ -290,8 +290,11 @@ export function EventList({ tags }: EventInfoProps) {
   useEffect(() => {
     fetchEvents();
     fetchUserTags();
+  }, []); // Run only once on mount
+
+  useEffect(() => {
     combinedEventList.forEach((event) => {
-      checkUserSignUpStatus(event._id); // Call for each eventId
+      checkUserSignUpStatus(event._id);
     });
   }, [combinedEventList]);
 
@@ -723,7 +726,13 @@ export function EventList({ tags }: EventInfoProps) {
                     sx={{ marginBottom: 1, lineHeight: 1.6 }}
                   >
                     <strong>Requirements:</strong>{' '}
-                    {event.eventRequirements.join(', ')}
+                    {event.eventRequirements
+                      ?.map(
+                        (id) =>
+                          tags.find((tag) => tag._id === id)?.tagName ||
+                          '(Unknown)'
+                      )
+                      .join(', ')}
                   </Typography>
                 ) : (
                   <Typography
@@ -737,7 +746,13 @@ export function EventList({ tags }: EventInfoProps) {
                 {event.eventPreferences?.length ? (
                   <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
                     <strong>Preferences:</strong>{' '}
-                    {event.eventPreferences.join(', ')}
+                    {event.eventPreferences
+                      ?.map(
+                        (id) =>
+                          tags.find((tag) => tag._id === id)?.tagName ||
+                          '(Unknown)'
+                      )
+                      .join(', ')}
                   </Typography>
                 ) : (
                   <Typography variant="body2" sx={{ lineHeight: 1.6 }}>

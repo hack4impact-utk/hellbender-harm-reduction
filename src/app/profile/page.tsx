@@ -63,7 +63,10 @@ export default async function Home() {
       events.map(async (event) => {
         try {
           const e = await getEvent(event.uevent.toString());
-          const year: number = e?.eventStart.getUTCFullYear() ?? 0;
+          const eventDate = new Date(e?.eventStart ?? 0);
+          const year: number = !isNaN(eventDate.getTime())
+            ? eventDate.getUTCFullYear()
+            : 0;
           return { keep: year === device_year, event };
         } catch (error) {
           console.log(error);
