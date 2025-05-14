@@ -285,7 +285,7 @@ export function AccountInfo({
           </Grid>
           {priorityTags.map((tag) => {
             const hasTag = userTagIds.has(tag._id.trim());
-            const bgColor = hasTag ? '#42603c' : '#5d7159'; // green if has, red if not
+            const bgColor = hasTag ? '#42603c' : '#5d7159';
 
             return (
               <Grid
@@ -306,28 +306,38 @@ export function AccountInfo({
               </Grid>
             );
           })}
-          {langs
-            .filter((tag) =>
-              (utags ?? []).some((utag) => utag.tagId === tag._id)
-            ) // only include tags the user has
-            .map((tag) => (
-              <Grid
-                item
-                xs={5}
-                key={tag._id}
-                sx={{
-                  padding: 1,
-                  m: 2,
-                  borderRadius: 1,
-                  backgroundColor: '#42603c',
-                  border: '1px solid',
-                }}
-              >
-                <Typography fontFamily="Verdana" color="#f0f5ef" variant="h6">
-                  {tag.tagName}
-                </Typography>
-              </Grid>
-            ))}
+          {!editMode &&
+            langs
+              .filter((tag) =>
+                (savedTags ?? []).some((utag) => utag.tagId === tag._id)
+              )
+              .map((tag) => {
+                const matchedTag = savedTags.find(
+                  (utag) => utag.tagId === tag._id
+                );
+                return (
+                  <Grid
+                    item
+                    xs={5}
+                    key={tag._id}
+                    sx={{
+                      padding: 1,
+                      m: 2,
+                      borderRadius: 1,
+                      backgroundColor: '#42603c',
+                      border: '1px solid',
+                    }}
+                  >
+                    <Typography
+                      fontFamily="Verdana"
+                      color="#f0f5ef"
+                      variant="h6"
+                    >
+                      {tag.tagName} – {matchedTag?.tagProf || 'N/A'}
+                    </Typography>
+                  </Grid>
+                );
+              })}
         </Grid>
         {editMode && (
           <>

@@ -10,8 +10,8 @@ import NavBar from '@/components/navbar';
 // information for event
 interface ListEventInfo {
   eventName: string;
-  eventStart: Date;
-  eventEnd: Date;
+  eventStart: string;
+  eventEnd: string;
   eventDescription: string;
   eventType: string;
   eventRequirements?: (string | null)[];

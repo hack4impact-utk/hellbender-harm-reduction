@@ -21,8 +21,8 @@ import {
 // needed interfaces
 interface EventInfo {
   eventName: string;
-  eventStart: Date;
-  eventEnd: Date;
+  eventStart: string;
+  eventEnd: string;
   eventDescription: string;
   eventType: string;
   eventRequirements?: (string | null)[];
@@ -36,6 +36,7 @@ interface EventInfoProps {
 
 // exports event description, edited version of eventlist component
 export function DashEventList({ events }: EventInfoProps) {
+  console.log(events);
   return (
     <Box
       sx={{
@@ -105,10 +106,10 @@ export function DashEventList({ events }: EventInfoProps) {
 
             {/* Right side: date(s) */}
             <Typography>
-              {events.eventStart.toLocaleDateString() ===
-              events.eventEnd.toLocaleDateString()
-                ? events.eventStart.toLocaleDateString()
-                : `${events.eventStart.toLocaleDateString()} - ${events.eventEnd.toLocaleDateString()}`}
+              {new Date(events.eventStart).toLocaleDateString() ===
+              new Date(events.eventEnd).toLocaleDateString()
+                ? new Date(events.eventStart).toLocaleDateString()
+                : `${new Date(events.eventStart).toLocaleDateString()} - ${new Date(events.eventEnd).toLocaleDateString()}`}
             </Typography>
           </Box>
         </AccordionSummary>
@@ -125,7 +126,7 @@ export function DashEventList({ events }: EventInfoProps) {
           {/* Times, Requirements, Preferences */}
           <Typography variant="body2" sx={{ marginBottom: 1, lineHeight: 1.6 }}>
             <strong>Event Start:</strong>{' '}
-            {events.eventStart.toLocaleTimeString('en-US', {
+            {new Date(events.eventStart).toLocaleTimeString('en-US', {
               hour: 'numeric',
               minute: '2-digit',
               hour12: true,
@@ -134,7 +135,7 @@ export function DashEventList({ events }: EventInfoProps) {
 
           <Typography variant="body2" sx={{ marginBottom: 1, lineHeight: 1.6 }}>
             <strong>Event End:</strong>{' '}
-            {events.eventEnd.toLocaleTimeString('en-US', {
+            {new Date(events.eventEnd).toLocaleTimeString('en-US', {
               hour: 'numeric',
               minute: '2-digit',
               hour12: true,

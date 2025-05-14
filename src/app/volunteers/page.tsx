@@ -50,8 +50,8 @@ export default async function Home() {
     return {
       id: String(event._id),
       eventName: event.eventName,
-      start: event.eventStart,
-      end: event.eventEnd,
+      start: new Date(event.eventStart),
+      end: new Date(event.eventEnd),
     };
   });
 
@@ -97,7 +97,7 @@ export default async function Home() {
   for (const e of fetchedEvents) {
     if (!e) continue;
 
-    const year = e.eventStart.getFullYear();
+    const year = new Date(e.eventStart).getFullYear();
     startingYear = Math.min(startingYear, year);
 
     if (!eventsPerYear.has(year)) {

@@ -226,9 +226,11 @@ export default function VolunteersView({
             </Grid>
           )}
           {selected === 1 && (
-            <Box padding={'15px'}>
-              <AllVolunteers data={alldata} />
-              <Box padding={'10px'}>
+            <Box padding={'15px'} sx={{ height: '100%' }}>
+              <Box sx={{ height: '85%', overflowY: 'auto' }}>
+                <AllVolunteers data={alldata} />
+              </Box>
+              <Box padding={'20px'}>
                 <Button
                   sx={{
                     backgroundColor: '#F0F5Ef',
