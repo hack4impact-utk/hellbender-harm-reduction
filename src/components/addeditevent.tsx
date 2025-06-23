@@ -230,14 +230,7 @@ export function AddEditEvent({
                       onChange={(newStart) => {
                         if (!newStart) return;
                         setEventStart(newStart);
-
-                        if (
-                          eventEnd &&
-                          (!newStart.isSame(eventEnd, 'day') ||
-                            newStart.isAfter(eventEnd))
-                        ) {
-                          setEventEnd(newStart.add(1, 'hour'));
-                        }
+                        setEventEnd(newStart); // Always set eventEnd to newStart
                       }}
                       slots={{ textField: TextField }}
                       slotProps={{ textField: { fullWidth: true } }}
@@ -393,7 +386,13 @@ export function AddEditEvent({
         <Button
           variant="contained"
           onClick={handleSubmit}
-          disabled={!eventName || !eventStart || !eventEnd || !eventType}
+          disabled={
+            !eventName ||
+            !eventStart ||
+            !eventEnd ||
+            !eventType ||
+            !eventDescription
+          }
           sx={{ backgroundColor: '#42603c' }}
         >
           {event ? 'Update Event' : 'Create Event'}
