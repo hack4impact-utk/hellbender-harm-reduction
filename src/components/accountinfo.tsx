@@ -170,50 +170,25 @@ export function AccountInfo({
           Email
         </Typography>
         <Box mb="25px">
-          {editMode ? (
-            <TextField
-              variant="outlined"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              fullWidth
-              size="small"
-              InputLabelProps={{ style: { color: '#f0f5ef' } }}
-              sx={{
-                '& .MuiInputBase-input': {
-                  color: '#f0f5ef', // text color
-                },
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: '#42603c',
-                  '& fieldset': {
-                    borderColor: '#f0f5ef',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: '#ffffff',
-                  },
-                },
-              }}
-            />
-          ) : (
-            <Box
-              sx={{
-                height: '8%',
-                backgroundColor: '#42603c',
-                display: 'flex',
-                alignItems: 'center',
-                borderRadius: '10px',
-                paddingLeft: '10px',
-              }}
+          <Box
+            sx={{
+              height: '8%',
+              backgroundColor: '#42603c',
+              display: 'flex',
+              alignItems: 'center',
+              borderRadius: '10px',
+              paddingLeft: '10px',
+            }}
+          >
+            <Typography
+              fontFamily={'Verdana'}
+              color="#f0f5ef"
+              variant="h5"
+              padding="4px"
             >
-              <Typography
-                fontFamily={'Verdana'}
-                color="#f0f5ef"
-                variant="h5"
-                padding="4px"
-              >
-                {newEmail}
-              </Typography>
-            </Box>
-          )}
+              {newEmail}
+            </Typography>
+          </Box>
         </Box>
         <Typography
           fontFamily="Verdana"
