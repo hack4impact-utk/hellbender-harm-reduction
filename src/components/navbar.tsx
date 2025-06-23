@@ -151,7 +151,7 @@ export default function NavBar({ userType, userId, page }: NavBarProps) {
               aria-label="profile"
               sx={{
                 backgroundColor:
-                  page === 'Profile' ? alpha('#000000', 0.1) : 'transparent',
+                  page === 'profile' ? alpha('#000000', 0.1) : 'transparent',
                 '&:hover': { backgroundColor: alpha('#ffffff', 0.25) },
               }}
             >
