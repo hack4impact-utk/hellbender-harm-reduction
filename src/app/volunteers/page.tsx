@@ -1,10 +1,11 @@
 import VolunteersView from '@/views/volunteersView';
-import { getAllUsers } from '@/server/actions/user';
+import { getAllUsers, getUser } from '@/server/actions/user';
 import { getAllEvents } from '@/server/actions/event';
 import { getTag } from '@/server/actions/tag';
 import { EventTypeEnum } from '@/types/event';
 import { getEvent } from '@/server/actions/event';
 import { getAllFacts } from '@/server/actions/facts';
+import { getAllRequests } from '@/server/actions/requests';
 
 export default async function Home() {
   // gets user info for all volunteers
@@ -127,6 +128,32 @@ export default async function Home() {
   const allfacts = await getAllFacts();
   const facts = allfacts.map((item) => item.fact);
 
+  const reqdata = await getAllRequests();
+  const cleanReqs = await Promise.all(
+    reqdata.map(async (req) => {
+      let userName: string;
+      if (req.requestingUser) {
+        const reqUser = await getUser(req.requestingUser);
+        if (!reqUser) {
+          userName = '';
+        } else {
+          userName = reqUser.name;
+        }
+      } else {
+        userName = '';
+      }
+
+      return {
+        _id: String(req._id),
+        title: req.title,
+        certification: req.certification,
+        status: req.status,
+        timesRequested: req.timesRequested,
+        requestingUser: userName,
+      };
+    })
+  );
+
   // returns actual page
   return (
     <div>
@@ -136,6 +163,7 @@ export default async function Home() {
         eventdata={filtevents}
         metrics={metrics}
         facts={facts}
+        reqs={cleanReqs}
       />
     </div>
   );

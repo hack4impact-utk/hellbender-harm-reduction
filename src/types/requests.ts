@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import zBase from './base';
-import zObjectId from './objectId';
 
 export const statusEnum = ['requested', 'in progress', 'N/A'] as const;
 export const zStatusEnum = z.enum(statusEnum);
@@ -10,7 +9,7 @@ export const zRequestsBase = z.object({
   certification: z.boolean(),
   status: zStatusEnum,
   timesRequested: z.number(),
-  requestingUser: zObjectId.optional(),
+  requestingUser: z.string().optional(),
 });
 
 export const zRequestsEntity = zRequestsBase.extend({ ...zBase.shape });

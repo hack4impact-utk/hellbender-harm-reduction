@@ -5,15 +5,15 @@ import { zUpdateRequestsRequest } from '@/types/requests';
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { reqId: string } }
+  { params }: { params: { requestsId: string } }
 ) {
   try {
-    const validationResult = zObjectId.safeParse(params.reqId);
+    const validationResult = zObjectId.safeParse(params.requestsId);
     if (!validationResult.success) {
       return NextResponse.json({ message: 'Bad Id' }, { status: 500 });
     }
 
-    await deleteRequests(params.reqId);
+    await deleteRequests(params.requestsId);
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {
@@ -23,10 +23,10 @@ export async function DELETE(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { reqId: string } }
+  { params }: { params: { requestsId: string } }
 ) {
   try {
-    const idValidationResult = zObjectId.safeParse(params.reqId);
+    const idValidationResult = zObjectId.safeParse(params.requestsId);
     if (!idValidationResult.success) {
       return NextResponse.json({ message: 'Bad Id' }, { status: 500 });
     }
@@ -39,7 +39,7 @@ export async function PUT(
         { status: 500 }
       );
     }
-    await updateRequests(params.reqId, data);
+    await updateRequests(params.requestsId, data);
 
     return new NextResponse(undefined, { status: 200 });
   } catch (error) {

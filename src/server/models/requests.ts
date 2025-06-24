@@ -21,8 +21,7 @@ const RequestsSchema = new Schema(
       required: true,
     },
     requestingUser: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
       required: false,
     },
   },

@@ -10,6 +10,7 @@ import PrefEventMetrics from '@/components/prefeventmetrics';
 import { EventTypeEnum } from '@/types/event';
 import { EventDistribution } from '@/components/eventsdistribution';
 import { DisplayFacts } from '@/components/displayfacts';
+import { CertRequestsList } from '@/components/certrequestslist';
 
 //interfaces for the data in all three components/tabs
 interface utag {
@@ -71,12 +72,22 @@ interface MetricData {
   prefevents: Events[];
 }
 
+interface Request {
+  _id: string;
+  title: string;
+  certification: boolean;
+  status: string;
+  timesRequested: number;
+  requestingUser: string;
+}
+
 interface DataTableProps {
   alldata: AllUserData[];
   userdata: UserData[];
   eventdata: EventData[];
   metrics: MetricData;
   facts: string[];
+  reqs: Request[];
 }
 
 export default function VolunteersView({
@@ -85,6 +96,7 @@ export default function VolunteersView({
   eventdata,
   metrics,
   facts,
+  reqs,
 }: DataTableProps) {
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
@@ -125,6 +137,16 @@ export default function VolunteersView({
         >
           <Tab
             label="Metrics"
+            sx={{
+              color: '#6E8569',
+              '&.Mui-selected': {
+                color: '#42603C',
+                fontWeight: 'bold',
+              },
+            }}
+          />
+          <Tab
+            label="Tag Requests"
             sx={{
               color: '#6E8569',
               '&.Mui-selected': {
@@ -225,7 +247,8 @@ export default function VolunteersView({
               </Grid>
             </Grid>
           )}
-          {selected === 1 && (
+          {selected === 1 && <CertRequestsList reqs={reqs} />}
+          {selected === 2 && (
             <Box padding={'15px'} sx={{ height: '100%' }}>
               <Box sx={{ height: '85%', overflowY: 'auto' }}>
                 <AllVolunteers data={alldata} />
@@ -243,7 +266,7 @@ export default function VolunteersView({
               </Box>
             </Box>
           )}
-          {selected === 2 && (
+          {selected === 3 && (
             <Box sx={{ height: '100%' }}>
               <EventVolunteers users={userdata} events={eventdata} />
             </Box>

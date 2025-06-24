@@ -72,6 +72,36 @@ export function AccountInfo({
   const priorityTags = tags.filter((tag) => tag.certification);
   const langs = tags.filter((tag) => !tag.certification);
 
+  const handleRequest = async () => {
+    setDialogOpen(false);
+    setRequested((prev) => [...prev, selectedTitle.trim()]);
+
+    try {
+      const response = await fetch(`/api/requests`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: selectedTitle,
+          certification: true,
+          status: 'requested',
+          timesRequested: 0,
+          requestingUser: id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update user information');
+      }
+    } catch (err) {
+      console.error('Update failed:', err);
+    }
+
+    setSelectedTitle('');
+    setSelectedDescription('');
+  };
+
   const handleSubmit = async () => {
     try {
       const formattedTags = (newTags ?? []).map((tag) => ({
@@ -122,12 +152,7 @@ export function AccountInfo({
           setSelectedTitle('');
           setSelectedDescription('');
         }}
-        onSubmit={() => {
-          setDialogOpen(false);
-          setRequested((prev) => [...prev, selectedTitle.trim()]);
-          setSelectedTitle('');
-          setSelectedDescription('');
-        }}
+        onSubmit={handleRequest}
         title={selectedTitle}
         description={selectedDescription}
       />
