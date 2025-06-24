@@ -4,12 +4,15 @@ import zBase from './base';
 export const statusEnum = ['requested', 'in progress', 'N/A'] as const;
 export const zStatusEnum = z.enum(statusEnum);
 
+export const zRequestingUser = z.object({
+  userId: z.string(),
+  status: zStatusEnum,
+});
+
 export const zRequestsBase = z.object({
   title: z.string(),
   certification: z.boolean(),
-  status: zStatusEnum,
-  timesRequested: z.number(),
-  requestingUser: z.string().optional(),
+  requestingUser: z.array(zRequestingUser),
 });
 
 export const zRequestsEntity = zRequestsBase.extend({ ...zBase.shape });

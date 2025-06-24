@@ -9,9 +9,10 @@ export default async function Home() {
   /*await createRequests({
     'title': 'Hellbender Harm Reduction 101',
     'certification': true,
-    'status': 'requested',
-    'timesRequested': 0,
-    'requestingUser': '681439a152a6f8d14f5ec44b'
+    'requestingUser': [{
+      'status': 'in progress',
+      'userId': '67daca60a3a78172a40ec73c'
+    }]
   });*/
 
   const user = await getUser('681439a152a6f8d14f5ec44b');
@@ -89,16 +90,14 @@ export default async function Home() {
   const cleantags = alltags.map((tag) => JSON.parse(JSON.stringify(tag)));
 
   const allreqs = await getAllRequests();
-  const cleanreqs = allreqs
-    .filter(
-      (req) =>
-        req.certification ||
-        String(req.requestingUser) === '681439a152a6f8d14f5ec44b'
-    )
-    .map((req) => ({
-      title: req.title,
-      status: req.status,
-    }));
+  const cleanreqs = allreqs.map((req) => ({
+    _id: String(req._id),
+    title: req.title,
+    certification: req.certification,
+    requestingUser: req.requestingUser
+      ? JSON.parse(JSON.stringify(req.requestingUser))
+      : [],
+  }));
 
   return (
     <div>
@@ -106,7 +105,7 @@ export default async function Home() {
         user={cleanData}
         count={filtered_events}
         tags={cleantags}
-        reqs={cleanreqs}
+        requests={cleanreqs}
       />
     </div>
   );

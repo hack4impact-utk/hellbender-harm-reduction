@@ -49,19 +49,31 @@ interface Tag {
   certification: boolean;
 }
 
-interface Req {
-  title: string;
+interface reqUser {
+  userId: string;
   status: string;
+}
+
+interface Request {
+  _id: string;
+  title: string;
+  certification: boolean;
+  requestingUser: reqUser[];
 }
 
 interface ProfileProps {
   user: User;
   count: number;
   tags: Tag[];
-  reqs: Req[];
+  requests: Request[];
 }
 
-export default function ProfileView({ user, count, tags, reqs }: ProfileProps) {
+export default function ProfileView({
+  user,
+  count,
+  tags,
+  requests,
+}: ProfileProps) {
   const id = '681439a152a6f8d14f5ec44b';
 
   // keeps track of which tab is selected
@@ -211,7 +223,7 @@ export default function ProfileView({ user, count, tags, reqs }: ProfileProps) {
                     phone={user.phone}
                     utags={user.userTags}
                     tags={tags}
-                    reqs={reqs}
+                    requests={requests}
                   />
                 </Box>
               )}

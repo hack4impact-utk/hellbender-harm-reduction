@@ -72,13 +72,18 @@ interface MetricData {
   prefevents: Events[];
 }
 
+interface RequestingUser {
+  userId: string;
+  userName: string;
+  status: string;
+}
+
 interface Request {
   _id: string;
   title: string;
+  tagId: string;
   certification: boolean;
-  status: string;
-  timesRequested: number;
-  requestingUser: string;
+  requestingUser: RequestingUser[];
 }
 
 interface DataTableProps {

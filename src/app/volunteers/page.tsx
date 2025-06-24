@@ -1,7 +1,7 @@
 import VolunteersView from '@/views/volunteersView';
 import { getAllUsers, getUser } from '@/server/actions/user';
 import { getAllEvents } from '@/server/actions/event';
-import { getTag } from '@/server/actions/tag';
+import { getAllTags, getTag } from '@/server/actions/tag';
 import { EventTypeEnum } from '@/types/event';
 import { getEvent } from '@/server/actions/event';
 import { getAllFacts } from '@/server/actions/facts';
@@ -128,32 +128,45 @@ export default async function Home() {
   const allfacts = await getAllFacts();
   const facts = allfacts.map((item) => item.fact);
 
+  const tagdata = await getAllTags();
   const reqdata = await getAllRequests();
+  if (!reqdata) {
+    return;
+  }
   const cleanReqs = await Promise.all(
     reqdata.map(async (req) => {
-      let userName: string;
-      if (req.requestingUser) {
-        const reqUser = await getUser(req.requestingUser);
-        if (!reqUser) {
-          userName = '';
-        } else {
-          userName = reqUser.name;
-        }
-      } else {
-        userName = '';
-      }
+      const requestingUser = await Promise.all(
+        (req.requestingUser || []).map(async (user) => {
+          const userId = String(user.userId);
+          const reqUser = await getUser(userId);
+          const userName = reqUser?.name;
+
+          return userName
+            ? {
+                userId: userId,
+                userName: userName,
+                status: user.status,
+              }
+            : {
+                userId: 'N/A',
+                userName: 'N/A',
+                status: 'N/A',
+              };
+        })
+      );
+
+      const tagMatch = tagdata.find((tag) => tag.tagName === req.title);
 
       return {
         _id: String(req._id),
         title: req.title,
+        tagId: tagMatch?._id ?? 'N/A',
         certification: req.certification,
-        status: req.status,
-        timesRequested: req.timesRequested,
-        requestingUser: userName,
+        requestingUser: requestingUser,
       };
     })
   );
-
+  console.log(cleanReqs[0].requestingUser[0]);
   // returns actual page
   return (
     <div>

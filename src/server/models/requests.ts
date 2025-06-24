@@ -11,18 +11,22 @@ const RequestsSchema = new Schema(
       type: Boolean,
       requires: true,
     },
-    status: {
-      type: String,
-      enum: statusEnum,
-      required: true,
-    },
-    timesRequested: {
-      type: Number,
-      required: true,
-    },
     requestingUser: {
-      type: String,
-      required: false,
+      type: [
+        {
+          userId: {
+            type: String,
+            required: true,
+          },
+          status: {
+            type: String,
+            enum: statusEnum,
+            required: true,
+          },
+          _id: false,
+        },
+      ],
+      required: true,
     },
   },
   {
