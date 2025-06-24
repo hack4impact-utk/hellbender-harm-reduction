@@ -3,8 +3,17 @@ import { getUser } from '@/server/actions/user';
 import { getAllTags, getTag } from '@/server/actions/tag';
 import ProfileView from '@/views/profileView';
 import { Typography } from '@mui/material';
+import { getAllRequests } from '@/server/actions/requests';
 
 export default async function Home() {
+  /*await createRequests({
+    'title': 'Hellbender Harm Reduction 101',
+    'certification': true,
+    'status': 'requested',
+    'timesRequested': 0,
+    'requestingUser': '681439a152a6f8d14f5ec44b'
+  });*/
+
   const user = await getUser('681439a152a6f8d14f5ec44b');
 
   if (!user) {
@@ -79,9 +88,26 @@ export default async function Home() {
   const alltags = await getAllTags();
   const cleantags = alltags.map((tag) => JSON.parse(JSON.stringify(tag)));
 
+  const allreqs = await getAllRequests();
+  const cleanreqs = allreqs
+    .filter(
+      (req) =>
+        req.certification ||
+        String(req.requestingUser) === '681439a152a6f8d14f5ec44b'
+    )
+    .map((req) => ({
+      title: req.title,
+      status: req.status,
+    }));
+
   return (
     <div>
-      <ProfileView user={cleanData} count={filtered_events} tags={cleantags} />
+      <ProfileView
+        user={cleanData}
+        count={filtered_events}
+        tags={cleantags}
+        reqs={cleanreqs}
+      />
     </div>
   );
 }

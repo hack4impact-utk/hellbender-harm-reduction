@@ -11,10 +11,12 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Edit } from '@mui/icons-material';
+import { CertificationPopUp } from './certificationpopup';
 
 interface Tag {
   _id: string;
   tagName: string;
+  tagDescription: string;
   certification: boolean;
 }
 
@@ -24,12 +26,18 @@ interface userTag {
   tagProf: string;
 }
 
+interface Req {
+  title: string;
+  status: string;
+}
+
 interface AccountInfoProps {
   id: string;
   email: string;
   phone: string;
   utags?: userTag[];
   tags: Tag[];
+  reqs: Req[];
 }
 
 export function AccountInfo({
@@ -38,6 +46,7 @@ export function AccountInfo({
   phone,
   utags,
   tags,
+  reqs,
 }: AccountInfoProps) {
   const [editMode, setEditMode] = useState(false);
   const [newEmail, setNewEmail] = useState(email);
@@ -48,6 +57,10 @@ export function AccountInfo({
   const [savedEmail, setSavedEmail] = useState(email);
   const [savedPhone, setSavedPhone] = useState(phone);
   const [savedTags, setSavedTags] = useState(utags ?? []);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [requested, setRequested] = useState<string[]>([]);
+  const [selectedTitle, setSelectedTitle] = useState('');
+  const [selectedDescription, setSelectedDescription] = useState('');
 
   const handleRemoveTag = (tagIdToRemove: string) => {
     setNewTags((prev) => (prev ?? []).filter((t) => t.tagId !== tagIdToRemove));
@@ -102,6 +115,22 @@ export function AccountInfo({
 
   return (
     <Box sx={{ position: 'relative', padding: '20px' }}>
+      <CertificationPopUp
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+          setSelectedTitle('');
+          setSelectedDescription('');
+        }}
+        onSubmit={() => {
+          setDialogOpen(false);
+          setRequested((prev) => [...prev, selectedTitle.trim()]);
+          setSelectedTitle('');
+          setSelectedDescription('');
+        }}
+        title={selectedTitle}
+        description={selectedDescription}
+      />
       <Box
         sx={{
           position: 'absolute',
@@ -260,6 +289,8 @@ export function AccountInfo({
           </Grid>
           {priorityTags.map((tag) => {
             const hasTag = userTagIds.has(tag._id.trim());
+            const hasRequest = reqs?.find((t) => t.title === tag.tagName);
+            const wasRequested = requested.includes(tag.tagName);
             const bgColor = hasTag ? '#42603c' : '#5d7159';
 
             return (
@@ -276,8 +307,38 @@ export function AccountInfo({
                 }}
               >
                 <Typography fontFamily="Verdana" color="#f0f5ef" variant="h6">
-                  {tag.tagName} {hasTag ? '' : '+'}
+                  {tag.tagName}
                 </Typography>
+                {hasRequest ? (
+                  <Typography
+                    fontFamily="Verdana"
+                    color="#cce5cc"
+                    variant="body2"
+                  >
+                    Status: {hasRequest.status}
+                  </Typography>
+                ) : wasRequested ? (
+                  <Typography
+                    fontFamily="Verdana"
+                    color="#cce5cc"
+                    variant="body2"
+                  >
+                    Status: requested
+                  </Typography>
+                ) : (
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ mt: 1 }}
+                    onClick={() => {
+                      setDialogOpen(true);
+                      setSelectedTitle(tag.tagName);
+                      setSelectedDescription(tag.tagDescription);
+                    }}
+                  >
+                    Add
+                  </Button>
+                )}
               </Grid>
             );
           })}

@@ -45,16 +45,23 @@ interface User {
 interface Tag {
   _id: string;
   tagName: string;
+  tagDescription: string;
   certification: boolean;
+}
+
+interface Req {
+  title: string;
+  status: string;
 }
 
 interface ProfileProps {
   user: User;
   count: number;
   tags: Tag[];
+  reqs: Req[];
 }
 
-export default function ProfileView({ user, count, tags }: ProfileProps) {
+export default function ProfileView({ user, count, tags, reqs }: ProfileProps) {
   const id = '681439a152a6f8d14f5ec44b';
 
   // keeps track of which tab is selected
@@ -204,6 +211,7 @@ export default function ProfileView({ user, count, tags }: ProfileProps) {
                     phone={user.phone}
                     utags={user.userTags}
                     tags={tags}
+                    reqs={reqs}
                   />
                 </Box>
               )}
