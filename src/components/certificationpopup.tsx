@@ -6,6 +6,7 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  Box,
 } from '@mui/material';
 
 interface CertPUpProps {
@@ -27,19 +28,36 @@ export function CertificationPopUp({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle
         variant="h3"
-        sx={{ padding: '25px', fontFamily: 'Verdana', color: '#42603c' }}
+        sx={{
+          padding: '25px',
+          fontFamily: 'Verdana',
+          fontWeight: 'bold',
+          color: '#42603c',
+          backgroundColor: '#e2e7e2',
+          textAlign: 'center',
+        }}
       >
         {title}
       </DialogTitle>
-      <DialogContent>
-        <DialogContentText>{description}</DialogContentText>
+      <DialogContent sx={{ backgroundColor: '#e2e7e2' }}>
+        <Box sx={{ backgroundColor: '#f0f5ef', p: '4%', borderRadius: '10px' }}>
+          <DialogContentText variant="h6">{description}</DialogContentText>
+        </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} autoFocus>
+      <DialogActions sx={{ backgroundColor: '#e2e7e2', pb: '2%', pr: '3%' }}>
+        <Button
+          onClick={onClose}
+          autoFocus
+          sx={{ color: '#42603c', fontFamily: 'Verdana', fontSize: '100%' }}
+        >
           Close
         </Button>
-        <Button onClick={onSubmit} autoFocus>
-          Submit
+        <Button
+          onClick={onSubmit}
+          autoFocus
+          sx={{ color: '#42603c', fontFamily: 'Verdana', fontSize: '100%' }}
+        >
+          Request
         </Button>
       </DialogActions>
     </Dialog>

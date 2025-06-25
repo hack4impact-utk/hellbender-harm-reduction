@@ -167,6 +167,10 @@ export default async function Home() {
     })
   );
   console.log(cleanReqs[0].requestingUser[0]);
+
+  const allTags = await getAllTags();
+  const langTags = allTags.filter((tag) => tag.certification === false);
+
   // returns actual page
   return (
     <div>
@@ -177,6 +181,7 @@ export default async function Home() {
         metrics={metrics}
         facts={facts}
         reqs={cleanReqs}
+        tags={langTags}
       />
     </div>
   );

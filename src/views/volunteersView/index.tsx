@@ -11,6 +11,7 @@ import { EventTypeEnum } from '@/types/event';
 import { EventDistribution } from '@/components/eventsdistribution';
 import { DisplayFacts } from '@/components/displayfacts';
 import { CertRequestsList } from '@/components/certrequestslist';
+import { LanguageLists } from '@/components/languagelists';
 
 //interfaces for the data in all three components/tabs
 interface utag {
@@ -86,6 +87,13 @@ interface Request {
   requestingUser: RequestingUser[];
 }
 
+interface Tags {
+  _id: string;
+  tagName: string;
+  tagDescription: string;
+  certification: boolean;
+}
+
 interface DataTableProps {
   alldata: AllUserData[];
   userdata: UserData[];
@@ -93,6 +101,7 @@ interface DataTableProps {
   metrics: MetricData;
   facts: string[];
   reqs: Request[];
+  tags: Tags[];
 }
 
 export default function VolunteersView({
@@ -102,6 +111,7 @@ export default function VolunteersView({
   metrics,
   facts,
   reqs,
+  tags,
 }: DataTableProps) {
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
@@ -113,6 +123,8 @@ export default function VolunteersView({
   ) => {
     setSelected(newSelected);
   };
+
+  const certReqs = reqs.filter((req) => req.certification === true);
 
   // returns actual page
   return (
@@ -252,7 +264,18 @@ export default function VolunteersView({
               </Grid>
             </Grid>
           )}
-          {selected === 1 && <CertRequestsList reqs={reqs} />}
+          {selected === 1 && (
+            <Box sx={{ height: '100%', width: '100%' }}>
+              <Grid container sx={{ height: '100%', width: '100%' }}>
+                <Grid item xs={6} p="1%" sx={{ height: '100%', width: '100%' }}>
+                  <LanguageLists reqs={reqs} tags={tags} />
+                </Grid>
+                <Grid item xs={6} p="1%" sx={{ height: '100%', width: '100%' }}>
+                  <CertRequestsList reqs={certReqs} />
+                </Grid>
+              </Grid>
+            </Box>
+          )}
           {selected === 2 && (
             <Box padding={'15px'} sx={{ height: '100%' }}>
               <Box sx={{ height: '85%', overflowY: 'auto' }}>

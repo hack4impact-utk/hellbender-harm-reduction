@@ -8,6 +8,8 @@ import {
   TableRow,
   MenuItem,
   SelectChangeEvent,
+  Typography,
+  Box,
 } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -242,74 +244,90 @@ export function CertRequestsList({ reqs }: CertRequestsListProps) {
   };
 
   return (
-    <TableContainer>
-      <Table stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell
-              sx={{
-                backgroundColor: '#42603C',
-                fontFamily: 'Verdana',
-                color: 'white',
-              }}
-            >
-              User
-            </TableCell>
-            <TableCell
-              sx={{
-                backgroundColor: '#42603C',
-                fontFamily: 'Verdana',
-                color: 'white',
-              }}
-            >
-              Certification
-            </TableCell>
-            <TableCell
-              sx={{
-                backgroundColor: '#42603C',
-                fontFamily: 'Verdana',
-                color: 'white',
-              }}
-            >
-              Status
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((req, index1) =>
-            req.requestingUser.map((user, index2) => (
-              <TableRow key={`${index1}, ${index2}`}>
+    <Box sx={{ height: '100%', width: '100%' }}>
+      <Typography
+        fontFamily="Verdana"
+        fontWeight="bold"
+        variant="h4"
+        color="white"
+        alignContent="center"
+        sx={{ height: '10%' }}
+      >
+        Certification Requests
+      </Typography>
+      <Box
+        sx={{ height: '90%', backgroundColor: '#f0f5ef', overflowY: 'auto' }}
+      >
+        <TableContainer>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
                 <TableCell
-                  sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+                  sx={{
+                    backgroundColor: '#42603C',
+                    fontFamily: 'Verdana',
+                    color: 'white',
+                  }}
                 >
-                  {user.userName}
+                  User
                 </TableCell>
                 <TableCell
-                  sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+                  sx={{
+                    backgroundColor: '#42603C',
+                    fontFamily: 'Verdana',
+                    color: 'white',
+                  }}
                 >
-                  {req.title}
+                  Certification
                 </TableCell>
                 <TableCell
-                  sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+                  sx={{
+                    backgroundColor: '#42603C',
+                    fontFamily: 'Verdana',
+                    color: 'white',
+                  }}
                 >
-                  <Select
-                    value={rows[index1].requestingUser[index2].status}
-                    onChange={(e) => handleStatusChange(e, index1, index2)}
-                    fullWidth
-                    size="small"
-                  >
-                    {statuses.map((status) => (
-                      <MenuItem key={status} value={status}>
-                        {status}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  Status
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </TableHead>
+            <TableBody>
+              {rows.map((req, index1) =>
+                req.requestingUser.map((user, index2) => (
+                  <TableRow key={`${index1}, ${index2}`}>
+                    <TableCell
+                      sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+                    >
+                      {user.userName}
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+                    >
+                      {req.title}
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontFamily: 'Verdana', backgroundColor: '#F0F5Ef' }}
+                    >
+                      <Select
+                        value={rows[index1].requestingUser[index2].status}
+                        onChange={(e) => handleStatusChange(e, index1, index2)}
+                        fullWidth
+                        size="small"
+                      >
+                        {statuses.map((status) => (
+                          <MenuItem key={status} value={status}>
+                            {status}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    </Box>
   );
 }

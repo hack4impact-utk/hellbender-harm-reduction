@@ -477,21 +477,27 @@ export function AccountInfo({
                 }}
               >
                 <Grid container>
-                  <Grid item xs={10}>
+                  <Grid item xs={8}>
                     <Typography
                       fontFamily="Verdana"
                       color="#f0f5ef"
                       variant="h6"
+                      sx={{
+                        pb: '1%',
+                        pt: '1%',
+                      }}
                     >
                       {tag.tagName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={4}>
                     {hasRequest ? (
                       <Typography
                         fontFamily="Verdana"
                         color="#cce5cc"
                         variant="body2"
+                        pt="5%"
+                        pl="10%"
                       >
                         Status: {matchStatus}
                       </Typography>
@@ -500,6 +506,8 @@ export function AccountInfo({
                         fontFamily="Verdana"
                         color="#cce5cc"
                         variant="body2"
+                        pt="5%"
+                        pl="10%"
                       >
                         Status: requested
                       </Typography>
@@ -509,14 +517,21 @@ export function AccountInfo({
                       <Button
                         size="small"
                         variant="contained"
-                        sx={{ mt: 1 }}
                         onClick={() => {
                           setDialogOpen(true);
                           setSelectedTitle(tag.tagName);
                           setSelectedDescription(tag.tagDescription);
                         }}
+                        sx={{
+                          pt: '6%',
+                          ml: '30%',
+                          backgroundColor: '#42603c',
+                          '&:hover': {
+                            backgroundColor: '#385233',
+                          },
+                        }}
                       >
-                        Add
+                        Learn More
                       </Button>
                     )}
                   </Grid>
@@ -539,7 +554,7 @@ export function AccountInfo({
                     xs={5}
                     key={tag._id}
                     sx={{
-                      padding: 1,
+                      padding: 1.5,
                       m: 2,
                       borderRadius: 1,
                       backgroundColor: '#42603c',
@@ -676,21 +691,19 @@ export function AccountInfo({
                   />
                 ))}
             </Box>
-            <Grid
-              container
-              spacing={2}
-              alignItems="center"
-              sx={{ mt: 2, ml: 0.2 }}
-            >
-              <Grid item xs={5}>
-                <Typography>
+            <Grid container alignItems="center" sx={{ mt: 2, ml: 0.2 }}>
+              <Grid item xs={3.8}>
+                <Typography color="white" variant="h6">
                   Want a Language Not Listed? Request Here:
                 </Typography>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={2.5}>
                 <TextField
                   value={languageReq}
                   onChange={(e) => setLanguageReq(e.target.value)}
+                  size="small"
+                  fullWidth
+                  sx={{ backgroundColor: '#5d7159' }}
                 />
               </Grid>
               <Grid item xs={2}>
@@ -698,6 +711,13 @@ export function AccountInfo({
                   variant="contained"
                   disabled={!languageReq}
                   onClick={handleLanguageRequest}
+                  sx={{
+                    ml: '5%',
+                    backgroundColor: '#42603c',
+                    '&:hover': {
+                      backgroundColor: '#385233',
+                    },
+                  }}
                 >
                   Request
                 </Button>
