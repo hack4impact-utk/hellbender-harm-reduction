@@ -1,5 +1,5 @@
 'use client';
-import { Box, Tab, Tabs, Button, Grid, Stack } from '@mui/material';
+import { Box, Tab, Tabs, Button, Grid, Stack, IconButton } from '@mui/material';
 import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { AllVolunteers } from '@/components/allvolunteers';
@@ -12,6 +12,8 @@ import { EventDistribution } from '@/components/eventsdistribution';
 import { DisplayFacts } from '@/components/displayfacts';
 import { CertRequestsList } from '@/components/certrequestslist';
 import { LanguageLists } from '@/components/languagelists';
+import { FunFactManager } from '@/components/funfactmanager';
+import { Edit } from '@mui/icons-material';
 
 //interfaces for the data in all three components/tabs
 interface utag {
@@ -94,12 +96,17 @@ interface Tags {
   certification: boolean;
 }
 
+interface FunFact {
+  _id: string;
+  fact: string;
+}
+
 interface DataTableProps {
   alldata: AllUserData[];
   userdata: UserData[];
   eventdata: EventData[];
   metrics: MetricData;
-  facts: string[];
+  facts: FunFact[];
   reqs: Request[];
   tags: Tags[];
 }
@@ -115,6 +122,11 @@ export default function VolunteersView({
 }: DataTableProps) {
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [factList, setFactList] = useState(facts);
+
+  const fonly = factList.map((item) => item.fact);
+  const [factsOnly, setFactsOnly] = useState(fonly);
 
   // for handling when someone swaps tabs
   const handleTabChange = (
@@ -122,6 +134,14 @@ export default function VolunteersView({
     newSelected: number
   ) => {
     setSelected(newSelected);
+  };
+
+  const getFacts = async () => {
+    const factRes = await fetch('/api/facts');
+    const factData: FunFact[] = await factRes.json();
+    setFactList(factData);
+    const clean = factList.map((item) => item.fact);
+    setFactsOnly(clean);
   };
 
   const certReqs = reqs.filter((req) => req.certification === true);
@@ -143,6 +163,14 @@ export default function VolunteersView({
           padding: '10px',
         }}
       >
+        <FunFactManager
+          open={dialogOpen}
+          onClose={() => {
+            setDialogOpen(false);
+            getFacts();
+          }}
+          facts={factList}
+        />
         <Tabs
           value={selected}
           onChange={handleTabChange}
@@ -217,14 +245,28 @@ export default function VolunteersView({
                   <VolsRegistered amount={metrics.volsregistered} />
                   <Box
                     sx={{
+                      position: 'relative',
                       backgroundColor: '#f0f5ef',
                       border: '2px solid',
                       borderColor: '#42603c',
                       borderRadius: '15px',
                       height: '45%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
-                    <DisplayFacts facts={facts} />
+                    <IconButton
+                      onClick={() => setDialogOpen(true)}
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                      }}
+                    >
+                      <Edit />
+                    </IconButton>
+                    <DisplayFacts facts={factsOnly} />
                   </Box>
                 </Stack>
               </Grid>

@@ -126,7 +126,6 @@ export default async function Home() {
 
   // gets fun facts
   const allfacts = await getAllFacts();
-  const facts = allfacts.map((item) => item.fact);
 
   const tagdata = await getAllTags();
   const reqdata = await getAllRequests();
@@ -179,7 +178,7 @@ export default async function Home() {
         userdata={cleanData}
         eventdata={filtevents}
         metrics={metrics}
-        facts={facts}
+        facts={allfacts}
         reqs={cleanReqs}
         tags={langTags}
       />
