@@ -3,14 +3,17 @@ import { getUser } from '@/server/actions/user';
 import { getAllTags, getTag } from '@/server/actions/tag';
 import ProfileView from '@/views/profileView';
 import { Typography } from '@mui/material';
+import { getAllRequests } from '@/server/actions/requests';
 
 export default async function Home() {
+  // gets testing user
   const user = await getUser('681439a152a6f8d14f5ec44b');
 
   if (!user) {
     return <Typography>User Not Found</Typography>;
   }
 
+  // gets the user's tags
   const userTags = await Promise.all(
     (user.userTags || []).map(async (userTag) => {
       const tagIdString = String(userTag.tag);
@@ -25,6 +28,7 @@ export default async function Home() {
     })
   );
 
+  // makes sure the data is clean (no recursion)
   const cleanData = {
     name: user.name,
     phone: user.phone,
@@ -63,7 +67,10 @@ export default async function Home() {
       events.map(async (event) => {
         try {
           const e = await getEvent(event.uevent.toString());
-          const year: number = e?.eventStart.getUTCFullYear() ?? 0;
+          const eventDate = new Date(e?.eventStart ?? 0);
+          const year: number = !isNaN(eventDate.getTime())
+            ? eventDate.getUTCFullYear()
+            : 0;
           return { keep: year === device_year, event };
         } catch (error) {
           console.log(error);
@@ -73,12 +80,29 @@ export default async function Home() {
     )
   ).filter(({ keep }) => keep).length;
 
+  // gets all tags
   const alltags = await getAllTags();
   const cleantags = alltags.map((tag) => JSON.parse(JSON.stringify(tag)));
 
+  // gets and cleans the requests made by the testing user
+  const allreqs = await getAllRequests();
+  const cleanreqs = allreqs.map((req) => ({
+    _id: String(req._id),
+    title: req.title,
+    certification: req.certification,
+    requestingUser: req.requestingUser
+      ? JSON.parse(JSON.stringify(req.requestingUser))
+      : [],
+  }));
+
   return (
     <div>
-      <ProfileView user={cleanData} count={filtered_events} tags={cleantags} />
+      <ProfileView
+        user={cleanData}
+        count={filtered_events}
+        tags={cleantags}
+        requests={cleanreqs}
+      />
     </div>
   );
 }

@@ -143,7 +143,7 @@ export function UserInfo(props: userInfoProps) {
             />
           ) : (
             <Typography height="10%" sx={typographyStyle}>
-              {props.name}
+              {name}
             </Typography>
           )}
         </Box>
@@ -185,7 +185,7 @@ export function UserInfo(props: userInfoProps) {
               ))}
             </Select>
           ) : (
-            <Typography sx={typographyStyle}>{props.pronouns}</Typography>
+            <Typography sx={typographyStyle}>{pronouns}</Typography>
           )}
         </Box>
         <Box>

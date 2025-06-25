@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import zBase from './base';
-import { zTagEntity } from './tag';
+import zObjectId from './objectId';
 
 export const eventTypeEnum = [
   'Harm Reduction Services',
@@ -16,12 +16,12 @@ export type EventTypeEnum = z.infer<typeof zEventTypeEnum>;
 
 export const zEventBase = z.object({
   eventName: z.string(),
-  eventStart: z.date(),
-  eventEnd: z.date(),
+  eventStart: z.string(),
+  eventEnd: z.string(),
   eventDescription: z.string(),
   eventType: zEventTypeEnum,
-  eventRequirements: z.array(zTagEntity).optional(),
-  eventPreferences: z.array(zTagEntity).optional(),
+  eventRequirements: z.array(zObjectId).optional(),
+  eventPreferences: z.array(zObjectId).optional(),
 });
 
 // Extend to create request, response, and entity types with zBase for event

@@ -1,10 +1,11 @@
 import VolunteersView from '@/views/volunteersView';
-import { getAllUsers } from '@/server/actions/user';
+import { getAllUsers, getUser } from '@/server/actions/user';
 import { getAllEvents } from '@/server/actions/event';
-import { getTag } from '@/server/actions/tag';
+import { getAllTags, getTag } from '@/server/actions/tag';
 import { EventTypeEnum } from '@/types/event';
 import { getEvent } from '@/server/actions/event';
 import { getAllFacts } from '@/server/actions/facts';
+import { getAllRequests } from '@/server/actions/requests';
 
 export default async function Home() {
   // gets user info for all volunteers
@@ -50,8 +51,8 @@ export default async function Home() {
     return {
       id: String(event._id),
       eventName: event.eventName,
-      start: event.eventStart,
-      end: event.eventEnd,
+      start: new Date(event.eventStart),
+      end: new Date(event.eventEnd),
     };
   });
 
@@ -97,7 +98,7 @@ export default async function Home() {
   for (const e of fetchedEvents) {
     if (!e) continue;
 
-    const year = e.eventStart.getFullYear();
+    const year = new Date(e.eventStart).getFullYear();
     startingYear = Math.min(startingYear, year);
 
     if (!eventsPerYear.has(year)) {
@@ -125,7 +126,53 @@ export default async function Home() {
 
   // gets fun facts
   const allfacts = await getAllFacts();
-  const facts = allfacts.map((item) => item.fact);
+
+  // gets tag info for certification management
+  const tagdata = await getAllTags();
+
+  // get request data
+  const reqdata = await getAllRequests();
+  if (!reqdata) {
+    return;
+  }
+  const cleanReqs = await Promise.all(
+    reqdata.map(async (req) => {
+      const requestingUser = await Promise.all(
+        (req.requestingUser || []).map(async (user) => {
+          const userId = String(user.userId);
+          const reqUser = await getUser(userId);
+          const userName = reqUser?.name;
+
+          return userName
+            ? {
+                userId: userId,
+                userName: userName,
+                status: user.status,
+              }
+            : {
+                userId: 'N/A',
+                userName: 'N/A',
+                status: 'N/A',
+              };
+        })
+      );
+
+      const tagMatch = tagdata.find((tag) => tag.tagName === req.title);
+
+      return {
+        _id: String(req._id),
+        title: req.title,
+        tagId: tagMatch?._id ?? 'N/A',
+        certification: req.certification,
+        requestingUser: requestingUser,
+      };
+    })
+  );
+  console.log(cleanReqs[0].requestingUser[0]);
+
+  // more tag data (should probably use tagdata above)
+  const allTags = await getAllTags();
+  const langTags = allTags.filter((tag) => tag.certification === false);
 
   // returns actual page
   return (
@@ -135,7 +182,9 @@ export default async function Home() {
         userdata={cleanData}
         eventdata={filtevents}
         metrics={metrics}
-        facts={facts}
+        facts={allfacts}
+        reqs={cleanReqs}
+        tags={langTags}
       />
     </div>
   );

@@ -45,16 +45,35 @@ interface User {
 interface Tag {
   _id: string;
   tagName: string;
+  tagDescription: string;
   certification: boolean;
+}
+
+interface reqUser {
+  userId: string;
+  status: string;
+}
+
+interface Request {
+  _id: string;
+  title: string;
+  certification: boolean;
+  requestingUser: reqUser[];
 }
 
 interface ProfileProps {
   user: User;
   count: number;
   tags: Tag[];
+  requests: Request[];
 }
 
-export default function ProfileView({ user, count, tags }: ProfileProps) {
+export default function ProfileView({
+  user,
+  count,
+  tags,
+  requests,
+}: ProfileProps) {
   const id = '681439a152a6f8d14f5ec44b';
 
   // keeps track of which tab is selected
@@ -76,7 +95,7 @@ export default function ProfileView({ user, count, tags }: ProfileProps) {
         height: '100vh',
       }}
     >
-      <Navbar userType={'Admin'} userId={''} page={'Volunteers'} />
+      <Navbar userType={'Admin'} userId={''} page={'profile'} />
       <Grid
         container
         spacing="10px"
@@ -204,6 +223,7 @@ export default function ProfileView({ user, count, tags }: ProfileProps) {
                     phone={user.phone}
                     utags={user.userTags}
                     tags={tags}
+                    requests={requests}
                   />
                 </Box>
               )}

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import zBase from './base';
-import { zEventEntity, zEventTypeEnum } from './event';
+import { zEventTypeEnum } from './event';
 import zObjectId from './objectId';
 
 export const userTypeEnum = ['Volunteer', 'Admin', 'Owner'] as const;
@@ -56,8 +56,6 @@ export const accommEnum = [
   'Provided Seating',
   'No Heavy Lifting',
   'Flexible Breaks',
-  'Blind',
-  'Deaf',
 ] as const;
 export const zAccommEnum = z.enum(accommEnum);
 
@@ -81,8 +79,8 @@ export const zUserTag = z.object({
 });
 
 export const zUserEvents = z.object({
-  uevent: zEventEntity,
-  appDate: z.date(),
+  uevent: zObjectId,
+  appDate: z.string(),
 });
 
 export const zUserBase = z.object({

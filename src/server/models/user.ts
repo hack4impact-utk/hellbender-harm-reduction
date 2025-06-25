@@ -76,7 +76,7 @@ const UserSchema = new Schema(
             required: true,
           },
           appDate: {
-            type: Date,
+            type: String,
             required: true,
           },
           _id: false,

@@ -1,5 +1,5 @@
 'use client';
-import { Box, Tab, Tabs, Button, Grid, Stack } from '@mui/material';
+import { Box, Tab, Tabs, Button, Grid, Stack, IconButton } from '@mui/material';
 import Navbar from '@/components/navbar';
 import React, { useState } from 'react';
 import { AllVolunteers } from '@/components/allvolunteers';
@@ -10,6 +10,10 @@ import PrefEventMetrics from '@/components/prefeventmetrics';
 import { EventTypeEnum } from '@/types/event';
 import { EventDistribution } from '@/components/eventsdistribution';
 import { DisplayFacts } from '@/components/displayfacts';
+import { CertRequestsList } from '@/components/certrequestslist';
+import { LanguageLists } from '@/components/languagelists';
+import { FunFactManager } from '@/components/funfactmanager';
+import { Edit } from '@mui/icons-material';
 
 //interfaces for the data in all three components/tabs
 interface utag {
@@ -71,12 +75,40 @@ interface MetricData {
   prefevents: Events[];
 }
 
+interface RequestingUser {
+  userId: string;
+  userName: string;
+  status: string;
+}
+
+interface Request {
+  _id: string;
+  title: string;
+  tagId: string;
+  certification: boolean;
+  requestingUser: RequestingUser[];
+}
+
+interface Tags {
+  _id: string;
+  tagName: string;
+  tagDescription: string;
+  certification: boolean;
+}
+
+interface FunFact {
+  _id: string;
+  fact: string;
+}
+
 interface DataTableProps {
   alldata: AllUserData[];
   userdata: UserData[];
   eventdata: EventData[];
   metrics: MetricData;
-  facts: string[];
+  facts: FunFact[];
+  reqs: Request[];
+  tags: Tags[];
 }
 
 export default function VolunteersView({
@@ -85,9 +117,17 @@ export default function VolunteersView({
   eventdata,
   metrics,
   facts,
+  reqs,
+  tags,
 }: DataTableProps) {
   // keeps track of which tab is selected
   const [selected, setSelected] = useState<number>(0);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [factList, setFactList] = useState(facts);
+
+  // saves version of facts as just an array of strings (no id) for fun fact display
+  const fonly = factList.map((item) => item.fact);
+  const [factsOnly, setFactsOnly] = useState(fonly);
 
   // for handling when someone swaps tabs
   const handleTabChange = (
@@ -96,6 +136,18 @@ export default function VolunteersView({
   ) => {
     setSelected(newSelected);
   };
+
+  // gets all facts from the database and resets facts only based on what's gotten
+  const getFacts = async () => {
+    const factRes = await fetch('/api/facts');
+    const factData: FunFact[] = await factRes.json();
+    setFactList(factData);
+    const clean = factList.map((item) => item.fact);
+    setFactsOnly(clean);
+  };
+
+  // filters through list of requests for just the ones that are certifications
+  const certReqs = reqs.filter((req) => req.certification === true);
 
   // returns actual page
   return (
@@ -114,6 +166,14 @@ export default function VolunteersView({
           padding: '10px',
         }}
       >
+        <FunFactManager
+          open={dialogOpen}
+          onClose={() => {
+            setDialogOpen(false);
+            getFacts();
+          }}
+          facts={factList}
+        />
         <Tabs
           value={selected}
           onChange={handleTabChange}
@@ -125,6 +185,16 @@ export default function VolunteersView({
         >
           <Tab
             label="Metrics"
+            sx={{
+              color: '#6E8569',
+              '&.Mui-selected': {
+                color: '#42603C',
+                fontWeight: 'bold',
+              },
+            }}
+          />
+          <Tab
+            label="Tag Requests"
             sx={{
               color: '#6E8569',
               '&.Mui-selected': {
@@ -178,14 +248,28 @@ export default function VolunteersView({
                   <VolsRegistered amount={metrics.volsregistered} />
                   <Box
                     sx={{
+                      position: 'relative',
                       backgroundColor: '#f0f5ef',
                       border: '2px solid',
                       borderColor: '#42603c',
                       borderRadius: '15px',
                       height: '45%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
-                    <DisplayFacts facts={facts} />
+                    <IconButton
+                      onClick={() => setDialogOpen(true)}
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                      }}
+                    >
+                      <Edit />
+                    </IconButton>
+                    <DisplayFacts facts={factsOnly} />
                   </Box>
                 </Stack>
               </Grid>
@@ -226,9 +310,23 @@ export default function VolunteersView({
             </Grid>
           )}
           {selected === 1 && (
-            <Box padding={'15px'}>
-              <AllVolunteers data={alldata} />
-              <Box padding={'10px'}>
+            <Box sx={{ height: '100%', width: '100%' }}>
+              <Grid container sx={{ height: '100%', width: '100%' }}>
+                <Grid item xs={6} p="1%" sx={{ height: '100%', width: '100%' }}>
+                  <LanguageLists reqs={reqs} tags={tags} />
+                </Grid>
+                <Grid item xs={6} p="1%" sx={{ height: '100%', width: '100%' }}>
+                  <CertRequestsList reqs={certReqs} />
+                </Grid>
+              </Grid>
+            </Box>
+          )}
+          {selected === 2 && (
+            <Box padding={'15px'} sx={{ height: '100%' }}>
+              <Box sx={{ height: '85%', overflowY: 'auto' }}>
+                <AllVolunteers data={alldata} />
+              </Box>
+              <Box padding={'20px'}>
                 <Button
                   sx={{
                     backgroundColor: '#F0F5Ef',
@@ -241,7 +339,7 @@ export default function VolunteersView({
               </Box>
             </Box>
           )}
-          {selected === 2 && (
+          {selected === 3 && (
             <Box sx={{ height: '100%' }}>
               <EventVolunteers users={userdata} events={eventdata} />
             </Box>

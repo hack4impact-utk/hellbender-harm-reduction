@@ -11,10 +11,12 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Edit } from '@mui/icons-material';
+import { CertificationPopUp } from './certificationpopup';
 
 interface Tag {
   _id: string;
   tagName: string;
+  tagDescription: string;
   certification: boolean;
 }
 
@@ -24,12 +26,25 @@ interface userTag {
   tagProf: string;
 }
 
+interface reqUser {
+  userId: string;
+  status: string;
+}
+
+interface Request {
+  _id: string;
+  title: string;
+  certification: boolean;
+  requestingUser: reqUser[];
+}
+
 interface AccountInfoProps {
   id: string;
   email: string;
   phone: string;
   utags?: userTag[];
   tags: Tag[];
+  requests: Request[];
 }
 
 export function AccountInfo({
@@ -38,7 +53,9 @@ export function AccountInfo({
   phone,
   utags,
   tags,
+  requests,
 }: AccountInfoProps) {
+  // all the needed variables :/
   const [editMode, setEditMode] = useState(false);
   const [newEmail, setNewEmail] = useState(email);
   const [newPhone, setNewPhone] = useState(phone);
@@ -48,17 +65,193 @@ export function AccountInfo({
   const [savedEmail, setSavedEmail] = useState(email);
   const [savedPhone, setSavedPhone] = useState(phone);
   const [savedTags, setSavedTags] = useState(utags ?? []);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [requestedCert, setRequestedCert] = useState<string[]>([]);
+  const [selectedTitle, setSelectedTitle] = useState('');
+  const [selectedDescription, setSelectedDescription] = useState('');
+  const [languageReq, setLanguageReq] = useState('');
+  const [requestedLanguages, setRequestedLanguages] = useState<string[]>([]);
 
+  // handles when you remove a tag
   const handleRemoveTag = (tagIdToRemove: string) => {
     setNewTags((prev) => (prev ?? []).filter((t) => t.tagId !== tagIdToRemove));
   };
 
+  // sorts tags into certifications and languages
   const userTagIds = new Set(
     (utags ?? []).map((utag) => utag.tagId?.trim()).filter(Boolean)
   );
   const priorityTags = tags.filter((tag) => tag.certification);
   const langs = tags.filter((tag) => !tag.certification);
 
+  // handles when a user requests training
+  const handleRequest = async () => {
+    setDialogOpen(false);
+
+    const certMatch = requests.find((req) => req.title === selectedTitle);
+    // make new request if it doesn't already exist
+    if (!certMatch) {
+      try {
+        const response = await fetch(`/api/requests`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: selectedTitle,
+            certification: true,
+            requestingUser: [
+              {
+                userId: String(id),
+                status: 'requested',
+              },
+            ],
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to make certification request');
+        } else {
+          setRequestedCert((prev) => [...prev, selectedTitle.trim()]);
+        }
+      } catch (err) {
+        console.error('Certification request failed:', err);
+        alert(`Certification request failed`);
+      }
+      // add user to list of requesting users if request already exists
+    } else {
+      try {
+        const response = await fetch(`/api/requests/${certMatch._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: certMatch.title,
+            certification: certMatch.certification,
+            requestingUser: [
+              ...certMatch.requestingUser,
+              {
+                userId: id,
+                status: 'requested',
+              },
+            ],
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update certification request');
+        } else {
+          setRequestedCert((prev) => [...prev, selectedTitle.trim()]);
+        }
+      } catch (err) {
+        console.error('Certification update failed:', err);
+        alert(`Certification update failed`);
+      }
+    }
+    setSelectedTitle('');
+    setSelectedDescription('');
+  };
+
+  // handles when a user asks for a new language to be added
+  const handleLanguageRequest = async () => {
+    // cleans input to make it only letters with the first being capital and the rest being lower case
+    const cleanedInput = languageReq.replace(/[^a-zA-Z]/g, '').trim();
+    if (cleanedInput.length === 0) {
+      // if there isn't anything left after cleaning
+      alert('Improper Input');
+      setLanguageReq('');
+    } else {
+      const newLang =
+        cleanedInput.charAt(0).toUpperCase() +
+        cleanedInput.slice(1).toLowerCase();
+
+      // if the user has requested this language (before most recent profile page load)
+      const oldRepeat = requests.find(
+        (req) =>
+          req.title === newLang &&
+          req.requestingUser.some((user) => user.userId === id)
+      );
+
+      // if the user has requested this language (since most recent page load)
+      const newRepeat = requestedLanguages.find((req) => req === newLang);
+
+      if (oldRepeat || newRepeat) {
+        alert('Language Already Requested');
+      } else {
+        // confirms
+        const confirmed = confirm(
+          `Are you sure you sure you want to request that ${newLang} is added?.`
+        );
+        if (confirmed) {
+          const langMatch = requests.find((req) => req.title === newLang);
+          // updates requested users if request already exists
+          if (langMatch) {
+            try {
+              const response = await fetch(`/api/requests/${langMatch._id}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  title: newLang,
+                  certification: false,
+                  requestingUser: [
+                    ...langMatch.requestingUser,
+                    {
+                      userId: id,
+                      status: 'requested',
+                    },
+                  ],
+                }),
+              });
+
+              if (!response.ok) {
+                throw new Error('Failed to update user information');
+              } else {
+                setRequestedLanguages((prev) => [...prev, newLang]);
+              }
+            } catch (err) {
+              console.error('Language request failed:', err);
+              alert('Language request failed');
+            }
+            // makes new request if it doesn't exist yet
+          } else {
+            try {
+              const response = await fetch(`/api/requests`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  title: newLang,
+                  certification: false,
+                  requestingUser: [
+                    {
+                      userId: id,
+                      status: 'requested',
+                    },
+                  ],
+                }),
+              });
+
+              if (!response.ok) {
+                throw new Error('Failed to update user information');
+              } else {
+                setRequestedLanguages((prev) => [...prev, newLang]);
+              }
+            } catch (err) {
+              console.error('Language request failed:', err);
+              alert('Language request failed');
+            }
+          }
+        }
+      }
+    }
+    setLanguageReq('');
+  };
+
+  // handles when changes to user profile are updated
   const handleSubmit = async () => {
     try {
       const formattedTags = (newTags ?? []).map((tag) => ({
@@ -102,6 +295,17 @@ export function AccountInfo({
 
   return (
     <Box sx={{ position: 'relative', padding: '20px' }}>
+      <CertificationPopUp
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+          setSelectedTitle('');
+          setSelectedDescription('');
+        }}
+        onSubmit={handleRequest}
+        title={selectedTitle}
+        description={selectedDescription}
+      />
       <Box
         sx={{
           position: 'absolute',
@@ -170,50 +374,25 @@ export function AccountInfo({
           Email
         </Typography>
         <Box mb="25px">
-          {editMode ? (
-            <TextField
-              variant="outlined"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              fullWidth
-              size="small"
-              InputLabelProps={{ style: { color: '#f0f5ef' } }}
-              sx={{
-                '& .MuiInputBase-input': {
-                  color: '#f0f5ef', // text color
-                },
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: '#42603c',
-                  '& fieldset': {
-                    borderColor: '#f0f5ef',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: '#ffffff',
-                  },
-                },
-              }}
-            />
-          ) : (
-            <Box
-              sx={{
-                height: '8%',
-                backgroundColor: '#42603c',
-                display: 'flex',
-                alignItems: 'center',
-                borderRadius: '10px',
-                paddingLeft: '10px',
-              }}
+          <Box
+            sx={{
+              height: '8%',
+              backgroundColor: '#42603c',
+              display: 'flex',
+              alignItems: 'center',
+              borderRadius: '10px',
+              paddingLeft: '10px',
+            }}
+          >
+            <Typography
+              fontFamily={'Verdana'}
+              color="#f0f5ef"
+              variant="h5"
+              padding="4px"
             >
-              <Typography
-                fontFamily={'Verdana'}
-                color="#f0f5ef"
-                variant="h5"
-                padding="4px"
-              >
-                {newEmail}
-              </Typography>
-            </Box>
-          )}
+              {newEmail}
+            </Typography>
+          </Box>
         </Box>
         <Typography
           fontFamily="Verdana"
@@ -285,7 +464,18 @@ export function AccountInfo({
           </Grid>
           {priorityTags.map((tag) => {
             const hasTag = userTagIds.has(tag._id.trim());
-            const bgColor = hasTag ? '#42603c' : '#5d7159'; // green if has, red if not
+            const hasRequest = requests.find(
+              (req) =>
+                req.title === tag.tagName &&
+                Array.isArray(req.requestingUser) &&
+                req.requestingUser.some((user) => user.userId === id)
+            );
+            const matchedUser = hasRequest?.requestingUser.find(
+              (user) => user.userId === id
+            );
+            const matchStatus = matchedUser?.status;
+            const wasRequested = requestedCert.includes(tag.tagName);
+            const bgColor = hasTag ? '#42603c' : '#5d7159';
 
             return (
               <Grid
@@ -300,34 +490,101 @@ export function AccountInfo({
                   border: '1px solid',
                 }}
               >
-                <Typography fontFamily="Verdana" color="#f0f5ef" variant="h6">
-                  {tag.tagName} {hasTag ? '' : '+'}
-                </Typography>
+                <Grid container>
+                  <Grid item xs={8}>
+                    <Typography
+                      fontFamily="Verdana"
+                      color="#f0f5ef"
+                      variant="h6"
+                      sx={{
+                        pb: '1%',
+                        pt: '1%',
+                      }}
+                    >
+                      {tag.tagName}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    {hasRequest ? (
+                      <Typography
+                        fontFamily="Verdana"
+                        color="#cce5cc"
+                        variant="body2"
+                        pt="5%"
+                        pl="10%"
+                      >
+                        Status: {matchStatus}
+                      </Typography>
+                    ) : wasRequested ? (
+                      <Typography
+                        fontFamily="Verdana"
+                        color="#cce5cc"
+                        variant="body2"
+                        pt="5%"
+                        pl="10%"
+                      >
+                        Status: requested
+                      </Typography>
+                    ) : hasTag ? (
+                      <Typography></Typography>
+                    ) : (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => {
+                          setDialogOpen(true);
+                          setSelectedTitle(tag.tagName);
+                          setSelectedDescription(tag.tagDescription);
+                        }}
+                        sx={{
+                          pt: '6%',
+                          ml: '30%',
+                          backgroundColor: '#42603c',
+                          '&:hover': {
+                            backgroundColor: '#385233',
+                          },
+                        }}
+                      >
+                        Learn More
+                      </Button>
+                    )}
+                  </Grid>
+                </Grid>
               </Grid>
             );
           })}
-          {langs
-            .filter((tag) =>
-              (utags ?? []).some((utag) => utag.tagId === tag._id)
-            ) // only include tags the user has
-            .map((tag) => (
-              <Grid
-                item
-                xs={5}
-                key={tag._id}
-                sx={{
-                  padding: 1,
-                  m: 2,
-                  borderRadius: 1,
-                  backgroundColor: '#42603c',
-                  border: '1px solid',
-                }}
-              >
-                <Typography fontFamily="Verdana" color="#f0f5ef" variant="h6">
-                  {tag.tagName}
-                </Typography>
-              </Grid>
-            ))}
+          {!editMode &&
+            langs
+              .filter((tag) =>
+                (savedTags ?? []).some((utag) => utag.tagId === tag._id)
+              )
+              .map((tag) => {
+                const matchedTag = savedTags.find(
+                  (utag) => utag.tagId === tag._id
+                );
+                return (
+                  <Grid
+                    item
+                    xs={5}
+                    key={tag._id}
+                    sx={{
+                      padding: 1.5,
+                      m: 2,
+                      borderRadius: 1,
+                      backgroundColor: '#42603c',
+                      border: '1px solid',
+                    }}
+                  >
+                    <Typography
+                      fontFamily="Verdana"
+                      color="#f0f5ef"
+                      variant="h6"
+                    >
+                      {tag.tagName} – {matchedTag?.tagProf || 'N/A'}
+                    </Typography>
+                  </Grid>
+                );
+              })}
         </Grid>
         {editMode && (
           <>
@@ -430,7 +687,6 @@ export function AccountInfo({
                 </Button>
               </Grid>
             </Grid>
-
             {/* Show added language tags as chips */}
             <Box
               sx={{ mt: 2, ml: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}
@@ -449,6 +705,38 @@ export function AccountInfo({
                   />
                 ))}
             </Box>
+            <Grid container alignItems="center" sx={{ mt: 2, ml: 0.2 }}>
+              <Grid item xs={3.8}>
+                <Typography color="white" variant="h6">
+                  Want a Language Not Listed? Request Here:
+                </Typography>
+              </Grid>
+              <Grid item xs={2.5}>
+                <TextField
+                  value={languageReq}
+                  onChange={(e) => setLanguageReq(e.target.value)}
+                  size="small"
+                  fullWidth
+                  sx={{ backgroundColor: '#5d7159' }}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Button
+                  variant="contained"
+                  disabled={!languageReq}
+                  onClick={handleLanguageRequest}
+                  sx={{
+                    ml: '5%',
+                    backgroundColor: '#42603c',
+                    '&:hover': {
+                      backgroundColor: '#385233',
+                    },
+                  }}
+                >
+                  Request
+                </Button>
+              </Grid>
+            </Grid>
           </>
         )}
       </Stack>

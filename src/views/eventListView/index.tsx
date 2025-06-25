@@ -1,23 +1,19 @@
 'use client';
+import React from 'react';
 import { Box } from '@mui/material';
 import Navbar from '@/components/navbar';
 import { EventList } from '@/components/eventlist';
 
-interface EventInfo {
-  eventName: string;
-  eventStart: Date;
-  eventEnd: Date;
-  eventDescription: string;
-  eventType: string;
-  eventRequirements?: (string | null)[];
-  eventPreferences?: (string | null)[];
+interface Tags {
+  _id: string;
+  tagName: string;
 }
 
 interface EventViewProps {
-  events: EventInfo[];
+  tags: Tags[];
 }
 
-export default function EventListView({ events }: EventViewProps) {
+export default function EventListView({ tags }: EventViewProps) {
   return (
     <Box
       sx={{
@@ -40,7 +36,7 @@ export default function EventListView({ events }: EventViewProps) {
           p: 1,
         }}
       >
-        <EventList events={events} />
+        <EventList tags={tags} />
       </Box>
     </Box>
   );

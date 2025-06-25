@@ -16,8 +16,8 @@ export default async function Home() {
   const calendardata = eventdata.map((event) => {
     return {
       title: event.eventName,
-      start: event.eventStart,
-      end: event.eventEnd,
+      start: new Date(event.eventStart),
+      end: new Date(event.eventEnd),
     };
   });
 

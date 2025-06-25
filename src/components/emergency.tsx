@@ -32,8 +32,6 @@ const accommodations = [
   'Provided Seating',
   'No Heavy Lifting',
   'Flexible Breaks',
-  'Blind',
-  'Deaf',
 ];
 
 // Styling things
@@ -68,10 +66,12 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
     otherAccomm: props.otherAccomm || '',
   });
 
-  const combinedAccommodations = [
+  const [combinedAccommodations, setCombinedAccommodations] = useState<
+    string[]
+  >([
     ...(props.accomm || []),
     ...(props.otherAccomm ? [props.otherAccomm] : []),
-  ];
+  ]);
   const [selectedAccoms, setSelectedAccoms] = useState<string[]>(
     props.accomm || []
   );
@@ -94,6 +94,10 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
     setPhone(initialState.phone);
     setSelectedAccoms(initialState.selectedAccoms);
     setOtherAccomm(initialState.otherAccomm);
+    setCombinedAccommodations([
+      ...initialState.selectedAccoms,
+      ...(initialState.otherAccomm ? [initialState.otherAccomm] : []),
+    ]);
   };
 
   const handleSubmit = async () => {
@@ -116,6 +120,10 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
         selectedAccoms: [...selectedAccoms],
         otherAccomm,
       });
+      setCombinedAccommodations([
+        ...selectedAccoms,
+        ...(otherAccomm ? [otherAccomm] : []),
+      ]);
       setEditMode(false);
     } catch (err) {
       console.error('Update failed:', err);
@@ -230,7 +238,7 @@ export function EmergencyInfo(props: EmergencyInfoProps) {
         </Typography>
         {editMode ? (
           <TextField
-            value={name}
+            value={phone}
             variant="outlined"
             onChange={(e) => setPhone(e.target.value)}
             fullWidth

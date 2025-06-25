@@ -159,32 +159,43 @@ export function EventVolunteers({ users, events }: DataTableProps) {
       })
     : chronEvents;
 
-  // handles values used throughout the component
-  useEffect(() => {
-    const lastIndex = chronEvents.length - 1;
-    const lastItem = itemRefs.current[lastIndex];
-    const scrollContainer = scrollContainerRef.current;
-    const now = new Date();
+  const hasScrolledRef = useRef(false);
 
-    if (selectedEventId === null && chronEvents.length > 0) {
+  useEffect(() => {
+    if (!hasScrolledRef.current && chronEvents.length > 0) {
+      const now = new Date();
+
+      // Sort and find the first upcoming event
       const sortedEvents = [...chronEvents].sort(
         (a, b) => a.start.getTime() - b.start.getTime()
       );
       const upcomingEvent = sortedEvents.find((event) => event.end > now);
 
       if (upcomingEvent) {
+        // Set the selected event ID
         setSelectedEventId(upcomingEvent.id);
+
+        const scrollContainer = scrollContainerRef.current;
+        const targetElement = itemRefs.current.find(
+          (el, i) => chronEvents[i].id === upcomingEvent.id
+        );
+
+        if (targetElement && scrollContainer) {
+          const headerOffset = 5;
+
+          const targetPosition =
+            targetElement.offsetTop - scrollContainer.offsetTop - headerOffset;
+
+          scrollContainer.scrollTo({
+            top: targetPosition > 0 ? targetPosition : 0,
+            behavior: 'smooth',
+          });
+        }
+
+        hasScrolledRef.current = true;
       }
     }
-
-    // scroll to most recent event
-    if (lastItem && scrollContainer) {
-      scrollContainer.scrollTo({
-        top: lastItem.offsetTop,
-        behavior: 'smooth',
-      });
-    }
-  }, [chronEvents, selectedEventId]);
+  }, [chronEvents]);
 
   //returns actual component
   return (
