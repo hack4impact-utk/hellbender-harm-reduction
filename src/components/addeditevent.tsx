@@ -393,7 +393,12 @@ export function AddEditEvent({
             !eventType ||
             !eventDescription
           }
-          sx={{ backgroundColor: '#42603c' }}
+          sx={{
+            backgroundColor: '#42603c',
+            '&:hover': {
+              backgroundColor: '#385233',
+            },
+          }}
         >
           {event ? 'Update Event' : 'Create Event'}
         </Button>

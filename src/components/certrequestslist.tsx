@@ -32,9 +32,11 @@ interface CertRequestsListProps {
 }
 
 export function CertRequestsList({ reqs }: CertRequestsListProps) {
+  // sets up needed data
   const statuses = ['requested', 'in progress', 'completed', 'denied'];
   const [rows, setRows] = useState(reqs);
 
+  // handles when a new status is clicked
   const handleStatusChange = async (
     event: SelectChangeEvent,
     certIndex: number,
@@ -46,12 +48,15 @@ export function CertRequestsList({ reqs }: CertRequestsListProps) {
     const changedCert = currentRows[certIndex];
     const changedId = currentRows[certIndex].requestingUser[userIndex].userId;
 
+    // if the status is changed to completed
     if (newStatus === 'completed') {
+      // confirms with user
       const confirmed = confirm(
         'Are you sure you want to mark this as completed? This will remove the request and give this user the certification.'
       );
 
       if (confirmed) {
+        // checks number of requesting users, if 1 request needs to be completely removed from database
         if (changedCert.requestingUser.length === 1) {
           try {
             const response = await fetch(`/api/requests/${changedCert._id}`, {
@@ -75,6 +80,7 @@ export function CertRequestsList({ reqs }: CertRequestsListProps) {
             setRows(revertedRows);
           }
         } else {
+          // if there is more than one user you have to remove the user from the list and update database
           const newReqUsers = [
             ...changedCert.requestingUser.slice(0, userIndex),
             ...changedCert.requestingUser.slice(userIndex + 1),
@@ -108,6 +114,7 @@ export function CertRequestsList({ reqs }: CertRequestsListProps) {
             setRows(revertedRows);
           }
         }
+        // since training was marked as completed user must be given tag
         const userRes = await fetch(`/api/users/${changedId}`);
         const userData = await userRes.json();
         try {
@@ -145,12 +152,15 @@ export function CertRequestsList({ reqs }: CertRequestsListProps) {
         revertedRows[certIndex].requestingUser[userIndex].status = prevStatus;
         setRows(revertedRows);
       }
+      // handles when status is set as denied
     } else if (newStatus === 'denied') {
+      // confirms with user
       const confirmed = confirm(
         'Are you sure you want to mark this as denied? This will remove the request and deny this user the certification.'
       );
 
       if (confirmed) {
+        // if there's only one user the entire request must be deleted from the database
         if (changedCert.requestingUser.length === 1) {
           try {
             const response = await fetch(`/api/requests/${changedCert._id}`, {
@@ -173,6 +183,7 @@ export function CertRequestsList({ reqs }: CertRequestsListProps) {
               prevStatus;
             setRows(revertedRows);
           }
+          // there's more than one user so just update requesting user list
         } else {
           const newReqUsers = [
             ...changedCert.requestingUser.slice(0, userIndex),
@@ -212,6 +223,7 @@ export function CertRequestsList({ reqs }: CertRequestsListProps) {
         revertedRows[certIndex].requestingUser[userIndex].status = prevStatus;
         setRows(revertedRows);
       }
+      // if status is changed to anything other than denied or completed
     } else {
       changedCert.requestingUser[userIndex].status = newStatus;
       try {
@@ -243,6 +255,7 @@ export function CertRequestsList({ reqs }: CertRequestsListProps) {
     }
   };
 
+  // return actual display
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
       <Typography

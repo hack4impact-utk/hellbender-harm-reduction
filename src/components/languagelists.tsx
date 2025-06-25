@@ -42,6 +42,7 @@ interface LanguageListsProps {
 }
 
 export function LanguageLists({ reqs, tags }: LanguageListsProps) {
+  // required data
   const langReqs = reqs.filter((req) => req.certification === false);
   const [reqRows, setReqRows] = useState(langReqs);
   const [languages, setLanguages] = useState<Tags[] | undefined>(tags);
@@ -50,6 +51,7 @@ export function LanguageLists({ reqs, tags }: LanguageListsProps) {
   const [newDescription, setNewDescription] = useState<string>('');
   const [addingLang, setAddingLang] = useState<boolean>(false);
 
+  // performs GET call and gets all language tags from the database
   const getLanguages = async () => {
     const tagRes = await fetch('/api/tags');
     const tagData: Tags[] = await tagRes.json();
@@ -59,14 +61,17 @@ export function LanguageLists({ reqs, tags }: LanguageListsProps) {
     }
   };
 
+  // handles when you add a requested language
   const handleReqAdd = async (index: number) => {
     const currentRows = [...reqRows];
     const changedReq = currentRows[index];
 
+    // confirms
     const confirmed = confirm(
       'Are you sure you want to add this language? This will add the language and remove the request'
     );
     if (confirmed) {
+      // first deletes request
       try {
         const response = await fetch(`/api/requests/${changedReq._id}`, {
           method: 'DELETE',
@@ -75,6 +80,7 @@ export function LanguageLists({ reqs, tags }: LanguageListsProps) {
         if (!response.ok) {
           throw new Error('Failed to delete request');
         } else {
+          // then tries to update tag list
           try {
             const response = await fetch(`/api/tags`, {
               method: 'POST',
@@ -106,14 +112,17 @@ export function LanguageLists({ reqs, tags }: LanguageListsProps) {
     }
   };
 
+  // handles when a language request is deleted
   const handleReqDelete = async (index: number) => {
     const currentRows = [...reqRows];
     const changedReq = currentRows[index];
 
+    // confirms with user
     const confirmed = confirm(
       'Are you sure you want to deny/delete this request?'
     );
     if (confirmed) {
+      // deletes request from request database
       try {
         const response = await fetch(`/api/requests/${changedReq._id}`, {
           method: 'DELETE',
@@ -132,6 +141,7 @@ export function LanguageLists({ reqs, tags }: LanguageListsProps) {
     }
   };
 
+  // handles when a language is edited
   const handleLangEdit = async () => {
     if (editingLang) {
       try {
@@ -167,6 +177,7 @@ export function LanguageLists({ reqs, tags }: LanguageListsProps) {
     }
   };
 
+  // handles when a language is deleted
   const handleLangDelete = async (index: number) => {
     if (languages) {
       const changedLang = languages[index];
@@ -193,6 +204,7 @@ export function LanguageLists({ reqs, tags }: LanguageListsProps) {
     }
   };
 
+  // handles when you're adding a language
   const handleAddLang = async () => {
     try {
       const response = await fetch(`/api/tags`, {
@@ -221,6 +233,7 @@ export function LanguageLists({ reqs, tags }: LanguageListsProps) {
     }
   };
 
+  // returns actual display
   return (
     <Stack sx={{ height: '100%', width: '100%' }}>
       <Typography

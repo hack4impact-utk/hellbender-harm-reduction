@@ -29,19 +29,21 @@ interface FunFactProps {
 }
 
 export function FunFactManager({ open, onClose, facts }: FunFactProps) {
+  // needed variables
   const [editingFacts, setEditingFacts] = useState<string>('');
   const [addingFacts, setAddingFacts] = useState<boolean>(false);
   const [factList, setFactList] = useState(facts);
   const [newFact, setNewFact] = useState<string>('');
 
+  // gets facts from database
   const getFacts = async () => {
     const factRes = await fetch('/api/facts');
     const factData: FunFact[] = await factRes.json();
     setFactList(factData);
   };
 
+  // handles when a fact is edited
   const handleFactEdit = async (index: number) => {
-    //const currentRows = [...factList];
     const fact = factList[index];
     if (editingFacts) {
       try {
@@ -75,8 +77,8 @@ export function FunFactManager({ open, onClose, facts }: FunFactProps) {
     }
   };
 
-  const handleLangDelete = async (index: number) => {
-    //if (languages) {
+  // handles when a fact is deleted
+  const handleFactDelete = async (index: number) => {
     const fact = factList[index];
 
     const confirmed = confirm('Are you sure you want to delete this fun fact?');
@@ -97,10 +99,10 @@ export function FunFactManager({ open, onClose, facts }: FunFactProps) {
         alert(`Fact delete failed: ${err}`);
       }
     }
-    //}
   };
 
-  const handleAddLang = async () => {
+  // handles when a fact is added
+  const handleAddFact = async () => {
     try {
       const response = await fetch(`/api/facts`, {
         method: 'POST',
@@ -125,6 +127,7 @@ export function FunFactManager({ open, onClose, facts }: FunFactProps) {
     }
   };
 
+  // returns actual display
   return (
     <Dialog
       open={open}
@@ -247,7 +250,7 @@ export function FunFactManager({ open, onClose, facts }: FunFactProps) {
                           </IconButton>
                         </Grid>
                         <Grid item xs={6}>
-                          <IconButton onClick={() => handleLangDelete(index)}>
+                          <IconButton onClick={() => handleFactDelete(index)}>
                             <Delete />
                           </IconButton>
                         </Grid>
@@ -268,7 +271,7 @@ export function FunFactManager({ open, onClose, facts }: FunFactProps) {
                   <TableCell>
                     <Grid container>
                       <Grid item xs={6}>
-                        <IconButton onClick={() => handleAddLang()}>
+                        <IconButton onClick={() => handleAddFact()}>
                           <Check />
                         </IconButton>
                       </Grid>

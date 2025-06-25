@@ -127,7 +127,10 @@ export default async function Home() {
   // gets fun facts
   const allfacts = await getAllFacts();
 
+  // gets tag info for certification management
   const tagdata = await getAllTags();
+
+  // get request data
   const reqdata = await getAllRequests();
   if (!reqdata) {
     return;
@@ -167,6 +170,7 @@ export default async function Home() {
   );
   console.log(cleanReqs[0].requestingUser[0]);
 
+  // more tag data (should probably use tagdata above)
   const allTags = await getAllTags();
   const langTags = allTags.filter((tag) => tag.certification === false);
 

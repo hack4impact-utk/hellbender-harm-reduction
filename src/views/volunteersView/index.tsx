@@ -125,6 +125,7 @@ export default function VolunteersView({
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [factList, setFactList] = useState(facts);
 
+  // saves version of facts as just an array of strings (no id) for fun fact display
   const fonly = factList.map((item) => item.fact);
   const [factsOnly, setFactsOnly] = useState(fonly);
 
@@ -136,6 +137,7 @@ export default function VolunteersView({
     setSelected(newSelected);
   };
 
+  // gets all facts from the database and resets facts only based on what's gotten
   const getFacts = async () => {
     const factRes = await fetch('/api/facts');
     const factData: FunFact[] = await factRes.json();
@@ -144,6 +146,7 @@ export default function VolunteersView({
     setFactsOnly(clean);
   };
 
+  // filters through list of requests for just the ones that are certifications
   const certReqs = reqs.filter((req) => req.certification === true);
 
   // returns actual page

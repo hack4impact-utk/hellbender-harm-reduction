@@ -6,21 +6,14 @@ import { Typography } from '@mui/material';
 import { getAllRequests } from '@/server/actions/requests';
 
 export default async function Home() {
-  /*await createRequests({
-    'title': 'Hellbender Harm Reduction 101',
-    'certification': true,
-    'requestingUser': [{
-      'status': 'in progress',
-      'userId': '67daca60a3a78172a40ec73c'
-    }]
-  });*/
-
+  // gets testing user
   const user = await getUser('681439a152a6f8d14f5ec44b');
 
   if (!user) {
     return <Typography>User Not Found</Typography>;
   }
 
+  // gets the user's tags
   const userTags = await Promise.all(
     (user.userTags || []).map(async (userTag) => {
       const tagIdString = String(userTag.tag);
@@ -35,6 +28,7 @@ export default async function Home() {
     })
   );
 
+  // makes sure the data is clean (no recursion)
   const cleanData = {
     name: user.name,
     phone: user.phone,
@@ -86,9 +80,11 @@ export default async function Home() {
     )
   ).filter(({ keep }) => keep).length;
 
+  // gets all tags
   const alltags = await getAllTags();
   const cleantags = alltags.map((tag) => JSON.parse(JSON.stringify(tag)));
 
+  // gets and cleans the requests made by the testing user
   const allreqs = await getAllRequests();
   const cleanreqs = allreqs.map((req) => ({
     _id: String(req._id),

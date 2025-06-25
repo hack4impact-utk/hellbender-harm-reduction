@@ -17,6 +17,7 @@ interface CertPUpProps {
   description: string;
 }
 
+// component that displays a training's info and allows user to request the training
 export function CertificationPopUp({
   open,
   onClose,

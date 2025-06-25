@@ -55,6 +55,7 @@ export function AccountInfo({
   tags,
   requests,
 }: AccountInfoProps) {
+  // all the needed variables :/
   const [editMode, setEditMode] = useState(false);
   const [newEmail, setNewEmail] = useState(email);
   const [newPhone, setNewPhone] = useState(phone);
@@ -71,21 +72,24 @@ export function AccountInfo({
   const [languageReq, setLanguageReq] = useState('');
   const [requestedLanguages, setRequestedLanguages] = useState<string[]>([]);
 
+  // handles when you remove a tag
   const handleRemoveTag = (tagIdToRemove: string) => {
     setNewTags((prev) => (prev ?? []).filter((t) => t.tagId !== tagIdToRemove));
   };
 
+  // sorts tags into certifications and languages
   const userTagIds = new Set(
     (utags ?? []).map((utag) => utag.tagId?.trim()).filter(Boolean)
   );
   const priorityTags = tags.filter((tag) => tag.certification);
   const langs = tags.filter((tag) => !tag.certification);
 
+  // handles when a user requests training
   const handleRequest = async () => {
     setDialogOpen(false);
 
     const certMatch = requests.find((req) => req.title === selectedTitle);
-
+    // make new request if it doesn't already exist
     if (!certMatch) {
       try {
         const response = await fetch(`/api/requests`, {
@@ -114,6 +118,7 @@ export function AccountInfo({
         console.error('Certification request failed:', err);
         alert(`Certification request failed`);
       }
+      // add user to list of requesting users if request already exists
     } else {
       try {
         const response = await fetch(`/api/requests/${certMatch._id}`, {
@@ -148,9 +153,12 @@ export function AccountInfo({
     setSelectedDescription('');
   };
 
+  // handles when a user asks for a new language to be added
   const handleLanguageRequest = async () => {
+    // cleans input to make it only letters with the first being capital and the rest being lower case
     const cleanedInput = languageReq.replace(/[^a-zA-Z]/g, '').trim();
     if (cleanedInput.length === 0) {
+      // if there isn't anything left after cleaning
       alert('Improper Input');
       setLanguageReq('');
     } else {
@@ -158,22 +166,26 @@ export function AccountInfo({
         cleanedInput.charAt(0).toUpperCase() +
         cleanedInput.slice(1).toLowerCase();
 
+      // if the user has requested this language (before most recent profile page load)
       const oldRepeat = requests.find(
         (req) =>
           req.title === newLang &&
           req.requestingUser.some((user) => user.userId === id)
       );
 
+      // if the user has requested this language (since most recent page load)
       const newRepeat = requestedLanguages.find((req) => req === newLang);
 
       if (oldRepeat || newRepeat) {
         alert('Language Already Requested');
       } else {
+        // confirms
         const confirmed = confirm(
           `Are you sure you sure you want to request that ${newLang} is added?.`
         );
         if (confirmed) {
           const langMatch = requests.find((req) => req.title === newLang);
+          // updates requested users if request already exists
           if (langMatch) {
             try {
               const response = await fetch(`/api/requests/${langMatch._id}`, {
@@ -203,6 +215,7 @@ export function AccountInfo({
               console.error('Language request failed:', err);
               alert('Language request failed');
             }
+            // makes new request if it doesn't exist yet
           } else {
             try {
               const response = await fetch(`/api/requests`, {
@@ -238,6 +251,7 @@ export function AccountInfo({
     setLanguageReq('');
   };
 
+  // handles when changes to user profile are updated
   const handleSubmit = async () => {
     try {
       const formattedTags = (newTags ?? []).map((tag) => ({
