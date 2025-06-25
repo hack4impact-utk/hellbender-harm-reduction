@@ -31,7 +31,7 @@ export default function VolunteerDashView({
         overflow: 'hidden',
       }}
     >
-      <Navbar userType={'Admin'} userId={''} page={'Calendar'} />
+      <Navbar userType={'Volunteer'} userId={''} page={'Dashboard'} />
       <Grid
         container
         sx={{

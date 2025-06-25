@@ -104,7 +104,7 @@ export default function ProfileView() {
         height: '100vh',
       }}
     >
-      <Navbar userType={'Admin'} userId={''} page={'Volunteers'} />
+      <Navbar userType={'Volunteer'} userId={''} page={'Profile'} />
       <Grid
         container
         spacing="10px"
